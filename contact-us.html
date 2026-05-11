@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <title>Contact Us | IndiaAI</title>
+  <style>
+    .contact-form input, .contact-form textarea {
+      width: 100%;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      border: 1.5px solid var(--neutral-300);
+      border-radius: 8px;
+      font-family: var(--font-sans);
+      font-size: 1rem;
+    }
+    .contact-form label {
+      display: block;
+      font-weight: 600;
+      color: var(--neutral-800);
+      margin-bottom: 6px;
+    }
+    .submit-btn {
+      background: var(--indigo-800);
+      color: white;
+      border: none;
+      padding: 14px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      width: 100%;
+    }
+    .contact-info-block {
+      padding: 24px;
+      background: var(--neutral-50);
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<main>
+  <div class="info-band">
+    <div class="info-band-inner" style="padding: 40px 24px; display: block; text-align: center;">
+      <h1 style="font-size: 2.5rem; font-weight: 800;">Contact Support</h1>
+    </div>
+  </div>
+
+  <section class="section-wrap">
+    <div class="charts-grid wide">
+      
+      <div class="chart-card" style="padding: 30px;">
+        <h2 style="margin-bottom: 24px; color: var(--indigo-900);">Send us a Message</h2>
+        <form class="contact-form">
+          <label>Full Name</label>
+          <input type="text" placeholder="Enter your name">
+          
+          <label>Email Address</label>
+          <input type="email" placeholder="Enter your email">
+          
+          <label>Message</label>
+          <textarea rows="5" placeholder="How can we help you?"></textarea>
+          
+          <button type="submit" class="submit-btn">Submit Inquiry</button>
+        </form>
+      </div>
+
+      <div class="chart-card" style="padding: 30px;">
+        <h2 style="margin-bottom: 24px; color: var(--indigo-900);">Headquarters</h2>
+        
+        <div class="contact-info-block">
+          <h3 style="font-size: 1.1rem; margin-bottom: 8px;">📍 Address</h3>
+          <p style="color: var(--neutral-700);">NIELIT Bhawan, Plot No. 3,<br>PSP Pocket, Sector-8, Dwarka,<br>New Delhi-110077</p>
+        </div>
+
+        <div class="contact-info-block">
+          <h3 style="font-size: 1.1rem; margin-bottom: 8px;">📞 Phone</h3>
+          <p style="color: var(--neutral-700);">+91-11-44446777</p>
+        </div>
+
+        <div class="contact-info-block">
+          <h3 style="font-size: 1.1rem; margin-bottom: 8px;">✉️ Email</h3>
+          <p style="color: var(--neutral-700);">contact@nielit.gov.in</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+</body>
+</html>
