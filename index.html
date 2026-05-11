@@ -331,7 +331,7 @@
     <div class="table-responsive">
       <table>
         <thead id="table-head">
-          </thead>
+        </thead>
         <tbody id="table-body">
           <tr><td colspan="8"><div class="loader-container"><div class="spinner"></div>Loading candidate data...</div></td></tr>
         </tbody>
@@ -341,7 +341,7 @@
     <div class="pagination">
       <div id="page-info">Showing 0 of 0 entries</div>
       <div class="page-controls" id="pagination-controls">
-        </div>
+      </div>
     </div>
   </div>
 </main>
@@ -389,6 +389,10 @@
       if (!response.ok) throw new Error("Network response was not ok");
       
       rawData = await response.json();
+      
+      // If the backend returned an error object
+      if (rawData.error) throw new Error(rawData.error);
+      
       filteredData = [...rawData];
       
       updateTimestamp();
@@ -403,7 +407,7 @@
         <tr><td colspan="${COLS.length}">
           <div class="loader-container" style="color:var(--danger)">
             <i class="fas fa-exclamation-triangle" style="font-size:2rem; margin-bottom:10px;"></i>
-            <p>Failed to load data. ${error.message}</p>
+            <p>Failed to load data. Ensure your Apps Script is deployed as a "New version" with access set to "Anyone".</p>
           </div>
         </td></tr>`;
     } finally {
