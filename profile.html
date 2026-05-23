@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edit Candidate Profile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  :root {
+    --bg-body: #f1f5f9;
+    --bg-surface: #ffffff;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --success: #16a34a;
+    --danger: #dc2626;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+  }
+  
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); color: var(--text-main); line-height: 1.5; padding: 40px 20px; }
+  
+  .container { max-width: 900px; margin: 0 auto; }
+  
+  .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+  .btn-back { display: inline-flex; align-items: center; gap: 8px; color: var(--text-muted); text-decoration: none; font-weight: 500; transition: color 0.2s; }
+  .btn-back:hover { color: var(--text-main); }
+  
+  .profile-card { background: var(--bg-surface); padding: 32px; border-radius: var(--radius-lg); box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); border: 1px solid var(--border); }
+  .profile-header { border-bottom: 1px solid var(--border); padding-bottom: 24px; margin-bottom: 24px; display: flex; align-items: center; gap: 20px; }
+  
+  .avatar { width: 72px; height: 72px; background: #eff6ff; color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; }
+  .header-text h1 { font-size: 1.5rem; margin-bottom: 4px; }
+  .header-text p { color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; }
+  
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group.full-width { grid-column: span 2; }
+  
+  label { font-size: 0.875rem; font-weight: 600; color: var(--text-main); }
+  input, select { padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius-md); font-family: 'Inter', sans-serif; font-size: 0.875rem; transition: border-color 0.2s; background: #f8fafc; }
+  input:focus, select:focus { outline: none; border-color: var(--primary); background: #ffffff; }
+  input[readonly] { background: #e2e8f0; color: #475569; cursor: not-allowed; }
+
+  .section-title { font-size: 1.125rem; font-weight: 600; color: var(--text-main); margin-bottom: 16px; margin-top: 10px; grid-column: span 2; border-bottom: 2px solid var(--border); padding-bottom: 8px; }
+
+  .actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; border-top: 1px solid var(--border); padding-top: 24px; }
+  .btn { padding: 10px 20px; border-radius: var(--radius-md); font-weight: 600; font-size: 0.875rem; cursor: pointer; border: none; transition: background 0.2s; }
+  .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
+  .btn-outline:hover { background: #f1f5f9; }
+  .btn-primary { background: var(--primary); color: white; display: flex; align-items: center; gap: 8px; }
+  .btn-primary:hover:not(:disabled) { background: var(--primary-hover); }
+  .btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
+
+  #error-msg { text-align: center; color: var(--danger); padding: 40px; font-weight: 500; display: none; }
+
+  @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } .form-group.full-width, .section-title { grid-column: span 1; } }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header-actions">
+    <a href="javascript:window.close();" class="btn-back"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+  </div>
+
+  <div id="error-msg">
+    <h2><i class="fas fa-exclamation-circle"></i> No Candidate Data Found</h2>
+    <p>Please open a profile directly from the Candidate Roster on the Dashboard.</p>
+  </div>
+
+  <div class="profile-card" id="profile-card" style="display: none;">
+    <div class="profile-header">
+      <div class="avatar"><i class="fas fa-user"></i></div>
+      <div class="header-text">
+        <h1 id="display_name">Candidate Name</h1>
+        <p>Registration No: <span id="display_regno">---</span></p>
+      </div>
+    </div>
+
+    <form id="edit-form">
+      <div class="form-grid">
+        <!-- System Data -->
+        <div class="section-title">System & Enrollment Details</div>
+        <div class="form-group">
+          <label>S.No</label>
+          <input type="text" id="SNo." readonly>
+        </div>
+        <div class="form-group">
+          <label>Registration Number</label>
+          <input type="text" id="Candidate_registration_no" readonly>
+        </div>
+        <div class="form-group">
+          <label>Batch Wise</label>
+          <input type="text" id="Batch Wise">
+        </div>
+        <div class="form-group">
+          <label>Result</label>
+          <select id="Result">
+            <option value="Pass">Pass</option>
+            <option value="Fail">Fail</option>
+            <option value="Pending">Pending</option>
+            <option value="">N/A</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Start Date</label>
+          <input type="text" id="Start Date">
+        </div>
+        <div class="form-group">
+          <label>End Date</label>
+          <input type="text" id="End Date">
+        </div>
+
+        <!-- Personal Data -->
+        <div class="section-title">Personal Information</div>
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="Candidate_Name">
+        </div>
+        <div class="form-group">
+          <label>Date of Birth</label>
+          <input type="text" id="Candidate_Birth_date">
+        </div>
+        <div class="form-group">
+          <label>Gender</label>
+          <input type="text" id="Candidate_Gender">
+        </div>
+        <div class="form-group">
+          <label>Category</label>
+          <input type="text" id="Category">
+        </div>
+        <div class="form-group">
+          <label>Father's Name</label>
+          <input type="text" id="Father_Name">
+        </div>
+        <div class="form-group">
+          <label>Mother's Name</label>
+          <input type="text" id="Mother_Name">
+        </div>
+
+        <!-- Contact & ID -->
+        <div class="section-title">Contact & Identifications</div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="Candidate_Email">
+        </div>
+        <div class="form-group">
+          <label>Mobile Number</label>
+          <input type="text" id="Candidate_Mobile">
+        </div>
+        <div class="form-group full-width">
+          <label>Permanent Address (City, State)</label>
+          <input type="text" id="Candidate_Perm_Address_City_State">
+        </div>
+        <div class="form-group">
+          <label>Aadhaar</label>
+          <input type="text" id="Aadhaar">
+        </div>
+        <div class="form-group">
+          <label>Apaar / ABC ID</label>
+          <input type="text" id="Apaar">
+        </div>
+        <div class="form-group full-width">
+          <label>Certificates Issued</label>
+          <input type="text" id="Certificates">
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn btn-outline" onclick="window.close()">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="saveData()"><i class="fas fa-save"></i> Save Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // YOUR APPS SCRIPT URL HERE
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyKu3tB206mwE7ef_rULrZ_17E5xTfp5rLWlSgY3vuKToj-0UxTvRodyhZYQb8d7qNH/exec';
+  
+  // List of all input IDs mapped exactly to the Google Sheet Headers
+  const fields = [
+    'SNo.', 'Candidate_registration_no', 'Candidate_Name', 'Candidate_Gender', 
+    'Father_Name', 'Mother_Name', 'Candidate_Birth_date', 'Candidate_Email', 
+    'Candidate_Mobile', 'Candidate_Perm_Address_City_State', 'Result', 
+    'Start Date', 'End Date', 'Batch Wise', 'Category', 'Certificates', 'Apaar', 'Aadhaar'
+  ];
+
+  // Initialize page with data from LocalStorage
+  document.addEventListener('DOMContentLoaded', () => {
+    const rawData = localStorage.getItem('currentCandidateProfile');
+    
+    if (rawData) {
+      try {
+        const candidate = JSON.parse(rawData);
+        document.getElementById('profile-card').style.display = 'block';
+        
+        document.getElementById('display_name').innerText = candidate['Candidate_Name'] || 'Unknown Candidate';
+        document.getElementById('display_regno').innerText = candidate['Candidate_registration_no'] || 'N/A';
+
+        // Loop through and populate inputs
+        fields.forEach(field => {
+          const el = document.getElementById(field);
+          if (el) {
+             el.value = candidate[field] !== undefined ? candidate[field] : '';
+          }
+        });
+      } catch(e) {
+        document.getElementById('error-msg').style.display = 'block';
+      }
+    } else {
+      document.getElementById('error-msg').style.display = 'block';
+    }
+  });
+
+  // Function to save data directly back to Google Sheets via POST
+  async function saveData() {
+    const btn = document.querySelector('.btn-primary');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving to Database...';
+    btn.disabled = true;
+    
+    // Gather all data from the form fields
+    let updatedCandidateData = {};
+    fields.forEach(field => {
+      const el = document.getElementById(field);
+      if (el) {
+        updatedCandidateData[field] = el.value;
+      }
+    });
+
+    try {
+      // Send the POST request to Google Apps Script
+      const response = await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8', 
+        },
+        body: JSON.stringify(updatedCandidateData),
+        redirect: 'follow'
+      });
+
+      const result = await response.json();
+
+      if (result.status === 'success') {
+        // Success UI updates
+        btn.innerHTML = '<i class="fas fa-check"></i> Saved successfully';
+        btn.style.backgroundColor = 'var(--success)';
+        
+        // Update the local storage so if they refresh the page, it holds the new data
+        localStorage.setItem('currentCandidateProfile', JSON.stringify(updatedCandidateData));
+        
+        // Update the header display text just in case they changed the name
+        document.getElementById('display_name').innerText = updatedCandidateData['Candidate_Name'];
+
+      } else {
+        throw new Error(result.message || "Failed to update record.");
+      }
+
+    } catch (error) {
+      console.error('Error saving data:', error);
+      btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error Saving';
+      btn.style.backgroundColor = 'var(--danger)';
+      alert("Error saving data: " + error.message);
+    } finally {
+      // Reset button UI after 3 seconds
+      setTimeout(() => {
+        btn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
+        btn.style.backgroundColor = 'var(--primary)';
+        btn.disabled = false;
+      }, 3000);
+    }
+  }
+</script>
+</body>
+</html>
