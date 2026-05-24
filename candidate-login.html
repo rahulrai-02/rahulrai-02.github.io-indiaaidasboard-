@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Candidate Login - IndiaAI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  :root {
+    --bg-body: #f8fafc;
+    --bg-surface: #ffffff;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    --primary: #FF9933; /* Tiranga Saffron to match IndiaAI theme */
+    --primary-hover: #e58a2e;
+    --danger: #dc2626;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+  }
+  
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { 
+    font-family: 'Inter', sans-serif; 
+    background-color: var(--bg-body); 
+    color: var(--text-main); 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    min-height: 100vh; 
+    padding: 20px;
+  }
+  
+  .login-card {
+    background: var(--bg-surface);
+    padding: 40px;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 10px 25px -5px rgb(0 0 0 / 0.1);
+    border: 1px solid var(--border);
+    width: 100%;
+    max-width: 420px;
+  }
+  
+  .login-header { text-align: center; margin-bottom: 30px; }
+  .login-icon {
+    width: 64px; height: 64px; background: #fff7ed; color: var(--primary);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 1.75rem; margin: 0 auto 16px;
+  }
+  .login-header h1 { font-size: 1.5rem; font-weight: 700; color: var(--text-main); }
+  .login-header p { color: var(--text-muted); font-size: 0.875rem; margin-top: 4px; }
+  
+  .form-group { margin-bottom: 20px; }
+  label { display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 8px; color: var(--text-main); }
+  input {
+    width: 100%; padding: 12px 14px; border: 1px solid var(--border);
+    border-radius: var(--radius-md); font-family: 'Inter', sans-serif; font-size: 0.875rem;
+    transition: border-color 0.2s; background: #f8fafc;
+  }
+  input:focus { outline: none; border-color: var(--primary); background: #ffffff; box-shadow: 0 0 0 3px rgba(255,153,51,0.15); }
+  
+  .btn-primary {
+    width: 100%; padding: 12px; background: var(--primary); color: white;
+    border: none; border-radius: var(--radius-md); font-weight: 600; font-size: 0.95rem;
+    cursor: pointer; transition: background 0.2s; margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 8px;
+  }
+  .btn-primary:hover:not(:disabled) { background: var(--primary-hover); }
+  .btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
+  
+  #error-msg {
+    background: #fef2f2; border: 1px solid #fecaca; color: var(--danger);
+    padding: 12px; border-radius: var(--radius-md); font-size: 0.875rem;
+    text-align: center; margin-top: 20px; font-weight: 500; display: none;
+  }
+
+  .help-text { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; display: block; }
+</style>
+</head>
+<body>
+
+  <header style="background:#fff;border-bottom:1px solid #e2e8f0;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;">
+    <a href="index.html" style="font-weight:700;font-size:1rem;color:#0f172a;text-decoration:none;">DataSync</a>
+    <nav style="display:flex;gap:14px;align-items:center;">
+      <a href="index.html" style="color:#64748b;text-decoration:none;">Home</a>
+      <a href="about-us.html" style="color:#64748b;text-decoration:none;">About</a>
+      <a href="training-curriculum.html" style="color:#64748b;text-decoration:none;">Training</a>
+      <a href="contact-us.html" style="color:#64748b;text-decoration:none;">Contact</a>
+      <a href="candidate-login.html" style="color:#64748b;text-decoration:none;">Candidate Login</a>
+      <a href="admin-login.html" style="padding:6px 10px;background:#2563eb;color:#fff;border-radius:8px;text-decoration:none;">Admin</a>
+    </nav>
+  </header>
+
+  <div class="login-card">
+  <div class="login-header">
+    <div class="login-icon"><i class="fas fa-user-graduate"></i></div>
+    <h1>Candidate Portal</h1>
+    <p>Sign in to view your profile and results</p>
+  </div>
+  
+  <form id="candidate-login-form">
+    <div class="form-group">
+      <label for="regNo">Registration Number</label>
+      <input type="text" id="regNo" placeholder="Enter your registration number" required>
+    </div>
+    
+    <div class="form-group">
+      <label for="contact">Email or Mobile Number</label>
+      <input type="text" id="contact" placeholder="Registered email or phone" required>
+    </div>
+
+    <div class="form-group">
+      <label for="dob">Date of Birth (Password)</label>
+      <input type="date" id="dob" required>
+      <span class="help-text">Used as your default password</span>
+    </div>
+    
+    <button type="submit" class="btn-primary" id="login-btn">Secure Login <i class="fas fa-arrow-right"></i></button>
+    
+    <div id="error-msg">
+      <i class="fas fa-exclamation-triangle"></i> <span id="error-text">Invalid credentials. Please check your details.</span>
+    </div>
+  </form>
+</div>
+
+<script>
+  // YOUR APPS SCRIPT URL HERE (Must be the exact same one used in the admin dashboard)
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyKu3tB206mwE7ef_rULrZ_17E5xTfp5rLWlSgY3vuKToj-0UxTvRodyhZYQb8d7qNH/exec';
+
+  document.getElementById('candidate-login-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const btn = document.getElementById('login-btn');
+    const errorBox = document.getElementById('error-msg');
+    const errorText = document.getElementById('error-text');
+    
+    // Hide error and show loading state
+    errorBox.style.display = 'none';
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+    btn.disabled = true;
+    
+    // Get form values
+    const regNoInput = document.getElementById('regNo').value.trim();
+    const contactInput = document.getElementById('contact').value.trim().toLowerCase();
+    const dobRaw = document.getElementById('dob').value; // Comes out as YYYY-MM-DD
+    
+    // Format DOB from YYYY-MM-DD to DD-MM-YYYY to match the JSON output
+    const [year, month, day] = dobRaw.split('-');
+    const formattedDob = `${day}-${month}-${year}`;
+
+    try {
+      // Fetch all candidate data from the database
+      const response = await fetch(APPS_SCRIPT_URL);
+      if (!response.ok) throw new Error("Could not connect to database.");
+      
+      const data = await response.json();
+      if (data.error) throw new Error(data.error);
+
+      // Find the candidate by Registration Number
+      const candidate = data.find(c => String(c['Candidate_registration_no']).trim() === regNoInput);
+
+      if (candidate) {
+        // Grab their data from the sheet for comparison
+        const dbEmail = String(candidate['Candidate_Email'] || '').toLowerCase().trim();
+        const dbMobile = String(candidate['Candidate_Mobile'] || '').trim();
+        const dbDob = String(candidate['Candidate_Birth_date'] || '').trim();
+
+        // Check if Contact (Email or Mobile) matches AND DOB matches
+        const isContactValid = (contactInput === dbEmail || contactInput === dbMobile);
+        const isDobValid = (formattedDob === dbDob);
+
+        if (isContactValid && isDobValid) {
+          // Success! Save session and candidate data
+          sessionStorage.setItem('isCandidateLoggedIn', 'true');
+          sessionStorage.setItem('currentCandidateData', JSON.stringify(candidate));
+          
+          btn.innerHTML = '<i class="fas fa-check"></i> Success! Redirecting...';
+          btn.style.backgroundColor = '#16a34a';
+          
+          // Redirect to the candidate's personal view portal (you will need to create this page)
+          setTimeout(() => {
+            window.location.href = 'candidate-dashboard.html'; 
+          }, 1000);
+
+        } else {
+          // Credentials didn't match
+          throw new Error("Invalid Email/Phone or Date of Birth.");
+        }
+      } else {
+        // Registration number not found
+        throw new Error("Registration number not found.");
+      }
+
+    } catch (error) {
+      console.error(error);
+      errorText.innerText = error.message || "An error occurred during login.";
+      errorBox.style.display = 'block';
+      btn.innerHTML = 'Secure Login <i class="fas fa-arrow-right"></i>';
+      btn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>

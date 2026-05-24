@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Profile - Candidate Portal</title>
+
+<!-- SECURITY CHECK: Redirects if the candidate is not logged in -->
+<script>
+  if (sessionStorage.getItem('isCandidateLoggedIn') !== 'true') {
+    window.location.replace('candidate-login.html');
+  }
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  :root {
+    --bg-body: #f8fafc;
+    --bg-surface: #ffffff;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    --primary: #FF9933; /* IndiaAI Saffron */
+    --primary-hover: #e58a2e;
+    --success: #16a34a;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+  }
+  
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); color: var(--text-main); line-height: 1.5; }
+  
+  header { 
+    background: var(--bg-surface); padding: 16px 32px; border-bottom: 1px solid var(--border); 
+    display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 2px rgb(0 0 0 / 0.05); 
+  }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand-icon { 
+    width: 40px; height: 40px; background: #fff7ed; color: var(--primary); 
+    border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; 
+  }
+  .brand-text h1 { font-size: 1.125rem; font-weight: 600; }
+  
+  .btn { 
+    padding: 8px 16px; border-radius: var(--radius-md); font-weight: 500; font-size: 0.875rem; 
+    cursor: pointer; border: 1px solid var(--border); background: var(--bg-surface); 
+    display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s;
+  }
+  .btn:hover { background: var(--bg-body); }
+  .btn-primary { background: var(--primary); color: white; border: none; }
+  .btn-primary:hover:not(:disabled) { background: var(--primary-hover); }
+  .btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
+  
+  main { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+  .card { 
+    background: var(--bg-surface); padding: 32px; border-radius: var(--radius-lg); 
+    border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05); margin-bottom: 24px; 
+  }
+  
+  .welcome-banner { margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+  .welcome-banner h2 { font-size: 1.5rem; color: var(--text-main); }
+  .welcome-banner p { color: var(--text-muted); font-size: 0.875rem; margin-top: 4px; }
+
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group.full { grid-column: span 2; }
+  
+  label { font-size: 0.875rem; font-weight: 600; color: var(--text-main); }
+  input { 
+    padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius-md); 
+    font-family: 'Inter', sans-serif; font-size: 0.875rem; transition: border-color 0.2s;
+  }
+  input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(255,153,51,0.15); }
+  
+  /* Styling for read-only fields */
+  input[readonly] { background: var(--bg-body); color: var(--text-muted); cursor: not-allowed; border-color: var(--border); }
+  
+  .section-title { font-size: 1.125rem; font-weight: 600; margin: 24px 0 16px; grid-column: span 2; border-bottom: 2px solid var(--border); padding-bottom: 8px;}
+
+  .actions { display: flex; justify-content: flex-end; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); }
+  
+  #msg-box { 
+    display: none; padding: 12px; border-radius: var(--radius-md); 
+    margin-bottom: 20px; font-size: 0.875rem; text-align: center; font-weight: 500; 
+  }
+  .msg-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+  .msg-error { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+
+  @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } .form-group.full, .section-title { grid-column: span 1; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="brand-icon"><i class="fas fa-user-graduate"></i></div>
+    <div class="brand-text">
+      <h1>Candidate Portal</h1>
+    </div>
+  </div>
+  <button class="btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+</header>
+
+<main>
+  <div class="card">
+    <div class="welcome-banner">
+      <h2>Welcome, <span id="display_name">Candidate</span></h2>
+      <p>Registration No: <span id="display_reg">---</span> | Training Result: <strong id="display_status">---</strong></p>
+    </div>
+
+    <div id="msg-box"></div>
+
+    <form id="candidate-edit-form">
+      <div class="form-grid">
+        
+        <!-- ============================================== -->
+        <!-- READ ONLY FIELDS (Must contact admin to change) -->
+        <!-- ============================================== -->
+        <div class="section-title">Immutable Details (Contact Admin to Change)</div>
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="Candidate_Name" readonly>
+        </div>
+        <div class="form-group">
+          <label>Date of Birth</label>
+          <input type="text" id="Candidate_Birth_date" readonly>
+        </div>
+        <div class="form-group">
+          <label>Aadhaar Number</label>
+          <input type="text" id="Aadhaar" readonly>
+        </div>
+        <div class="form-group">
+          <label>Apaar / ABC ID</label>
+          <input type="text" id="Apaar" readonly>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- EDITABLE FIELDS                                -->
+        <!-- ============================================== -->
+        <div class="section-title">Editable Contact & Personal Details</div>
+        <div class="form-group">
+          <label>Gender</label>
+          <input type="text" id="Candidate_Gender">
+        </div>
+        <div class="form-group">
+          <label>Mobile Number</label>
+          <input type="text" id="Candidate_Mobile">
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="Candidate_Email">
+        </div>
+        <div class="form-group">
+          <label>Father's Name</label>
+          <input type="text" id="Father_Name">
+        </div>
+        <div class="form-group">
+          <label>Mother's Name</label>
+          <input type="text" id="Mother_Name">
+        </div>
+        <div class="form-group full">
+          <label>Permanent Address (City, State)</label>
+          <input type="text" id="Candidate_Perm_Address_City_State">
+        </div>
+
+        <!-- Hidden fields required to link the data back to the database row -->
+        <input type="hidden" id="Candidate_registration_no">
+        <input type="hidden" id="SNo.">
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="btn btn-primary" id="save-btn"><i class="fas fa-paper-plane"></i> Submit Edit Request</button>
+      </div>
+    </form>
+  </div>
+</main>
+
+<script>
+  // YOUR APPS SCRIPT URL HERE (Must be the exact same one used in the login and dashboard pages)
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyKu3tB206mwE7ef_rULrZ_17E5xTfp5rLWlSgY3vuKToj-0UxTvRodyhZYQb8d7qNH/exec';
+
+  const fields = [
+    'Candidate_Name', 'Candidate_Birth_date', 'Aadhaar', 'Apaar', 
+    'Candidate_Gender', 'Candidate_Mobile', 'Candidate_Email', 
+    'Father_Name', 'Mother_Name', 'Candidate_Perm_Address_City_State',
+    'Candidate_registration_no', 'SNo.'
+  ];
+
+  // Load candidate data when the page opens
+  document.addEventListener('DOMContentLoaded', () => {
+    const rawData = sessionStorage.getItem('currentCandidateData');
+    if (rawData) {
+      const candidate = JSON.parse(rawData);
+      
+      // Update UI Banner text
+      document.getElementById('display_name').innerText = candidate['Candidate_Name'] || 'Candidate';
+      document.getElementById('display_reg').innerText = candidate['Candidate_registration_no'] || 'N/A';
+      document.getElementById('display_status').innerText = candidate['Result'] || 'Pending';
+
+      // Populate form inputs
+      fields.forEach(field => {
+        const el = document.getElementById(field);
+        if (el && candidate[field] !== undefined) {
+          el.value = candidate[field];
+        }
+      });
+    }
+  });
+
+  // Handle Form Submission
+  document.getElementById('candidate-edit-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const btn = document.getElementById('save-btn');
+    const msgBox = document.getElementById('msg-box');
+    
+    // UI Update during processing
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+    btn.disabled = true;
+    msgBox.style.display = 'none';
+
+    // 1. Gather data and flag it as a candidate edit request
+    let payload = { action: 'candidate_edit' }; 
+    
+    // We send ALL fields (even read-only) so the admin has full context in the Edits sheet
+    const currentData = JSON.parse(sessionStorage.getItem('currentCandidateData'));
+    Object.assign(payload, currentData); // Pull in everything
+
+    // Overwrite with any new edits made in the form
+    fields.forEach(field => {
+      const el = document.getElementById(field);
+      if (el) {
+        payload[field] = el.value;
+      }
+    });
+
+    try {
+      // 2. Send the data to Google Apps Script
+      const response = await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json();
+
+      if (result.status === 'success') {
+        // Success Message
+        msgBox.className = 'msg-success';
+        msgBox.innerHTML = '<i class="fas fa-check-circle"></i> Your edit request has been successfully sent to the administration.';
+        msgBox.style.display = 'block';
+        
+        // Update local session storage so the UI reflects changes if they refresh
+        sessionStorage.setItem('currentCandidateData', JSON.stringify(payload));
+      } else {
+        throw new Error(result.message);
+      }
+    } catch (error) {
+      // Error Message
+      msgBox.className = 'msg-error';
+      msgBox.innerHTML = '<i class="fas fa-exclamation-triangle"></i> ' + (error.message || "Failed to submit request.");
+      msgBox.style.display = 'block';
+    } finally {
+      // Reset the button after process finishes
+      btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Edit Request';
+      btn.disabled = false;
+    }
+  });
+
+  // Logout function
+  function logout() {
+    sessionStorage.removeItem('isCandidateLoggedIn');
+    sessionStorage.removeItem('currentCandidateData');
+    window.location.replace('candidate-login.html');
+  }
+</script>
+</body>
+</html>
