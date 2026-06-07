@@ -51,19 +51,26 @@
   .stat-details .stat-value { font-size: 1.6rem; font-weight: 800; color: var(--navy); margin-top: 4px; }
   
   /* Blinking Animation for Live Status */
-  .live-dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; display: inline-block; animation: blink 1.5s infinite; }
+  .live-dot { width: 8px; height: 8px; background: #ea580c; border-radius: 50%; display: inline-block; animation: blink 1.5s infinite; }
   @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
 
-  /* --- SEARCH & FORMS --- */
+  /* --- CARDS & FORMS --- */
   .card { background: var(--bg-surface); padding: 30px; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(15,23,42,0.03); margin-bottom: 24px; }
   .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; position: relative;}
   label { font-size: 0.85rem; font-weight: 600; color: var(--text-main); }
   input, select, textarea { padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-family: 'Inter', sans-serif; transition: 0.2s; background: #f8fafc; font-size: 0.95rem; }
   input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); background: #ffffff; box-shadow: 0 0 0 3px rgba(37,99,235,0.15); }
   
-  .btn { padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.95rem;}
+  .btn { padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.95rem;}
   .btn-primary { background: var(--primary); color: white; }
   .btn-primary:hover { background: var(--primary-hover); }
+  .btn-success { background: var(--success); color: white; }
+  .btn-success:hover { background: #15803d; }
+
+  /* --- QUEUE TABLE --- */
+  .queue-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+  .queue-table th { text-align: left; padding: 12px; background: #f1f5f9; color: var(--text-muted); font-size: 0.85rem; border-bottom: 2px solid var(--border); }
+  .queue-table td { padding: 15px 12px; border-bottom: 1px solid var(--border); font-size: 0.95rem; vertical-align: middle;}
 
   /* --- AUTOCOMPLETE SUGGESTIONS --- */
   #candidate-suggestion-panel { display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 10; max-height: 260px; overflow-y: auto; background: white; border: 1px solid #cbd5e1; border-radius: 0 0 10px 10px; box-shadow: 0 12px 30px rgba(15,23,42,0.08); margin-top: 2px; }
@@ -104,50 +111,71 @@
     <div class="hero">
       <div>
         <h1>Attendance & Progress</h1>
-        <p>Search candidates to manually update their overall course progress and manual grades.</p>
+        <p>Verify live check-ins and manually update overall candidate course progress.</p>
       </div>
     </div>
 
-    <!-- STATS DASHBOARD (Now 4 Columns with Live Sync) -->
+    <!-- STATS DASHBOARD -->
     <div class="candidate-stats-row">
       <div class="stat-card">
-        <div class="stat-icon icon-blue"><i class="fas fa-users"></i></div>
+        <div class="stat-icon icon-blue" style="background:#f1f5f9; color:var(--navy);"><i class="fas fa-users"></i></div>
         <div class="stat-details">
-          <h5>Total Students Tracked</h5>
+          <h5>Total Students</h5>
           <div class="stat-value" id="summary-total"><i class="fas fa-spinner fa-spin" style="font-size:1rem;"></i></div>
         </div>
       </div>
       
       <div class="stat-card">
-        <div class="stat-icon icon-green"><i class="fas fa-user-check"></i></div>
+        <div class="stat-icon icon-orange" style="background:#fff7ed; color:#ea580c;"><i class="fas fa-desktop"></i></div>
         <div class="stat-details">
-          <h5>Average Attendance</h5>
-          <div class="stat-value" id="summary-attendance">--%</div>
+          <h5>Active Today <span class="live-dot"></span></h5>
+          <div class="stat-value" id="summary-active-today">--</div>
         </div>
       </div>
       
-      <div class="stat-card">
-        <div class="stat-icon icon-orange"><i class="fas fa-chart-line"></i></div>
+      <div class="stat-card" style="border-left: 4px solid #10b981;">
+        <div class="stat-icon icon-live"><i class="fas fa-user-check"></i></div>
         <div class="stat-details">
-          <h5>Average Progress</h5>
-          <div class="stat-value" id="summary-progress">--%</div>
+          <h5>Verified Present</h5>
+          <div class="stat-value" id="summary-verified-today">--</div>
         </div>
       </div>
 
-      <!-- NEW LIVE SYNC WIDGET -->
-      <div class="stat-card" style="border-left: 4px solid #10b981;">
-        <div class="stat-icon icon-live"><i class="fas fa-satellite-dish"></i></div>
+      <div class="stat-card">
+        <div class="stat-icon icon-blue"><i class="fas fa-chart-line"></i></div>
         <div class="stat-details">
-          <h5>Present Today <span class="live-dot"></span></h5>
-          <div class="stat-value" id="summary-present-today"><i class="fas fa-spinner fa-spin" style="font-size:1rem;"></i></div>
-          <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">Auto-syncs every 60s</div>
+          <h5>Avg Course Progress</h5>
+          <div class="stat-value" id="summary-progress">--%</div>
         </div>
       </div>
     </div>
 
+    <!-- PENDING VERIFICATION QUEUE -->
+    <div class="card" style="border: 2px solid #cbd5e1; padding-top: 25px;">
+      <h3 style="color: var(--navy); margin-bottom: 5px;"><i class="fas fa-clipboard-list" style="color: #ea580c;"></i> Pending Verification Queue</h3>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">These students have logged into the portal today. Click "Verify" to confirm they are physically present.</p>
+      
+      <table class="queue-table" id="queue-table">
+        <thead>
+          <tr>
+            <th>Candidate Info</th>
+            <th>Login Time</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="queue-body">
+          <tr>
+            <td colspan="3" style="text-align:center; padding: 30px; color: var(--primary);">
+              <i class="fas fa-spinner fa-spin"></i> Fetching live queue...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
     <!-- SEARCH CARD -->
     <div class="card" style="max-width: 800px; margin: 0 auto 30px;">
-      <h3 style="color: var(--navy); margin-bottom: 15px;"><i class="fas fa-search" style="color: var(--primary);"></i> Find Candidate</h3>
+      <h3 style="color: var(--navy); margin-bottom: 15px;"><i class="fas fa-search" style="color: var(--primary);"></i> Manual Progress Update</h3>
       <div class="form-group" style="margin-bottom: 0;">
         <input type="text" id="attendance-search" placeholder="Type Registration Number or Candidate Name..." autocomplete="off">
         <div id="candidate-suggestion-panel"></div>
@@ -218,41 +246,89 @@
   // ==========================================
   window.onload = async () => {
     await loadAttendanceData();
-    await syncLiveAttendance();
+    await syncLiveQueue();
     
-    // Auto-refresh the Present Today counter every 60,000 milliseconds (60s)
-    setInterval(syncLiveAttendance, 60000);
+    // Auto-refresh the Queue and Stats every 60,000 milliseconds (60s)
+    setInterval(syncLiveQueue, 60000);
   };
 
-  // Fetch the live count of today's attendance checks
-  async function syncLiveAttendance() {
+  // Fetch the live queue of today's attendance checks
+  async function syncLiveQueue() {
     try {
       const response = await fetch(APPS_SCRIPT_URL, {
         method: 'POST',
         body: JSON.stringify({ action: 'fetch_live_attendance' })
       });
       const result = await response.json();
-      document.getElementById('summary-present-today').innerText = result.count !== undefined ? result.count : '--';
+      
+      // Update Top Stats
+      document.getElementById('summary-active-today').innerText = result.active !== undefined ? result.active : '--';
+      document.getElementById('summary-verified-today').innerText = result.verified !== undefined ? result.verified : '--';
+      
+      // Update Table Queue
+      const tbody = document.getElementById('queue-body');
+      if (!result.pending || result.pending.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding: 30px; color: var(--text-muted);">
+          <i class="fas fa-check-circle" style="color: #10b981; font-size: 1.5rem; display:block; margin-bottom:10px;"></i> 
+          All active students are verified!
+        </td></tr>`;
+      } else {
+        tbody.innerHTML = result.pending.map(p => `
+          <tr>
+            <td>
+              <strong style="color:var(--navy); font-size: 1.05rem;">${p.name}</strong><br>
+              <span style="font-size:0.85rem; color:var(--text-muted);">${p.regNo}</span>
+            </td>
+            <td><i class="fas fa-clock" style="color:#cbd5e1; margin-right:5px;"></i> ${p.time}</td>
+            <td>
+              <button class="btn btn-success" onclick="verifyStudent(${p.row}, this)">
+                <i class="fas fa-check"></i> Verify
+              </button>
+            </td>
+          </tr>
+        `).join('');
+      }
     } catch(e) {
-      console.error("Live sync failed", e);
+      console.error("Queue sync failed", e);
+    }
+  }
+
+  // Admin clicks to verify a student
+  async function verifyStudent(rowIndex, btnElement) {
+    btnElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    btnElement.disabled = true;
+    
+    try {
+      await fetch(APPS_SCRIPT_URL, { 
+        method: 'POST', 
+        body: JSON.stringify({ action: 'verify_attendance', row_index: rowIndex }) 
+      });
+      
+      btnElement.innerHTML = '<i class="fas fa-check-double"></i> Verified';
+      btnElement.style.background = '#e2e8f0'; 
+      btnElement.style.color = '#475569';
+      
+      // Refresh the queue after a brief delay so the admin sees it succeeded
+      setTimeout(syncLiveQueue, 1500); 
+    } catch(e) { 
+      alert("Failed to verify student."); 
+      btnElement.innerHTML = '<i class="fas fa-check"></i> Verify'; 
+      btnElement.disabled = false; 
     }
   }
 
   // Load candidate list and their stored overall progress
   async function loadAttendanceData() {
     try {
-      // 1. Fetch the main candidate list (Names, Reg Nos, Batches)
       const mainResponse = await fetch(APPS_SCRIPT_URL + '?nocache=' + Date.now());
       const mainData = await mainResponse.json();
 
-      // 2. Fetch the saved scores from the new "Attendance_Summary" sheet
       const summaryResponse = await fetch(APPS_SCRIPT_URL, {
         method: 'POST',
         body: JSON.stringify({ action: 'fetch_attendance_summary' })
       });
       const summaryData = await summaryResponse.json();
 
-      // 3. Merge them together for the dashboard
       attendanceRows = mainData.map(candidate => {
         const regNo = getRegNo(candidate);
         const savedRecord = summaryData.find(row => String(row['Candidate_registration_no']).trim() === regNo);
@@ -269,22 +345,14 @@
       refreshAttendanceSummary();
     } catch (err) {
       console.error('Failed to load DB data', err);
-      document.getElementById('summary-total').innerHTML = `<span style="color:red; font-size:1rem;">Error Loading Data</span>`;
+      document.getElementById('summary-total').innerHTML = `<span style="color:red; font-size:1rem;">Error</span>`;
     }
   }
 
   function refreshAttendanceSummary() {
-    const total = attendanceRows.length;
-    
-    // Auto-detect columns that hold progress/attendance
-    const attendanceValues = attendanceRows.map(r => Number(r['Attendance'] || r['Attendance %'] || r['Attendance_Percentage'] || 0)).filter(v => !isNaN(v) && v > 0);
+    document.getElementById('summary-total').innerText = attendanceRows.length;
     const progressValues = attendanceRows.map(r => Number(r['Progress'] || r['Course_Progress'] || r['Progress %'] || 0)).filter(v => !isNaN(v) && v > 0);
-    
-    const avgAttendance = attendanceValues.length ? Math.round(attendanceValues.reduce((a,b) => a+b,0) / attendanceValues.length) : 0;
     const avgProgress = progressValues.length ? Math.round(progressValues.reduce((a,b) => a+b,0) / progressValues.length) : 0;
-    
-    document.getElementById('summary-total').innerText = total;
-    document.getElementById('summary-attendance').innerText = avgAttendance + '%';
     document.getElementById('summary-progress').innerText = avgProgress + '%';
   }
 
@@ -400,7 +468,6 @@
     const scoreValue = document.getElementById('att-score').value.trim();
     const remarksValue = document.getElementById('att-remarks').value.trim();
 
-    // Use the NEW action to target the isolated sheet
     const payload = {
       action: 'update_attendance_summary',
       Candidate_registration_no: getRegNo(selectedAttendanceCandidate),
