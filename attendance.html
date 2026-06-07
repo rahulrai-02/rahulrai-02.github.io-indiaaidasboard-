@@ -100,8 +100,7 @@
   <div class="sidebar">
     <div class="brand"><i class="fas fa-shield-alt"></i> Admin Portal</div>
     <a class="nav-item" href="admin-dashboard.html"><i class="fas fa-house"></i> Main Dashboard</a>
-    <a class="nav-item" href="admin-assignment-hub.html"><i class="fas fa-laptop-code"></i> Assignment Hub</a>
-    <a class="nav-item active" href="attendance.html"><i class="fas fa-calendar-check"></i> Attendance</a>
+    <a class="nav-item active" href="attendance.html"><i class="fas fa-calendar-check"></i> Attendance Queue</a>
     <div class="nav-item logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</div>
   </div>
 
@@ -257,15 +256,14 @@
     try {
       const response = await fetch(APPS_SCRIPT_URL, {
         method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({ action: 'fetch_live_attendance' })
       });
       const result = await response.json();
       
-      // Update Top Stats
       document.getElementById('summary-active-today').innerText = result.active !== undefined ? result.active : '--';
       document.getElementById('summary-verified-today').innerText = result.verified !== undefined ? result.verified : '--';
       
-      // Update Table Queue
       const tbody = document.getElementById('queue-body');
       if (!result.pending || result.pending.length === 0) {
         tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding: 30px; color: var(--text-muted);">
@@ -301,6 +299,7 @@
     try {
       await fetch(APPS_SCRIPT_URL, { 
         method: 'POST', 
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({ action: 'verify_attendance', row_index: rowIndex }) 
       });
       
@@ -325,6 +324,7 @@
 
       const summaryResponse = await fetch(APPS_SCRIPT_URL, {
         method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({ action: 'fetch_attendance_summary' })
       });
       const summaryData = await summaryResponse.json();
@@ -345,7 +345,7 @@
       refreshAttendanceSummary();
     } catch (err) {
       console.error('Failed to load DB data', err);
-      document.getElementById('summary-total').innerHTML = `<span style="color:red; font-size:1rem;">Error</span>`;
+      document.getElementById('summary-total').innerHTML = `<span style="color:red; font-size:1rem;">Error Loading Data</span>`;
     }
   }
 
@@ -481,6 +481,7 @@
     try {
       const response = await fetch(APPS_SCRIPT_URL, { 
         method: 'POST', 
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(payload) 
       });
       const result = await response.json();

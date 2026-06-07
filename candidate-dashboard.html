@@ -73,28 +73,6 @@
   .assignment-info h3 { color: var(--navy); margin-bottom: 4px; }
   .assignment-info span { font-size: 0.8rem; color: var(--text-muted); background: #f1f5f9; padding: 2px 8px; border-radius: 4px; }
 
-  .assignment-hub { background: #f8fafc; border-radius: 20px; padding: 24px; box-shadow: 0 18px 40px rgba(15,23,42,0.05); }
-  .hub-header { display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 24px; }
-  .hub-header .hub-title { font-size: 1.4rem; font-weight: 800; color: var(--navy); }
-  .hub-header .hub-subtitle { margin-top: 6px; color: var(--text-muted); line-height: 1.5; }
-  .timer-pill { background: white; border: 1px solid var(--border); padding: 12px 18px; border-radius: 999px; font-weight: 700; letter-spacing: 0.03em; color: var(--navy); min-width: 140px; text-align: center; }
-  .timer-pill.warning { border-color: #f97316; color: #c2410c; }
-  .hub-body { display: grid; gap: 24px; grid-template-columns: 1.65fr 0.95fr; }
-  .hub-main { display: flex; flex-direction: column; gap: 18px; }
-  .hub-tabs { display: flex; gap: 10px; background: #eef2ff; border-radius: 12px; padding: 8px; }
-  .hub-tab { flex: 1; padding: 12px 18px; border: none; border-radius: 10px; background: transparent; cursor: pointer; font-weight: 700; color: var(--text-muted); transition: all 0.2s ease; }
-  .hub-tab.active { background: white; color: var(--navy); box-shadow: 0 10px 24px rgba(15,23,42,0.08); }
-  .hub-tab-panel { display: none; background: white; border-radius: 20px; padding: 20px; border: 1px solid var(--border); }
-  .hub-tab-panel.active { display: block; }
-  .hub-sidebar { display: flex; flex-direction: column; gap: 18px; }
-  .hub-card { background: white; border: 1px solid var(--border); border-radius: 18px; padding: 20px; box-shadow: 0 12px 24px rgba(15,23,42,0.04); }
-  .hub-card h4 { margin-bottom: 12px; color: var(--navy); }
-  .hub-card p { color: var(--text-muted); line-height: 1.6; }
-  .hub-footer { margin-top: 18px; display: flex; justify-content: flex-end; }
-  .submit-modal { position: fixed; inset: 0; background: rgba(15,23,42,0.65); display: none; align-items: center; justify-content: center; z-index: 10000; padding: 20px; }
-  .submit-modal .modal-card { width: 100%; max-width: 560px; background: white; border-radius: 20px; padding: 28px; }
-  .submit-modal .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; }
-
   /* SPLIT SCREEN SANDBOX */
   .sandbox-split { display: flex; gap: 30px; align-items: stretch; }
   .sandbox-pane { flex: 1; display: flex; flex-direction: column; }
@@ -157,58 +135,88 @@
         <h2 style="color:var(--navy);">Welcome, <span id="display_name">Student</span></h2>
         <p style="color:var(--text-muted); font-size:0.9rem;">Batch: <strong id="display_batch">---</strong> | Result: <strong id="display_status">---</strong></p>
       </div>
-      <div id="certificate-container" style="display:none; align-self:center;">
+      <div id="certificate-container" style="display: none;">
+        <!-- Button triggers the New Tab function -->
         <button onclick="openCertificate()" class="btn" style="background:#16a34a; color:white;">
           <i class="fas fa-award"></i> View Certificate
         </button>
       </div>
-
-      <div id="certificate-modal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.65); z-index:9999; align-items:center; justify-content:center; padding:20px;">
-        <div style="width:100%; max-width:1000px; height:90%; background:white; border-radius:16px; overflow:hidden; display:flex; flex-direction:column;">
-          <div style="display:flex; justify-content:space-between; align-items:center; padding:16px; border-bottom:1px solid #e2e8f0; background:#f8fafc;">
-            <div style="font-size:1rem; font-weight:700; color:#0f172a;">Certificate Preview</div>
-            <button onclick="closeCertificateModal()" class="btn" style="background:#ef4444; color:white; padding:8px 14px; border-radius:10px;">Close</button>
-          </div>
-          <iframe id="certificate-frame" src="" style="border:none; flex:1; width:100%; background:#f3f4f6;"></iframe>
-        </div>
-      </div>
     </div>
 
+    <!-- VIEW 1: PROFILE -->
     <div class="view-section active" id="view-profile">
-      <div class="card" style="margin-top: 20px;">
-      <h3 style="margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px;">Account Details</h3>
-      <form id="profile-edit-form">
-        <div class="form-grid">
-          <div class="form-group"><label>Full Name</label><input type="text" id="Candidate_Name" readonly></div>
-          <div class="form-group"><label>Enrolled Course</label><input type="text" id="Courses" readonly></div>
-          <div class="form-group full"><label>Apaar / ABC ID</label><input type="text" id="Apaar" readonly></div>
-          <div class="form-group"><label>Mobile Number</label><input type="text" id="Candidate_Mobile"></div>
-          <div class="form-group"><label>Email Address</label><input type="email" id="Candidate_Email"></div>
-          <div class="form-group full"><label>Permanent Address</label><input type="text" id="Candidate_Perm_Address_City_State"></div>
-          <input type="hidden" id="Candidate_registration_no">
-        </div>
-        <div style="margin-top: 20px; text-align: right;">
-          <button type="submit" class="btn btn-primary" id="save-profile-btn"><i class="fas fa-paper-plane"></i> Request Update</button>
-        </div>
-        <div id="profile-alert" class="alert-box alert-success"></div>
-      </form>
-    </div>
+      <div class="card">
+        <h3 style="margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px;">Account Details</h3>
+        <form id="profile-edit-form">
+          <div class="form-grid">
+            <div class="form-group"><label>Full Name</label><input type="text" id="Candidate_Name" readonly></div>
+            <div class="form-group"><label>Enrolled Course</label><input type="text" id="Courses" readonly></div>
+            <div class="form-group full"><label>Apaar / ABC ID</label><input type="text" id="Apaar" readonly></div>
+            <div class="form-group"><label>Mobile Number</label><input type="text" id="Candidate_Mobile"></div>
+            <div class="form-group"><label>Email Address</label><input type="email" id="Candidate_Email"></div>
+            <div class="form-group full"><label>Permanent Address</label><input type="text" id="Candidate_Perm_Address_City_State"></div>
+            <input type="hidden" id="Candidate_registration_no">
+          </div>
+          <div style="margin-top: 20px; text-align: right;">
+            <button type="submit" class="btn btn-primary" id="save-profile-btn"><i class="fas fa-paper-plane"></i> Request Update</button>
+          </div>
+          <div id="profile-alert" class="alert-box alert-success"></div>
+        </form>
+      </div>
     </div>
 
     <!-- VIEW 2: ASSIGNMENTS -->
     <div class="view-section" id="view-assignments">
-      <div id="assignment-hub-container">Loading assignment hub...</div>
-    </div>
-  </div>
-
-  <div id="submit-confirm-modal" class="submit-modal">
-    <div class="modal-card">
-      <h3 style="margin-bottom: 14px; color: var(--navy);">Ready to submit?</h3>
-      <p style="color: var(--text-muted);">Confirm that you have reviewed your answer. Once submitted, the assignment will be sent to your instructor for evaluation.</p>
-      <div class="modal-actions">
-        <button class="btn" style="background:#f3f4f6; color:var(--navy);" onclick="closeSubmitModal()">Cancel</button>
-        <button id="confirm-submit-btn" class="btn btn-primary">Submit Now</button>
+      
+      <!-- List View -->
+      <div id="assignments-list-container">
+        <h3 style="margin-bottom: 20px; color:var(--navy);">Pending Assignments</h3>
+        <div id="loader-assignments" style="color:var(--primary);"><i class="fas fa-spinner fa-spin"></i> Fetching your tasks...</div>
+        <div class="assignment-list" id="assignment-grid"></div>
       </div>
+
+      <!-- SPLIT SCREEN SANDBOX (Hidden by default) -->
+      <div id="sandbox-container" style="display: none;">
+        <button class="btn" style="background:var(--bg-surface); border:1px solid var(--border); color:var(--text-main); margin-bottom:20px;" onclick="closeSandbox()">
+          <i class="fas fa-arrow-left"></i> Back to List
+        </button>
+        
+        <div class="sandbox-split">
+          
+          <!-- LEFT PANE: Smart Question/PDF Viewer -->
+          <div class="sandbox-pane card" style="margin-bottom: 0;">
+            <div class="pane-header" id="sandbox-title">Assignment Title</div>
+            <div class="question-viewer" id="sandbox-question-container">
+              <!-- Content injected via JS based on Text or URL -->
+            </div>
+          </div>
+
+          <!-- RIGHT PANE: Anti-Cheat Workspace -->
+          <div class="sandbox-pane card" style="margin-bottom: 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div class="pane-header">Your Solution</div>
+              <div class="editor-toggle">
+                <button type="button" id="btn-mode-text" class="active" onclick="setSandboxMode('text')"><i class="fas fa-align-left"></i> Text/Algo</button>
+                <button type="button" id="btn-mode-code" onclick="setSandboxMode('code')"><i class="fas fa-code"></i> Write Code</button>
+              </div>
+            </div>
+            
+            <form id="submission-form" style="display: flex; flex-direction: column; flex: 1;">
+              <!-- The Anti-Cheat Textarea -->
+              <textarea id="sandbox-editor" class="sandbox-area mode-text" placeholder="Type your answer here. Paste is disabled." required></textarea>
+              <input type="hidden" id="current_assignment_id">
+              
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="anti-cheat-warning"><i class="fas fa-shield-alt"></i> Strict Mode: Copy & Paste Disabled</span>
+                <button type="submit" class="btn btn-primary" id="submit-answer-btn"><i class="fas fa-cloud-upload-alt"></i> Submit Answer</button>
+              </div>
+              <div id="submission-alert" class="alert-box alert-success"></div>
+            </form>
+          </div>
+
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -217,442 +225,84 @@
   const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyAfhakyTh0j_StQ3a2MpnZlqQq-46kuW45Vw8V2V8gIUa9Prr-c21K-d5ZoTYAEnU2VQ/exec';
   let candidateData = {};
   let currentEditorMode = 'text';
-  let assignmentHubInitialized = false;
 
-  async function refreshCandidateData(regNo) {
-    try {
-      const response = await fetch(`${APPS_SCRIPT_URL}?nocache=${Date.now()}`);
-      const data = await response.json();
-      if (!Array.isArray(data)) return null;
-      return data.find(c => {
-        const cReg = String(c['Candidate_registration_no'] || c['Registration No'] || c['Registration No.'] || c['Candidate Registration No'] || c['Candidate Reg No'] || c['Reg_No'] || c['Reg No'] || c['Registration Number'] || c['regno'] || '').trim();
-        return cReg.toLowerCase() === String(regNo).trim().toLowerCase();
-      }) || null;
-    } catch (err) {
-      console.warn('Failed to refresh candidate data:', err);
-      return null;
-    }
-  }
-
-  async function markAttendance() {
-    const btn = document.getElementById('btn-mark-attendance');
-    const msgDiv = document.getElementById('attendance-msg');
-    
-    // Put button in loading state
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Marking...';
-    btn.disabled = true;
-    msgDiv.style.display = 'none';
-
-    // Retrieve data
-    const regNo = String(candidateData['Candidate_registration_no'] || candidateData['Candidate Registration No'] || candidateData['Registration No'] || candidateData['RegistrationNo'] || candidateData['regno'] || '').trim();
-    const name = String(candidateData['Candidate_Name'] || candidateData['Candidate Name'] || 'Candidate').trim() || 'Candidate';
-
-    try {
-      const payload = {
-        action: 'mark_attendance',
-        Candidate_registration_no: regNo,
-        Candidate_Name: name
-      };
-
-      const response = await fetch(APPS_SCRIPT_URL, {
-        method: 'POST',
-        body: JSON.stringify(payload)
-      });
-      const result = await response.json();
-
-      if (result.status === 'success' || result.status === 'info') {
-        btn.innerHTML = '<i class="fas fa-check"></i> Present Today';
-        btn.style.background = '#94a3b8'; // gray
-        btn.style.borderColor = '#94a3b8';
-        btn.disabled = true;
-        
-        msgDiv.style.display = 'block';
-        msgDiv.style.color = '#16a34a';
-        msgDiv.innerText = result.message || 'Attendance marked successfully!';
-      } else {
-        throw new Error(result.message || 'Failed to mark attendance.');
-      }
-    } catch (e) {
-      console.error(e);
-      btn.innerHTML = '<i class="fas fa-check-circle"></i> Mark Present';
-      btn.disabled = false;
-      
-      msgDiv.style.display = 'block';
-      msgDiv.style.color = '#dc2626';
-      msgDiv.innerText = e.message || 'Error occurred. Try again.';
-    }
-  }
-
-  function getCertificateLink() {
-    const keys = ['Certificate Link', 'Certificate_Link', 'certificate_link', 'certificate link', 'CertificateLink', 'CertificateURL', 'Certificate_URL'];
-    for (const key of keys) {
-      if (candidateData[key] && String(candidateData[key]).trim()) {
-        return String(candidateData[key]).trim();
-      }
-    }
-    return '';
-  }
-
-  function populateCandidateProfile() {
-    document.getElementById('display_name').innerText = candidateData['Candidate_Name'] || candidateData['Candidate Name'] || 'Student';
-    document.getElementById('display_batch').innerText = candidateData['Batch Wise'] || candidateData['Batch'] || 'Unassigned';
-    document.getElementById('display_status').innerText = candidateData['Result'] || 'Pending';
-
-    const fields = ['Candidate_Name', 'Candidate Name', 'Courses', 'Apaar', 'Candidate_Mobile', 'Candidate Mobile', 'Candidate_Email', 'Candidate Email', 'Candidate_Perm_Address_City_State', 'Candidate_registration_no'];
-    fields.forEach(f => {
-      const field = document.getElementById(f);
-      if (field) field.value = candidateData[f] || '';
-    });
-
-    const certUrl = getCertificateLink();
-    const certButton = document.getElementById('certificate-container');
-    if (certButton) certButton.style.display = certUrl ? 'flex' : 'none';
-  }
-
-  async function initializeCandidateDashboard() {
+  document.addEventListener('DOMContentLoaded', () => {
     const rawData = sessionStorage.getItem('currentCandidateData');
-    if (!rawData) return window.location.replace('login.html');
-
-    let savedData;
-    try {
-      savedData = JSON.parse(rawData);
-    } catch (err) {
-      console.error('Invalid candidate session data:', err);
-      return window.location.replace('login.html');
-    }
-
-    const getReg = (d) => String(d['Candidate_registration_no'] || d['Registration No'] || d['Registration No.'] || d['Candidate Registration No'] || d['Candidate Reg No'] || d['Reg_No'] || d['Reg No'] || d['Registration Number'] || d['regno'] || '').trim();
+    if (!rawData) return;
+    candidateData = JSON.parse(rawData);
     
-    const regNo = getReg(savedData);
-    if (!regNo) return window.location.replace('login.html');
-
-    const freshData = await refreshCandidateData(regNo);
-    candidateData = freshData || savedData;
+    document.getElementById('display_name').innerText = candidateData['Candidate_Name'] || 'Student';
+    document.getElementById('display_batch').innerText = candidateData['Batch Wise'] || 'Unassigned';
+    document.getElementById('display_status').innerText = candidateData['Result'] || 'Pending';
     
-    if (!candidateData || !getReg(candidateData)) {
-      return window.location.replace('login.html');
+    if (candidateData['Certificate Link']) {
+      document.getElementById('certificate-container').style.display = 'block';
     }
+    
+    const fields = ['Candidate_Name', 'Courses', 'Apaar', 'Candidate_Mobile', 'Candidate_Email', 'Candidate_Perm_Address_City_State', 'Candidate_registration_no'];
+    fields.forEach(f => { if(document.getElementById(f) && candidateData[f]) document.getElementById(f).value = candidateData[f]; });
 
-    sessionStorage.setItem('currentCandidateData', JSON.stringify(candidateData));
-    populateCandidateProfile();
     setupAntiCheat();
-  }
 
-  document.addEventListener('DOMContentLoaded', initializeCandidateDashboard);
+    /* ==========================================
+       SILENT PING: Auto-Check in for Attendance
+       ========================================== */
+    silentPing();
+  });
 
-  async function loadAssignmentHub() {
-    const container = document.getElementById('assignment-hub-container');
-    if (!container || container.dataset.loaded === 'true') return;
+  // ==========================================
+  // SILENT ATTENDANCE PING LOGIC
+  // ==========================================
+  async function silentPing() {
+    const regNo = candidateData['Candidate_registration_no'];
+    const name = candidateData['Candidate_Name'];
 
-    try {
-      const response = await fetch('assignment-hub.html?nocache=' + Date.now());
-      if (!response.ok) throw new Error('Failed to load assignment hub.');
-      container.innerHTML = await response.text();
-      container.dataset.loaded = 'true';
-      initializeAssignmentHub();
-    } catch (error) {
-      console.error(error);
-      if (container) {
-        container.innerHTML = '<div style="padding:20px; color:red;">Unable to load assignment hub. Please refresh.</div>';
-      }
-    }
-  }
-
-  function initializeAssignmentHub() {
-    if (assignmentHubInitialized) return;
-    assignmentHubInitialized = true;
-
-    const submitForm = document.getElementById('submission-form');
-    if (submitForm) {
-      submitForm.addEventListener('submit', async function (e) {
-        e.preventDefault();
-        const btn = document.getElementById('submit-answer-btn');
-        const alertBox = document.getElementById('submission-alert');
-        if (!btn || !alertBox) return;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...'; btn.disabled = true;
-
-        const payload = {
-          action: 'submit_assignment',
-          Candidate_registration_no: candidateData['Candidate_registration_no'],
-          Candidate_Name: candidateData['Candidate_Name'],
-          'Batch Wise': candidateData['Batch Wise'],
-          Assignment_ID: document.getElementById('current_assignment_id').value,
-          Format: currentEditorMode === 'code' ? 'Code Logic' : 'Text Answer',
-          Answer: document.getElementById('sandbox-editor').value
-        };
-
-        try {
-          await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
-          alertBox.innerHTML = '<i class="fas fa-check-circle"></i> Submitted successfully!';
-          alertBox.style.display = 'block';
-          setTimeout(closeSandbox, 2000);
-          await fetchAssignments();
-        } catch (err) {
-          alert('Failed to submit assignment. Check connection.');
-        } finally {
-          btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Submit Answer'; btn.disabled = false;
-        }
-      });
-    }
-
-    const btnText = document.getElementById('btn-mode-text');
-    const btnCode = document.getElementById('btn-mode-code');
-    if (btnText) btnText.addEventListener('click', () => setSandboxMode('text'));
-    if (btnCode) btnCode.addEventListener('click', () => setSandboxMode('code'));
-  }
-
-  function getCandidateSubmissionId(sub) {
-    return String(sub.Candidate_registration_no || sub.Candidate_Reg_No || sub['Candidate Registration No'] || sub['Candidate Reg No'] || sub['Candidate_Reg_No'] || '').trim();
-  }
-
-  function getSubmissionStatus(sub) {
-    return String(sub.Status || sub.status || 'Pending').trim();
-  }
-
-  function getSubmissionScore(sub) {
-    const raw = sub.Score || sub.Marks || sub.ScoreValue || sub.Grade || sub.grade || sub.mark;
-    const num = Number(raw);
-    if (!Number.isFinite(num) || num < 0) return null;
-    return num;
-  }
-
-  function isSubmissionGraded(sub) {
-    const status = getSubmissionStatus(sub).toLowerCase();
-    return status.includes('reviewed') || status.includes('pass') || status.includes('fail') || status.includes('graded');
-  }
-
-  async function fetchCandidateSubmissions() {
-    try {
-      const response = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'fetch_submissions' }) });
-      const data = await response.json();
-      if (!Array.isArray(data)) return [];
-      const regNo = String(candidateData['Candidate_registration_no'] || candidateData['Candidate Registration No'] || candidateData['Registration No'] || candidateData['RegistrationNo'] || candidateData['regno'] || '').trim();
-      return data.filter(sub => getCandidateSubmissionId(sub) === regNo);
-    } catch (err) {
-      console.warn('Failed to refresh candidate submissions:', err);
-      return [];
-    }
-  }
-
-  function updateAssignmentHubStats(total, pendingCount, completedCount, averageScore, attendanceValue) {
-    const progress = total > 0 ? Math.round((completedCount / total) * 100) : 0;
-    const progressText = `${progress}%`;
-    const scoreText = averageScore !== null ? `${averageScore}/100` : 'N/A';
-    const attendanceText = attendanceValue || 'Pending';
-
-    const progressBar = document.querySelector('#stat-progress-text');
-    const scoreBar = document.querySelector('#stat-marks-text');
-    const attendanceBar = document.querySelector('#stat-attendance-text');
-    const progressFill = document.querySelector('.mini-progress-fill');
-
-    if (progressBar) progressBar.innerText = progressText;
-    if (scoreBar) scoreBar.innerText = scoreText;
-    if (attendanceBar) attendanceBar.innerText = attendanceText;
-    if (progressFill) progressFill.style.width = `${progress}%`;
-
-    const totalTaskEl = document.getElementById('sidebar-total-tasks');
-    const pendingTaskEl = document.getElementById('sidebar-pending-tasks');
-    const nameEl = document.getElementById('sidebar-candidate-name');
-    const batchEl = document.getElementById('sidebar-batch');
-
-    if (totalTaskEl) totalTaskEl.innerText = total;
-    if (pendingTaskEl) pendingTaskEl.innerText = pendingCount;
-    if (nameEl) nameEl.innerText = candidateData['Candidate_Name'] || candidateData['Candidate Name'] || 'Student';
-    if (batchEl) batchEl.innerText = candidateData['Batch Wise'] || candidateData['Batch'] || 'Unassigned';
-  }
-
-  async function fetchAssignments() {
-    const grid = document.getElementById('assignment-grid');
-    const gradedGrid = document.getElementById('graded-assignment-grid');
-    const loader = document.getElementById('loader-assignments');
-    
-    const skeletonHTML = `
-      <div class="skeleton-card">
-        <div class="skeleton-info">
-          <div class="skeleton-line short"></div>
-          <div class="skeleton-line"></div>
-        </div>
-        <div class="skeleton-action"></div>
-      </div>
-      <div class="skeleton-card">
-        <div class="skeleton-info">
-          <div class="skeleton-line short"></div>
-          <div class="skeleton-line"></div>
-        </div>
-        <div class="skeleton-action"></div>
-      </div>
-    `;
-
-    if (grid) grid.innerHTML = skeletonHTML;
-    if (gradedGrid) gradedGrid.innerHTML = skeletonHTML;
-    if (loader) loader.style.display = 'none';
-
-    const batchValue = candidateData['Batch Wise'] || candidateData['Batch'] || candidateData['Batch_Name'] || 'Unassigned';
-    const courseValue = candidateData['Courses'] || candidateData['Course'] || candidateData['Enrolled Course'] || 'None';
+    if (!regNo) return; // Failsafe
 
     const payload = {
-      action: 'fetch_assignments',
-      Batch: batchValue,
-      'Batch Wise': batchValue,
-      Courses: courseValue,
-      Course: courseValue
+      action: 'candidate_ping',
+      Candidate_registration_no: regNo,
+      Candidate_Name: name
     };
 
     try {
-      const [assignmentsResponse, submissions] = await Promise.all([
-        fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) }),
-        fetchCandidateSubmissions()
-      ]);
-      const assignments = await assignmentsResponse.json();
-      if (!Array.isArray(assignments)) throw new Error('Unexpected assignments data');
-
-      const pendingAssignments = [];
-      const gradedAssignments = [];
-      const submissionMap = new Map();
-      submissions.forEach(sub => {
-        const assignmentId = String(sub.Assignment_ID || sub.AssignmentId || sub.assignment_id || '').trim();
-        if (!assignmentId) return;
-        const existing = submissionMap.get(assignmentId) || [];
-        existing.push(sub);
-        submissionMap.set(assignmentId, existing);
+      // Send silent POST to register login time and mark them 'Pending Verification'
+      await fetch(APPS_SCRIPT_URL, { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload) 
       });
-
-      const attendanceValue = candidateData['Attendance'] || candidateData['Attendance %'] || candidateData['Attendance_Percentage'] || candidateData['Attendance Percentage'] || '';
-      let scoredValues = [];
-
-      assignments.forEach(task => {
-        const assignmentId = String(task.Assignment_ID || task.Id || task.assignment_id || '').trim();
-        const related = submissionMap.get(assignmentId) || [];
-        const graded = related.find(isSubmissionGraded);
-        if (graded) {
-          gradedAssignments.push({ assignment: task, submission: graded });
-          const score = getSubmissionScore(graded);
-          if (score !== null) scoredValues.push(score);
-        } else {
-          pendingAssignments.push({ assignment: task, submissions: related });
-        }
-      });
-
-      if (matrixAssignmentsEmpty(assignments)) {
-        if (grid) grid.innerHTML = '<div style="padding:20px; background:white; border-radius:12px; border:1px solid var(--border);">No active assignments at the moment.</div>';
-      } else {
-        renderPendingAssignments(pendingAssignments);
-      }
-
-      renderGradedAssignments(gradedAssignments);
-      const averageScore = scoredValues.length ? Math.round(scoredValues.reduce((a,b)=>a+b,0)/scoredValues.length) : null;
-      updateAssignmentHubStats(assignments.length, pendingAssignments.length, gradedAssignments.length, averageScore, attendanceValue);
+      console.log("Attendance Ping sent successfully.");
     } catch (e) {
-      console.error(e);
-      if (loader) { 
-        loader.style.display = 'block'; 
-        loader.innerHTML = '<span style="color:red;">Error loading assignments.</span>'; 
-      }
-      if (grid) grid.innerHTML = '';
+      console.error("Attendance Ping failed:", e);
     }
   }
 
-  function matrixAssignmentsEmpty(assignments) {
-    return !Array.isArray(assignments) || assignments.length === 0;
-  }
-
-  function renderPendingAssignments(pendingAssignments) {
-    const grid = document.getElementById('assignment-grid');
-    if (!grid) return;
-    if (pendingAssignments.length === 0) {
-      grid.innerHTML = '<div style="padding:20px; background:white; border-radius:12px; border:1px solid var(--border);">You have no pending assignments right now.</div>';
-      return;
-    }
-
-    grid.innerHTML = pendingAssignments.map(item => {
-      const task = item.assignment;
-      const statusBadge = item.submissions.length > 0 ? '<span class="assignment-tags"><span>Submitted</span></span>' : '<span class="assignment-tags"><span>Pending</span></span>';
-      const safeTitle = encodeURIComponent(task.Title);
-      const safeQuestion = encodeURIComponent(task.Question);
-      return `
-        <div class="assignment-card" onclick="openSandbox('${task.Assignment_ID}', '${safeTitle}', '${safeQuestion}')">
-          <div class="assignment-info">
-            <h3>${task.Title || 'Untitled Assignment'}</h3>
-            <div class="assignment-tags"><span>${task.Due_Date || 'No Due Date'}</span></div>
-          </div>
-          <div class="assignment-action">${item.submissions.length > 0 ? 'Resume' : 'Start'}</div>
-        </div>
-      `;
-    }).join('');
-  }
-
-  function renderGradedAssignments(gradedAssignments) {
-    const gradedGrid = document.getElementById('graded-assignment-grid');
-    if (!gradedGrid) return;
-    if (gradedAssignments.length === 0) {
-      gradedGrid.innerHTML = '<div style="padding:20px; background:#f8fafc; border-radius:12px; border:1px dashed var(--border); color:#64748b;">No graded assignments available yet.</div>';
-      return;
-    }
-
-    gradedGrid.innerHTML = gradedAssignments.map(item => {
-      const task = item.assignment;
-      const sub = item.submission;
-      const status = getSubmissionStatus(sub);
-      const score = getSubmissionScore(sub);
-      const scoreLabel = score !== null ? `<strong>${score}/100</strong>` : `<strong>${status}</strong>`;
-      return `
-        <div class="assignment-card graded">
-          <div class="assignment-info">
-            <h3>${task.Title || 'Untitled Assignment'}</h3>
-            <div class="assignment-tags"><span>${task.Due_Date || 'No Due Date'}</span><span>${status}</span></div>
-          </div>
-          <div class="assignment-action" style="background:#16a34a; color:white;">${scoreLabel}</div>
-        </div>
-      `;
-    }).join('');
-  }
-
-  async function switchView(viewId) {
+  function switchView(viewId) {
     document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-    const navItem = document.getElementById(`nav-${viewId}`);
-    if (navItem) navItem.classList.add('active');
+    document.getElementById(`nav-${viewId}`).classList.add('active');
     document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-    const viewSection = document.getElementById(`view-${viewId}`);
-    if (viewSection) viewSection.classList.add('active');
-    if (viewId === 'assignments') {
-      await loadAssignmentHub();
-      await fetchAssignments();
-      startAssignmentTimer(2700);
-      switchAssignmentTab('hub-list-panel');
-    }
+    document.getElementById(`view-${viewId}`).classList.add('active');
+    if(viewId === 'assignments') fetchAssignments();
   }
 
-  function getCertificatePreviewUrl(url) {
-    if (!url) return '';
-    if (url.includes('drive.google.com/file/d/')) {
-      const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-      if (match && match[1]) {
-        return `https://drive.google.com/file/d/${match[1]}/preview`;
-      }
-    }
-    if (url.includes('/view')) return url.replace('/view', '/preview');
-    if (url.includes('/preview')) return url;
-    return url;
-  }
-
+  // ==========================================
+  // CERTIFICATE VIEW LOGIC (NEW TAB)
+  // ==========================================
   function openCertificate() {
-    const certUrl = getCertificateLink();
-    if (!certUrl) {
-      alert('Certificate not available. Please contact administration.');
-      return;
+    let certUrl = candidateData['Certificate Link'];
+    
+    if (certUrl) {
+      // Clean up the URL: if it has /preview, change it back to /view so it opens beautifully in a new tab
+      if (certUrl.includes('/preview')) {
+        certUrl = certUrl.replace('/preview', '/view');
+      }
+      
+      // Open the official Google Drive viewer securely in a new browser tab
+      window.open(certUrl, '_blank');
+    } else {
+      alert("Certificate not found in the database. Please contact administration.");
     }
-    const previewUrl = getCertificatePreviewUrl(certUrl);
-    const iframe = document.getElementById('certificate-frame');
-    const modal = document.getElementById('certificate-modal');
-    if (iframe) iframe.src = previewUrl;
-    if (modal) modal.style.display = 'flex';
-  }
-
-  function closeCertificateModal() {
-    const iframe = document.getElementById('certificate-frame');
-    const modal = document.getElementById('certificate-modal');
-    if (iframe) iframe.src = '';
-    if (modal) modal.style.display = 'none';
   }
 
   // ==========================================
@@ -660,15 +310,14 @@
   // ==========================================
   function setupAntiCheat() {
     const editor = document.getElementById('sandbox-editor');
-    if (!editor) return;
-
+    
     // Block Paste via Mouse
     editor.addEventListener('paste', e => { e.preventDefault(); alert("Security Alert: Copy/Pasting is disabled for assessments."); });
     // Block Drag & Drop
     editor.addEventListener('drop', e => { e.preventDefault(); alert("Security Alert: Drag & Drop is disabled."); });
     // Block Right Click Menu
     editor.addEventListener('contextmenu', e => e.preventDefault());
-
+    
     // Block Keyboard Shortcuts (Ctrl+V, Cmd+V, Ctrl+C)
     editor.addEventListener('keydown', function(e) {
       if ((e.ctrlKey || e.metaKey) && (e.key === 'v' || e.key === 'V' || e.key === 'c' || e.key === 'C')) {
@@ -678,62 +327,54 @@
     });
   }
 
-  function switchAssignmentTab(tabId) {
-    document.querySelectorAll('.hub-tab').forEach(tab => tab.classList.toggle('active', tab.dataset.tab === tabId));
-    document.querySelectorAll('.hub-tab-panel').forEach(panel => panel.classList.toggle('active', panel.id === tabId));
-    const emptyMessage = document.getElementById('workspace-empty-message');
-    const sandboxPanel = document.getElementById('sandbox-container');
+  // ==========================================
+  // FETCH ASSIGNMENTS
+  // ==========================================
+  async function fetchAssignments() {
+    const grid = document.getElementById('assignment-grid');
+    const loader = document.getElementById('loader-assignments');
+    grid.innerHTML = ''; loader.style.display = 'block';
+    
+    // Updated Payload: Sends both Batch and Course for accurate matching
+    const payload = { 
+      action: 'fetch_assignments', 
+      'Batch Wise': candidateData['Batch Wise'] || candidateData['Batch'] || 'Unassigned',
+      'Courses': candidateData['Courses'] || 'None'
+    };
+    
+    try {
+      const response = await fetch(APPS_SCRIPT_URL, { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload) 
+      });
+      const assignments = await response.json();
+      loader.style.display = 'none';
 
-    if (tabId === 'hub-workspace-panel') {
-      if (sandboxPanel) sandboxPanel.style.display = sandboxPanel.style.display === 'block' ? 'block' : 'none';
-      if (emptyMessage) emptyMessage.style.display = sandboxPanel && sandboxPanel.style.display === 'block' ? 'none' : 'block';
-    } else {
-      if (sandboxPanel) sandboxPanel.style.display = 'none';
-      if (emptyMessage) emptyMessage.style.display = 'none';
-    }
-  }
-
-  function formatTime(seconds) {
-    const mm = String(Math.floor(seconds / 60)).padStart(2, '0');
-    const ss = String(seconds % 60).padStart(2, '0');
-    return `${mm}:${ss}`;
-  }
-
-  let assignmentTimerInterval;
-  function startAssignmentTimer(durationSeconds = 2700) {
-    let remaining = durationSeconds;
-    const timer = document.getElementById('assignment-timer');
-    if (!timer) return;
-    clearInterval(assignmentTimerInterval);
-    timer.innerText = formatTime(remaining);
-    timer.classList.remove('warning');
-    assignmentTimerInterval = setInterval(() => {
-      remaining -= 1;
-      if (remaining <= 0) {
-        clearInterval(assignmentTimerInterval);
-        timer.innerText = 'Time is up';
-        timer.classList.add('warning');
+      if(assignments.length === 0) {
+        grid.innerHTML = '<div style="padding:20px; background:white; border-radius:8px; border:1px solid var(--border);">No active assignments right now.</div>';
         return;
       }
-      timer.innerText = formatTime(remaining);
-      timer.classList.toggle('warning', remaining <= 300);
-    }, 1000);
-  }
 
-  function openSubmitModal() {
-    document.getElementById('submit-confirm-modal').style.display = 'flex';
-  }
-
-  function closeSubmitModal() {
-    document.getElementById('submit-confirm-modal').style.display = 'none';
-  }
-
-  document.addEventListener('click', (event) => {
-    if (event.target.id === 'confirm-submit-btn') {
-      document.getElementById('submission-form').requestSubmit();
-      closeSubmitModal();
+      assignments.forEach(task => {
+        // Encode the question safely before passing to the function
+        const safeTitle = encodeURIComponent(task.Title);
+        const safeQuestion = encodeURIComponent(task.Question);
+        
+        grid.innerHTML += `
+          <div class="assignment-card" onclick="openSandbox('${task.Assignment_ID}', '${safeTitle}', '${safeQuestion}')">
+            <div class="assignment-info">
+              <h3>${task.Title}</h3>
+              <span>Due: ${task.Due_Date || 'No Date'}</span>
+            </div>
+            <button class="btn btn-primary" style="padding: 8px 16px;"><i class="fas fa-pen"></i> Solve</button>
+          </div>
+        `;
+      });
+    } catch (e) {
+      loader.innerHTML = '<span style="color:red;">Error loading assignments.</span>';
     }
-  });
+  }
 
   // ==========================================
   // SMART SPLIT-SCREEN RENDERER
@@ -742,39 +383,30 @@
     const title = decodeURIComponent(encTitle);
     const question = decodeURIComponent(encQuestion);
 
-    switchAssignmentTab('hub-workspace-panel');
-    const sandbox = document.getElementById('sandbox-container');
-    if (sandbox) sandbox.style.display = 'block';
-    const emptyMessage = document.getElementById('workspace-empty-message');
-    if (emptyMessage) emptyMessage.style.display = 'none';
-    const submissionAlert = document.getElementById('submission-alert');
-    if (submissionAlert) submissionAlert.style.display = 'none';
-    const editor = document.getElementById('sandbox-editor');
-    if (editor) editor.value = '';
-
-    const activeTitle = document.getElementById('hub-active-title');
-    if (activeTitle) activeTitle.innerText = title;
-
-    const assignmentIdField = document.getElementById('current_assignment_id');
-    if (assignmentIdField) assignmentIdField.value = id;
-    const sandboxTitle = document.getElementById('sandbox-title');
-    if (sandboxTitle) sandboxTitle.innerText = title;
-
+    document.getElementById('assignments-list-container').style.display = 'none';
+    document.getElementById('sandbox-container').style.display = 'block';
+    document.getElementById('submission-alert').style.display = 'none';
+    document.getElementById('sandbox-editor').value = ''; 
+    
+    document.getElementById('current_assignment_id').value = id;
+    document.getElementById('sandbox-title').innerText = title;
+    
     const qContainer = document.getElementById('sandbox-question-container');
-    if (qContainer) {
-      if (question.startsWith('http://') || question.startsWith('https://')) {
-        let embedUrl = question.replace('/view', '/preview');
-        qContainer.innerHTML = `<iframe src="${embedUrl}" width="100%" height="100%" style="border:none; flex:1;"></iframe>`;
-      } else {
-        qContainer.innerHTML = `<div class="question-text">${question}</div>`;
-      }
+    
+    // Check if the Admin pasted a URL (Like a Google Drive PDF link)
+    if (question.startsWith('http://') || question.startsWith('https://')) {
+      // If it's a Drive link, change /view to /preview for perfect embedding
+      let embedUrl = question.replace('/view', '/preview');
+      qContainer.innerHTML = `<iframe src="${embedUrl}" width="100%" height="100%" style="border:none; flex:1;"></iframe>`;
+    } else {
+      // Otherwise, render it as standard text
+      qContainer.innerHTML = `<div class="question-text">${question}</div>`;
     }
   }
 
   function closeSandbox() {
-    const sandbox = document.getElementById('sandbox-container');
-    if (sandbox) sandbox.style.display = 'none';
-    switchAssignmentTab('hub-list-panel');
+    document.getElementById('sandbox-container').style.display = 'none';
+    document.getElementById('assignments-list-container').style.display = 'block';
   }
 
   function setSandboxMode(mode) {
@@ -787,6 +419,41 @@
     editor.className = `sandbox-area mode-${mode}`;
   }
 
+  // ==========================================
+  // SUBMISSION LOGIC
+  // ==========================================
+  document.getElementById('submission-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('submit-answer-btn');
+    const alertBox = document.getElementById('submission-alert');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...'; btn.disabled = true;
+
+    const payload = {
+      action: 'submit_assignment',
+      Candidate_registration_no: candidateData['Candidate_registration_no'],
+      Candidate_Name: candidateData['Candidate_Name'],
+      'Batch Wise': candidateData['Batch Wise'],
+      Assignment_ID: document.getElementById('current_assignment_id').value,
+      Format: currentEditorMode === 'code' ? 'Code Logic' : 'Text Answer',
+      Answer: document.getElementById('sandbox-editor').value
+    };
+
+    try {
+      await fetch(APPS_SCRIPT_URL, { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload) 
+      });
+      alertBox.innerHTML = '<i class="fas fa-check-circle"></i> Submitted successfully!';
+      alertBox.style.display = 'block';
+      setTimeout(closeSandbox, 2000);
+    } catch(err) {
+      alert("Failed to submit assignment. Check connection.");
+    } finally {
+      btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Submit Answer'; btn.disabled = false;
+    }
+  });
+
   // Profile Edit Form Submit
   document.getElementById('profile-edit-form').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -796,7 +463,11 @@
     Object.assign(payload, candidateData); 
     ['Candidate_Mobile', 'Candidate_Email', 'Candidate_Perm_Address_City_State'].forEach(f => { payload[f] = document.getElementById(f).value; });
     try {
-      await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
+      await fetch(APPS_SCRIPT_URL, { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload) 
+      });
       document.getElementById('profile-alert').style.display = 'block';
       sessionStorage.setItem('currentCandidateData', JSON.stringify(payload));
     } catch(err) { alert("Failed to submit request."); } 
