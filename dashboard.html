@@ -8,7 +8,7 @@
 <!-- SECURITY CHECK: Redirects to login if not authenticated -->
 <script>
   if (sessionStorage.getItem('isAdminLoggedIn') !== 'true') {
-    window.location.replace('admin-login.html');
+    window.location.replace('login.html');
   }
 </script>
 
@@ -110,10 +110,10 @@
   .toolbar-filters { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; background: var(--bg-body); padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--border); }
   
   .filter-group { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; color: var(--text-main); }
-  select, .search-input { padding: 8px 12px; border: 1px solid var(--border); border-radius: var(--radius-md); font-family: var(--font-sans); font-size: 0.85rem; outline: none; background: white; max-width: 180px; }
+  select, .search-input { padding: 8px 12px; border: 1px solid var(--border); border-radius: var(--radius-md); font-family: var(--font-sans); font-size: 0.85rem; outline: none; background: white; max-width: 160px; }
   select:focus, .search-input:focus { border-color: var(--primary); }
   
-  .search-wrapper { position: relative; width: 250px; }
+  .search-wrapper { position: relative; width: 220px; }
   .search-wrapper i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
   .search-wrapper input { width: 100%; padding-left: 36px; max-width: 100%; }
 
@@ -167,7 +167,14 @@
     <a href="about-us.html"><i class="fas fa-info-circle"></i> About</a>
     <a href="training-curriculum.html"><i class="fas fa-book"></i> Curriculum</a>
     <a href="contact-us.html"><i class="fas fa-envelope"></i> Contact</a>
+    <a href="admin-dashboard.html" id="admin-nav-link" style="display: none; color: #FF9933;"><i class="fas fa-shield-alt"></i> Admin Portal</a>
   </nav>
+  <script>
+    // Show admin link only if admin is logged in
+    if (sessionStorage.getItem('isAdminLoggedIn') === 'true') {
+      document.getElementById('admin-nav-link').style.display = 'flex';
+    }
+  </script>
 
   <div class="header-actions">
     <button class="btn btn-primary" id="refresh-btn" onclick="initDashboard()"><i class="fas fa-sync-alt"></i> Sync Data</button>
@@ -195,6 +202,10 @@
       <div class="stat-info"><h3>Failed / Pending</h3><div class="value" id="stat-fail">-</div></div>
     </div>
     <div class="stat-card">
+      <div class="stat-icon purple"><i class="fas fa-certificate"></i></div>
+      <div class="stat-info"><h3>Certificates Issued</h3><div class="value" id="stat-cert-issued">-</div></div>
+    </div>
+    <div class="stat-card">
       <div class="stat-icon orange"><i class="fas fa-layer-group"></i></div>
       <div class="stat-info"><h3>Total Batches</h3><div class="value" id="stat-batch">-</div></div>
     </div>
@@ -213,6 +224,10 @@
       <div class="chart-header"><i class="fas fa-city"></i> Top Locations</div>
       <div style="height: 250px;"><canvas id="chartLocation"></canvas></div>
     </div>
+    <div class="chart-container">
+      <div class="chart-header"><i class="fas fa-certificate"></i> Certificates Issued</div>
+      <div style="height: 250px;"><canvas id="chartCertificates"></canvas></div>
+    </div>
   </div>
 
   <div class="table-container">
@@ -222,34 +237,24 @@
         <button class="btn" onclick="exportData()"><i class="fas fa-file-csv"></i> Export CSV</button>
       </div>
       
-      <!-- ALL FULLY DYNAMIC FILTERS -->
+      <!-- ALL FULLY DYNAMIC FILTERS (INCLUDING NEW COURSE FILTER) -->
       <div class="toolbar-filters">
         <div class="search-wrapper">
           <i class="fas fa-search"></i>
           <input type="text" class="search-input" id="search-box" placeholder="Global search..." onkeyup="applyFilters()">
         </div>
 
-        <div class="filter-group">
-          <select id="filterGender" onchange="applyFilters()">
-            <option value="all">All Genders</option>
-            <option value="missing">⚠️ Missing Gender</option>
-            <!-- Auto-populated -->
-          </select>
+        <div class="filter-group" style="display:flex; align-items:center; gap:8px;">
+          <input type="checkbox" id="toggleSerial" checked onchange="buildTableHeader(); renderTable()">
+          <label for="toggleSerial" style="margin:0; font-size:0.95rem; color:var(--text-main);">Show Sr. No.</label>
         </div>
 
+        <!-- NEW COURSE FILTER -->
         <div class="filter-group">
-          <select id="filterResult" onchange="applyFilters()">
-            <option value="all">All Results</option>
-            <option value="missing">⚠️ Missing Result</option>
-            <!-- Auto-populated -->
-          </select>
-        </div>
-
-        <div class="filter-group">
-          <select id="filterCategory" onchange="applyFilters()">
-            <option value="all">All Categories</option>
-            <option value="missing">⚠️ Missing Category</option>
-            <!-- Auto-populated -->
+          <select id="filterCourse" onchange="applyFilters()">
+            <option value="all">All Courses</option>
+            <option value="missing">⚠️ Missing Course</option>
+            <!-- Auto-populated by JS -->
           </select>
         </div>
 
@@ -257,7 +262,39 @@
           <select id="filterBatch" onchange="applyFilters()">
             <option value="all">All Batches</option>
             <option value="missing">⚠️ Missing Batch</option>
-            <!-- Auto-populated -->
+            <!-- Auto-populated by JS -->
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <select id="filterCategory" onchange="applyFilters()">
+            <option value="all">All Categories</option>
+            <option value="missing">⚠️ Missing Category</option>
+            <!-- Auto-populated by JS -->
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <select id="filterGender" onchange="applyFilters()">
+            <option value="all">All Genders</option>
+            <option value="missing">⚠️ Missing Gender</option>
+            <!-- Auto-populated by JS -->
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <select id="filterResult" onchange="applyFilters()">
+            <option value="all">All Results</option>
+            <option value="missing">⚠️ Missing Result</option>
+            <!-- Auto-populated by JS -->
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <select id="filterCertificate" onchange="applyFilters()">
+            <option value="all">Certificate Status</option>
+            <option value="issued">Issued</option>
+            <option value="missing">Not Issued</option>
           </select>
         </div>
 
@@ -278,7 +315,7 @@
       <table>
         <thead id="table-head"></thead>
         <tbody id="table-body">
-          <tr><td colspan="9"><div class="loader-container"><div class="spinner"></div>Loading candidate data...</div></td></tr>
+          <tr><td colspan="10"><div class="loader-container"><div class="spinner"></div>Loading candidate data...</div></td></tr>
         </tbody>
       </table>
     </div>
@@ -314,13 +351,16 @@
   // ==========================================
   // DASHBOARD LOGIC
   // ==========================================
-  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyKu3tB206mwE7ef_rULrZ_17E5xTfp5rLWlSgY3vuKToj-0UxTvRodyhZYQb8d7qNH/exec';
+  // REPLACE WITH YOUR WEB APP URL
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyAfhakyTh0j_StQ3a2MpnZlqQq-46kuW45Vw8V2V8gIUa9Prr-c21K-d5ZoTYAEnU2VQ/exec';
   const REFRESH_INTERVAL = 60000;
   let PAGE_SIZE = 15;
 
+  // NEW COLUMN 'Courses' ADDED HERE
   const COLS = [
     { key: 'Candidate_registration_no', label: 'Reg. No.' },
     { key: 'Candidate_Name', label: 'Candidate Name' },
+    { key: 'Courses', label: 'Course' },
     { key: 'Batch Wise', label: 'Batch' },
     { key: 'Category', label: 'Category' },
     { key: 'Candidate_Gender', label: 'Gender' },
@@ -370,18 +410,20 @@
   }
 
   // ==========================================
-  // FULLY DYNAMIC DROPDOWNS
+  // FULLY DYNAMIC DROPDOWNS (Added Course)
   // ==========================================
   function populateFilterDropdowns() {
-    const categories = new Set();
+    const courses = new Set();
     const batches = new Set();
+    const categories = new Set();
     const genders = new Set();
     const results = new Set();
 
     // Scan all data to find unique values
     rawData.forEach(row => {
-      if (row['Category'] && String(row['Category']).trim() !== '') categories.add(String(row['Category']).trim());
+      if (row['Courses'] && String(row['Courses']).trim() !== '') courses.add(String(row['Courses']).trim());
       if (row['Batch Wise'] && String(row['Batch Wise']).trim() !== '') batches.add(String(row['Batch Wise']).trim());
+      if (row['Category'] && String(row['Category']).trim() !== '') categories.add(String(row['Category']).trim());
       if (row['Candidate_Gender'] && String(row['Candidate_Gender']).trim() !== '') genders.add(String(row['Candidate_Gender']).trim());
       if (row['Result'] && String(row['Result']).trim() !== '') results.add(String(row['Result']).trim());
     });
@@ -403,15 +445,16 @@
       selectEl.value = currentVal; // Restore selection
     };
 
-    updateSelect('filterCategory', 'All Categories', '⚠️ Missing Category', categories);
+    updateSelect('filterCourse', 'All Courses', '⚠️ Missing Course', courses);
     updateSelect('filterBatch', 'All Batches', '⚠️ Missing Batch', batches);
+    updateSelect('filterCategory', 'All Categories', '⚠️ Missing Category', categories);
     updateSelect('filterGender', 'All Genders', '⚠️ Missing Gender', genders);
     updateSelect('filterResult', 'All Results', '⚠️ Missing Result', results);
   }
 
   function calculateStats() {
     const total = rawData.length;
-    let pass = 0; let fail = 0;
+    let pass = 0; let fail = 0; let certIssued = 0;
     const batches = new Set();
 
     rawData.forEach(row => {
@@ -419,11 +462,13 @@
       if (res === 'pass' || res === 'passed') pass++;
       else if (res === 'fail' || res === 'failed' || res === 'absent' || res === 'dropout') fail++;
       if (row['Batch Wise']) batches.add(row['Batch Wise'].trim());
+      if (String(row['Certificate Link'] || '').trim() !== '') certIssued++;
     });
 
     document.getElementById('stat-total').innerText = total;
     document.getElementById('stat-pass').innerText = pass;
     document.getElementById('stat-fail').innerText = fail;
+    document.getElementById('stat-cert-issued').innerText = certIssued;
     document.getElementById('stat-batch').innerText = batches.size;
     document.getElementById('total-records-text').innerText = `${total} total records in database`;
   }
@@ -441,6 +486,7 @@
     const resCounts = { Pass: 0, Fail: 0, Other: 0 };
     const genCounts = {};
     const locCounts = {};
+    const certCounts = { Issued: 0, Missing: 0 };
 
     rawData.forEach(r => {
       let res = (r['Result'] || '').toString().toLowerCase();
@@ -453,29 +499,51 @@
 
       let loc = r['Candidate_Perm_Address_City_State'] || 'Unknown';
       if(loc !== 'Unknown') locCounts[loc] = (locCounts[loc] || 0) + 1;
+
+      let certLink = String(r['Certificate Link'] || '').trim();
+      if (certLink) certCounts.Issued++;
+      else certCounts.Missing++;
     });
 
     createChart('chartResult', 'doughnut', Object.keys(resCounts), Object.values(resCounts), ['#16a34a', '#dc2626', '#cbd5e1']);
     createChart('chartGender', 'pie', Object.keys(genCounts), Object.values(genCounts), ['#3b82f6', '#db2777', '#8b5cf6', '#cbd5e1']);
     const sortedLocs = Object.entries(locCounts).sort((a,b) => b[1] - a[1]).slice(0, 5);
     createChart('chartLocation', 'bar', sortedLocs.map(i=>i[0]), sortedLocs.map(i=>i[1]), ['#FF9933', '#fca5a5', '#fcd34d', '#86efac', '#93c5fd']);
+    createChart('chartCertificates', 'doughnut', Object.keys(certCounts), Object.values(certCounts), ['#2563eb', '#6b7280']);
   }
 
   // ==========================================
-  // FILTERING LOGIC
+  // FILTERING LOGIC (Added Course check)
   // ==========================================
   function applyFilters() {
     const searchTerm = document.getElementById('search-box').value.toLowerCase();
+    const courseFilter = document.getElementById('filterCourse').value;
+    const batchFilter = document.getElementById('filterBatch').value;
+    const categoryFilter = document.getElementById('filterCategory').value;
     const genderFilter = document.getElementById('filterGender').value;
     const resultFilter = document.getElementById('filterResult').value;
-    const categoryFilter = document.getElementById('filterCategory').value;
-    const batchFilter = document.getElementById('filterBatch').value;
+    const certFilter = document.getElementById('filterCertificate').value;
 
     filteredData = rawData.filter(row => {
       // Global Search
       const matchesSearch = Object.values(row).some(val => String(val).toLowerCase().includes(searchTerm));
 
       // Dynamic Filter Checks
+      let rowCourse = String(row['Courses'] || '').trim().toLowerCase();
+      let matchesCourse = true;
+      if (courseFilter === 'missing') matchesCourse = (rowCourse === '');
+      else if (courseFilter !== 'all') matchesCourse = (rowCourse === courseFilter);
+
+      let rowBatch = String(row['Batch Wise'] || '').trim().toLowerCase();
+      let matchesBatch = true;
+      if (batchFilter === 'missing') matchesBatch = (rowBatch === '');
+      else if (batchFilter !== 'all') matchesBatch = (rowBatch === batchFilter);
+
+      let rowCategory = String(row['Category'] || '').trim().toLowerCase();
+      let matchesCategory = true;
+      if (categoryFilter === 'missing') matchesCategory = (rowCategory === '');
+      else if (categoryFilter !== 'all') matchesCategory = (rowCategory === categoryFilter);
+
       let rowGender = String(row['Candidate_Gender'] || '').trim().toLowerCase();
       let matchesGender = true;
       if (genderFilter === 'missing') matchesGender = (rowGender === '');
@@ -486,17 +554,12 @@
       if (resultFilter === 'missing') matchesResult = (rowResult === '');
       else if (resultFilter !== 'all') matchesResult = (rowResult === resultFilter);
 
-      let rowCategory = String(row['Category'] || '').trim().toLowerCase();
-      let matchesCategory = true;
-      if (categoryFilter === 'missing') matchesCategory = (rowCategory === '');
-      else if (categoryFilter !== 'all') matchesCategory = (rowCategory === categoryFilter);
+      let rowCertificate = String(row['Certificate Link'] || '').trim();
+      let matchesCertificate = true;
+      if (certFilter === 'issued') matchesCertificate = rowCertificate !== '';
+      else if (certFilter === 'missing') matchesCertificate = rowCertificate === '';
 
-      let rowBatch = String(row['Batch Wise'] || '').trim().toLowerCase();
-      let matchesBatch = true;
-      if (batchFilter === 'missing') matchesBatch = (rowBatch === '');
-      else if (batchFilter !== 'all') matchesBatch = (rowBatch === batchFilter);
-
-      return matchesSearch && matchesGender && matchesResult && matchesCategory && matchesBatch;
+      return matchesSearch && matchesCourse && matchesBatch && matchesCategory && matchesGender && matchesResult && matchesCertificate;
     });
 
     currentPage = 1;
@@ -514,7 +577,9 @@
   }
 
   function buildTableHeader() {
+    const showSerial = document.getElementById('toggleSerial')?.checked;
     let html = '<tr>';
+    if (showSerial) html += '<th>Sr. No.</th>';
     COLS.forEach(col => {
       let sortClass = currentSort.col === col.key ? 'active-sort' : '';
       let sortIcon = currentSort.col === col.key && currentSort.dir === -1 ? 'fa-sort-down' : 'fa-sort-up';
@@ -531,15 +596,18 @@
     const end = start + PAGE_SIZE;
     const pageData = filteredData.slice(start, end);
 
+    const showSerial = document.getElementById('toggleSerial')?.checked;
+    const colsCount = COLS.length + 1 + (showSerial ? 1 : 0);
     if (pageData.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="${COLS.length + 1}" style="text-align:center; padding: 40px; color: var(--text-muted);">No candidates match your current filters.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="${colsCount}" style="text-align:center; padding: 40px; color: var(--text-muted);">No candidates match your current filters.</td></tr>`;
       renderPagination();
       return;
     }
 
     let html = '';
-    pageData.forEach(row => {
+    pageData.forEach((row, index) => {
       html += `<tr onclick="openProfile('${row['Candidate_registration_no']}')">`;
+      if (showSerial) html += `<td>${index + 1}</td>`;
       COLS.forEach(col => {
         let val = row[col.key] || '';
         
@@ -615,7 +683,7 @@
 
   function logout() {
     sessionStorage.removeItem('isAdminLoggedIn');
-    window.location.replace('admin-login.html');
+    window.location.replace('login.html');
   }
 
   // Start app

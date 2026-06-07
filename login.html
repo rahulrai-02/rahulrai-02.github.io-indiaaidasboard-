@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Access Portal - IndiaAI Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  :root {
+    --bg-body: #f8fafc; --bg-surface: #ffffff; --text-main: #0f172a; --text-muted: #64748b;
+    --border: #e2e8f0; --primary: #2563eb; --primary-hover: #1d4ed8;
+    --primary-saffron: #FF9933; --primary-saffron-hover: #e58a2e; --danger: #dc2626; --success: #16a34a;
+    --radius-md: 8px; --radius-lg: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); color: var(--text-main); display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+  .login-card { background: var(--bg-surface); padding: 40px; border-radius: var(--radius-lg); box-shadow: 0 10px 25px -5px rgb(0 0 0 / 0.1); border: 1px solid var(--border); width: 100%; max-width: 450px; position: relative; overflow: hidden; }
+  .login-header { text-align: center; margin-bottom: 28px; }
+  .login-icon { width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; margin: 0 auto 16px; transition: all 0.3s; }
+  .login-header h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 8px; }
+  .login-header p { color: var(--text-muted); font-size: 0.875rem; }
+  .toggle-group { display: flex; gap: 12px; margin-bottom: 28px; background: #f1f5f9; padding: 6px; border-radius: var(--radius-md); }
+  .toggle-btn { flex: 1; padding: 12px 16px; border: none; border-radius: 6px; background: transparent; color: var(--text-muted); font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.3s; text-align: center; }
+  .toggle-btn.active { background: var(--bg-surface); color: var(--text-main); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+  .toggle-btn.admin.active { color: var(--primary); }
+  .toggle-btn.candidate.active { color: var(--primary-saffron); }
+  .form-group { margin-bottom: 20px; }
+  label { display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 8px; }
+  input, select { width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius-md); font-family: 'Inter', sans-serif; font-size: 0.875rem; transition: border-color 0.2s; background: #f8fafc; }
+  input:focus, select:focus { outline: none; border-color: var(--primary); background: #ffffff; box-shadow: 0 0 0 3px rgba(37,99,235,0.15); }
+  input:disabled, select:disabled { background: #e2e8f0; cursor: not-allowed; opacity: 0.7; }
+  .help-text { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; display: block; }
+  .form-section { display: none; animation: slideIn 0.3s ease-out; }
+  .form-section.active { display: block; }
+  .btn-primary { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: var(--radius-md); font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: background 0.2s; margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 8px; }
+  .btn-primary:hover:not(:disabled) { background: var(--primary-hover); }
+  .btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
+  .candidate-btn { background: var(--primary-saffron); }
+  .candidate-btn:hover:not(:disabled) { background: var(--primary-saffron-hover); }
+  .switch-link { text-align: center; margin-top: 20px; font-size: 0.875rem; color: var(--text-muted); cursor: pointer; font-weight: 600; }
+  .switch-link span { color: var(--primary-saffron); text-decoration: underline; }
+  .alert-box { padding: 12px; border-radius: var(--radius-md); font-size: 0.875rem; text-align: center; margin-top: 20px; font-weight: 500; display: none; }
+  .alert-error { background: #fef2f2; border: 1px solid #fecaca; color: var(--danger); }
+  .alert-success { background: #dcfce7; border: 1px solid #bbf7d0; color: var(--success); }
+  .form-section.admin.active .login-icon { background: #eff6ff; color: var(--primary); }
+  .form-section.candidate.active .login-icon, .form-section.signup.active .login-icon { background: #fff7ed; color: var(--primary-saffron); }
+  @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+
+<div class="login-card">
+  <div class="toggle-group" id="main-toggles">
+    <button type="button" class="toggle-btn admin active" onclick="switchForm('admin')"><i class="fas fa-shield-alt"></i> Admin</button>
+    <button type="button" class="toggle-btn candidate" onclick="switchForm('candidate')"><i class="fas fa-user-graduate"></i> Candidate</button>
+  </div>
+
+  <div class="form-section admin active" id="admin-form-section">
+    <div class="login-header">
+      <div class="login-icon"><i class="fas fa-shield-alt"></i></div>
+      <h1>Admin Access</h1>
+      <p>Manage candidates and view analytics</p>
+    </div>
+    <form id="admin-login-form">
+      <div class="form-group"><label>Username</label><input type="text" id="admin-username" required></div>
+      <div class="form-group"><label>Password</label><input type="password" id="admin-password" required></div>
+      <button type="submit" class="btn-primary" id="admin-login-btn">Sign In <i class="fas fa-arrow-right"></i></button>
+      <div id="alert-admin" class="alert-box alert-error"><i class="fas fa-exclamation-triangle"></i> Invalid credentials</div>
+    </form>
+  </div>
+
+  <div class="form-section candidate" id="candidate-form-section">
+    <div class="login-header">
+      <div class="login-icon"><i class="fas fa-user-graduate"></i></div>
+      <h1>Candidate Portal</h1>
+      <p>Sign in to view your profile and results</p>
+    </div>
+    <form id="candidate-login-form">
+      <div class="form-group"><label>Registration Number</label><input type="text" id="candidate-regno" required></div>
+      <div class="form-group"><label>Email or Mobile Number</label><input type="text" id="candidate-contact" required></div>
+      <div class="form-group"><label>Date of Birth (Password)</label><input type="date" id="candidate-dob" required></div>
+      <button type="submit" class="btn-primary candidate-btn" id="candidate-login-btn">Secure Login <i class="fas fa-arrow-right"></i></button>
+      <div id="alert-candidate" class="alert-box alert-error"><i class="fas fa-exclamation-triangle"></i> <span id="candidate-error-text">Invalid credentials</span></div>
+    </form>
+    <div class="switch-link" onclick="switchForm('signup')">New Student? <span>Register Here</span></div>
+  </div>
+
+  <div class="form-section signup" id="signup-form-section">
+    <div class="login-header">
+      <div class="login-icon"><i class="fas fa-user-plus"></i></div>
+      <h1>Student Registration</h1>
+      <p>Enroll in a new IndiaAI training program</p>
+    </div>
+    <form id="candidate-signup-form">
+      <div class="form-group"><label>Full Name</label><input type="text" id="signup-name" required></div>
+      <div class="form-group"><label>Email Address</label><input type="email" id="signup-email" required></div>
+      <div class="form-group"><label>Mobile Number</label><input type="text" id="signup-mobile" required></div>
+      <div class="form-group"><label>Date of Birth</label><input type="date" id="signup-dob" required></div>
+      <div class="form-group"><label>Course Selection</label>
+        <select id="signup-course" required disabled><option value="">-- Loading Live Courses... --</option></select>
+      </div>
+      <div class="form-group"><label>City / State</label><input type="text" id="signup-address" required></div>
+      <button type="submit" class="btn-primary candidate-btn" id="candidate-signup-btn"><i class="fas fa-paper-plane"></i> Submit Registration</button>
+      <div id="alert-signup" class="alert-box"></div>
+    </form>
+    <div class="switch-link" onclick="switchForm('candidate')">Already registered? <span>Login Here</span></div>
+  </div>
+</div>
+
+<script>
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyAfhakyTh0j_StQ3a2MpnZlqQq-46kuW45Vw8V2V8gIUa9Prr-c21K-d5ZoTYAEnU2VQ/exec';
+  const ADMIN_USER = "admin";
+  const ADMIN_PASS = "admin123";
+  let cachedData = null;
+
+  async function fetchInitialData() {
+    try {
+      const response = await fetch(APPS_SCRIPT_URL + "?nocache=" + new Date().getTime());
+      cachedData = await response.json();
+      const coursesSet = new Set();
+      cachedData.forEach(row => { if (row['Courses'] && String(row['Courses']).trim() !== '') coursesSet.add(String(row['Courses']).trim()); });
+      const courseSelect = document.getElementById('signup-course');
+      courseSelect.innerHTML = '<option value="">-- Select a Course --</option>';
+      if (coursesSet.size > 0) [...coursesSet].sort().forEach(course => courseSelect.innerHTML += `<option value="${course}">${course}</option>`);
+      courseSelect.disabled = false;
+    } catch (error) { document.getElementById('signup-course').innerHTML = '<option value="">-- Error Loading Courses --</option>'; }
+  }
+  window.onload = fetchInitialData;
+
+  function switchForm(formType) {
+    document.querySelectorAll('.alert-box').forEach(el => el.style.display = 'none');
+    if (formType === 'signup') document.getElementById('main-toggles').style.display = 'none';
+    else {
+      document.getElementById('main-toggles').style.display = 'flex';
+      document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelector(`.toggle-btn.${formType}`).classList.add('active');
+    }
+    document.querySelectorAll('.form-section').forEach(section => section.classList.remove('active'));
+    document.getElementById(`${formType}-form-section`).classList.add('active');
+  }
+
+  document.getElementById('admin-login-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (document.getElementById('admin-username').value === ADMIN_USER && document.getElementById('admin-password').value === ADMIN_PASS) {
+      document.getElementById('admin-login-btn').innerHTML = '<i class="fas fa-check"></i> Redirecting...';
+      sessionStorage.setItem('isAdminLoggedIn', 'true');
+      setTimeout(() => { window.location.href = 'dashboard.html'; }, 800);
+    } else { document.getElementById('alert-admin').style.display = 'block'; }
+  });
+
+  document.getElementById('candidate-login-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('candidate-login-btn');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...'; btn.disabled = true;
+    try {
+      const regNoInput = document.getElementById('candidate-regno').value.trim();
+      const contactInput = document.getElementById('candidate-contact').value.trim().toLowerCase();
+      const [year, month, day] = document.getElementById('candidate-dob').value.split('-');
+      const formattedDob = `${day}-${month}-${year}`;
+      let data = cachedData;
+      if (!data) data = await (await fetch(APPS_SCRIPT_URL)).json();
+      
+      const candidate = data.find(c => {
+        const reg = String(c['Candidate_registration_no']||c['Registration No']||c['Registration No.']||c['Candidate Registration No']||c['Candidate Reg No']||c['Reg_No']||c['Reg No']||c['Registration Number']||c['regno']||'').trim();
+        return reg.toLowerCase() === regNoInput.toLowerCase();
+      });
+
+      if (candidate) {
+        const candidateEmail = String(candidate['Candidate_Email']||candidate['Candidate Email']||candidate['Email']||candidate['Email Address']||'').toLowerCase().trim();
+        const candidateMobile = String(candidate['Candidate_Mobile']||candidate['Candidate Mobile']||candidate['Mobile']||candidate['Mobile Number']||candidate['Phone']||'').trim();
+        const candidateDob = String(candidate['Candidate_Birth_date']||candidate['Candidate Birth Date']||candidate['DOB']||candidate['Date of Birth']||'').trim();
+        
+        const dobVariants = [
+          `${day}-${month}-${year}`,
+          `${day}/${month}/${year}`,
+          `${year}-${month}-${day}`,
+          `${year}/${month}/${day}`
+        ];
+        
+        const dobMatches = dobVariants.includes(candidateDob) || candidateDob.includes(`${year}-${month}-${day}`);
+        
+        const isEmail = contactInput.includes('@');
+        let contactMatches = false;
+        
+        if (isEmail) {
+            contactMatches = (contactInput === candidateEmail);
+        } else {
+            const cleanContactInput = contactInput.replace(/\D/g, '');
+            const cleanCandidateMobile = candidateMobile.replace(/\D/g, '');
+            contactMatches = (contactInput === candidateMobile) || 
+                             (cleanContactInput && cleanCandidateMobile && (cleanContactInput.includes(cleanCandidateMobile) || cleanCandidateMobile.includes(cleanContactInput)));
+        }
+
+        if (contactMatches && dobMatches) {
+          sessionStorage.setItem('isCandidateLoggedIn', 'true');
+          sessionStorage.setItem('currentCandidateData', JSON.stringify(candidate));
+          btn.innerHTML = '<i class="fas fa-check"></i> Redirecting...';
+          setTimeout(() => { window.location.href = 'candidate-dashboard.html'; }, 800);
+          return;
+        }
+      }
+      throw new Error("Invalid credentials or registration number.");
+    } catch (error) {
+      document.getElementById('candidate-error-text').innerText = error.message;
+      document.getElementById('alert-candidate').style.display = 'block';
+      btn.innerHTML = 'Secure Login <i class="fas fa-arrow-right"></i>'; btn.disabled = false;
+    }
+  });
+
+  document.getElementById('candidate-signup-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('candidate-signup-btn');
+    const alertBox = document.getElementById('alert-signup');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...'; btn.disabled = true;
+    const [year, month, day] = document.getElementById('signup-dob').value.split('-');
+    const payload = { action: 'candidate_signup', Candidate_Name: document.getElementById('signup-name').value, Candidate_Email: document.getElementById('signup-email').value, Candidate_Mobile: document.getElementById('signup-mobile').value, Candidate_Birth_date: `${day}-${month}-${year}`, Courses: document.getElementById('signup-course').value, Candidate_Perm_Address_City_State: document.getElementById('signup-address').value };
+    try {
+      const response = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
+      const result = await response.json();
+      if (result.status === 'success') {
+        alertBox.className = 'alert-box alert-success'; alertBox.innerHTML = '<i class="fas fa-check-circle"></i> Registration Successful!'; alertBox.style.display = 'block'; document.getElementById('candidate-signup-form').reset();
+      } else throw new Error(result.message);
+    } catch (error) {
+      alertBox.className = 'alert-box alert-error'; alertBox.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Failed to submit.'; alertBox.style.display = 'block';
+    } finally { btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Registration'; btn.disabled = false; }
+  });
+</script>
+</body>
+</html>

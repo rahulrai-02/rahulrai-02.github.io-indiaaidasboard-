@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Hub - NIELIT Ropar</title>
+<script>
+  if (sessionStorage.getItem('isAdminLoggedIn') !== 'true') {
+    window.location.replace('login.html');
+  }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  :root {
+    --bg-body: #f8fafc; --bg-surface: #ffffff; --text-main: #0f172a; --text-muted: #64748b;
+    --border: #e2e8f0; --primary: #2563eb; --primary-hover: #1d4ed8; --navy: #0D1B4B;
+    --success: #16a34a; --warning: #d97706; --danger: #dc2626;
+  }
+  
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
+
+  /* SIDEBAR */
+  .sidebar { width: 260px; background: var(--navy); color: white; display: flex; flex-direction: column; padding: 20px 0; flex-shrink: 0; }
+  .brand { padding: 0 20px 30px; font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px;}
+  .brand i { color: #FF9933; }
+  
+  .nav-item { padding: 15px 20px; color: #cbd5e1; text-decoration: none; display: flex; align-items: center; gap: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s; border-left: 4px solid transparent; }
+  .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.05); color: white; border-left-color: var(--primary); }
+  .logout-btn { margin-top: auto; color: #fca5a5; }
+  .logout-btn:hover { color: #ef4444; background: rgba(239, 68, 68, 0.1); border-left-color: #ef4444; }
+
+  /* MAIN CONTENT */
+  .main-content { flex: 1; overflow-y: auto; padding: 40px; }
+  .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+  
+  .card { background: var(--bg-surface); padding: 30px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05); margin-bottom: 24px; }
+
+  .view-section { display: none; animation: fadeIn 0.3s ease; }
+  .view-section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* FORMS */
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  label { font-size: 0.85rem; font-weight: 600; color: var(--text-main); }
+  input, select, textarea { padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-family: 'Inter', sans-serif; transition: border-color 0.2s; background: #f8fafc; }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); background: #ffffff; box-shadow: 0 0 0 3px rgba(37,99,235,0.15); }
+  
+  .btn { padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; transition: 0.2s; display: inline-flex; align-items: center; gap: 8px;}
+  .btn-primary { background: var(--primary); color: white; }
+  .btn-primary:hover { background: var(--primary-hover); }
+
+  .alert-box { padding: 12px; border-radius: 8px; margin-top: 15px; font-weight: 500; display: none; text-align: center; font-size: 0.9rem;}
+  .alert-success { background: #dcfce7; color: var(--success); border: 1px solid #bbf7d0; }
+  .alert-error { background: #fef2f2; color: var(--danger); border: 1px solid #fecaca; }
+
+  /* SPLIT VIEW FOR SUBMISSIONS */
+  .split-layout { display: flex; gap: 24px; height: 600px; align-items: stretch;}
+  .list-pane { flex: 1; border: 1px solid var(--border); border-radius: 8px; background: #f8fafc; overflow-y: auto; display: flex; flex-direction: column; }
+  .detail-pane { flex: 2; border: 1px solid var(--border); border-radius: 8px; background: white; display: flex; flex-direction: column; }
+  
+  .sub-item { padding: 16px; border-bottom: 1px solid var(--border); cursor: pointer; background: white; transition: 0.2s; }
+  .sub-item:hover { background: #eff6ff; }
+  .sub-item.active { border-left: 4px solid var(--primary); background: #eff6ff; }
+  .sub-name { font-weight: 700; color: var(--navy); font-size: 0.95rem; }
+  .sub-meta { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+  
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; margin-top: 6px; }
+  .b-pending { background: #fef3c7; color: var(--warning); }
+  .b-reviewed { background: #dcfce7; color: var(--success); }
+
+  .detail-header { padding: 20px; border-bottom: 1px solid var(--border); background: #f8fafc; }
+  .detail-body { padding: 20px; flex: 1; overflow-y: auto; }
+  .code-viewer { background: #1e1e1e; color: #d4d4d4; padding: 20px; border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; white-space: pre-wrap; overflow-x: auto; margin-bottom: 20px;}
+  .text-viewer { background: #f1f5f9; color: var(--text-main); padding: 20px; border-radius: 8px; font-size: 0.95rem; white-space: pre-wrap; line-height: 1.6; margin-bottom: 20px;}
+  
+  .grading-box { background: white; border-top: 1px solid var(--border); padding: 20px; display: flex; gap: 15px; align-items: flex-end; }
+</style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <div class="brand"><i class="fas fa-shield-alt"></i> Admin Portal</div>
+    <a class="nav-item active" id="nav-sync" onclick="switchView('sync')">
+      <i class="fas fa-award"></i> Certificates
+    </a>
+    <a class="nav-item" href="admin-assignment-hub.html">
+      <i class="fas fa-laptop-code"></i> Assignment Hub
+    </a>
+    <a class="nav-item" href="attendance.html">
+      <i class="fas fa-user-check"></i> Attendance Hub
+    </a>
+    <a class="nav-item logout-btn" onclick="logout()">
+      <i class="fas fa-sign-out-alt"></i> Logout
+    </a>
+  </div>
+
+  <div class="main-content">
+    <div class="top-bar">
+      <div>
+        <h2 style="color:var(--navy);">Administrator Dashboard</h2>
+        <p style="color:var(--text-muted); font-size:0.9rem;">IndiaAI Skill Development Initiative</p>
+      </div>
+    </div>
+
+    <div class="view-section active" id="view-sync">
+      <div class="card" style="max-width: 760px; margin: 0 auto;">
+        <i class="fas fa-award" style="font-size: 3rem; color: var(--primary); margin-bottom: 20px;"></i>
+        <h2 style="color: var(--navy); margin-bottom: 10px;">Manual Certificate Upload</h2>
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px;">
+          Search a candidate by registration number or name, then upload the certificate file from your system. The upload will attach a Drive link to the selected candidate record.
+        </p>
+
+        <form id="admin-sync-form">
+          <div class="form-group" style="margin-bottom: 18px; text-align: left; position: relative;">
+            <label>Search Candidate</label>
+            <input type="text" id="search-candidate" placeholder="Search by Registration No. or Name" autocomplete="off" style="width:100%;">
+            <div id="candidate-suggestion-panel" style="display:none; position:absolute; top:100%; left:0; right:0; z-index:10; max-height:260px; overflow:auto; background:white; border:1px solid #cbd5e1; border-radius: 0 0 10px 10px; box-shadow: 0 12px 30px rgba(15,23,42,0.08); margin-top:2px;"></div>
+            <span style="font-size: 0.75rem; color: var(--text-muted); margin-top: 5px; display: block;">Type a candidate name or registration number. Choose the correct student from the list, then upload.</span>
+          </div>
+
+          <div id="candidate-details" style="margin-bottom: 18px; display: none; padding: 18px; border: 1px solid var(--border); border-radius: 12px; background: #f8fafc;">
+            <strong style="color: var(--navy);">Selected Candidate</strong>
+            <div id="candidate-details-content" style="margin-top: 12px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;"></div>
+            <div id="selected-candidate-hint" style="margin-top: 12px; color: #166534; font-size: 0.9rem;"></div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 18px; text-align: left;">
+            <label>Certificate PDF</label>
+            <input type="file" id="certificate-file" accept="application/pdf">
+            <span style="font-size: 0.75rem; color: var(--text-muted); margin-top: 5px; display: block;">Upload the certificate file. The system will save it to Drive and attach a view link to the candidate.</span>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 18px; text-align: left;">
+            <label>Optional Drive Link</label>
+            <input type="text" id="certificate-drive-link" placeholder="Paste Drive view link if already available">
+          </div>
+
+          <button type="submit" id="btn-run-sync" class="btn btn-primary" style="width: 100%; justify-content: center;">
+            <i class="fas fa-upload"></i> Upload Certificate
+          </button>
+          <div id="sync-alert" class="alert-box"></div>
+        </form>
+
+        <!-- ====== BULK UPLOAD SECTION ====== -->
+        <hr style="margin: 40px 0; border: 0; border-top: 1px solid var(--border);">
+        
+        <i class="fas fa-layer-group" style="font-size: 3rem; color: #10b981; margin-bottom: 20px;"></i>
+        <h2 style="color: var(--navy); margin-bottom: 10px;">Bulk Certificate Upload</h2>
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px;">
+          Select multiple PDFs at once. The system will automatically read the Registration Number from the start of the file name (e.g., <strong>1748964_Certificate.pdf</strong>) and attach them sequentially.
+        </p>
+
+        <div style="text-align: left; margin-bottom: 18px;">
+          <input type="file" id="bulk-files" accept="application/pdf" multiple style="width: 100%; padding: 10px; border: 1px dashed var(--primary); background: #eff6ff;">
+        </div>
+
+        <button onclick="startBulkUpload()" id="btn-bulk-sync" class="btn btn-primary" style="background: #10b981; width: 100%; justify-content: center;">
+          <i class="fas fa-play-circle"></i> Start Bulk Upload
+        </button>
+
+        <div id="bulk-progress" style="margin-top: 15px; font-weight: 600; color: var(--navy); display: none;"></div>
+        <div id="bulk-log" style="margin-top: 10px; max-height: 200px; overflow-y: auto; text-align: left; font-size: 0.85rem; background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid var(--border); display: none; font-family: 'JetBrains Mono', monospace;"></div>
+
+      </div>
+    </div>
+
+  </div>
+
+<script>
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyAfhakyTh0j_StQ3a2MpnZlqQq-46kuW45Vw8V2V8gIUa9Prr-c21K-d5ZoTYAEnU2VQ/exec';
+  let allSubmissions = [];
+  let spreadsheetData = [];
+  let selectedCertificateCandidate = null;
+
+  // ==========================================
+  // INITIALIZATION
+  // ==========================================
+  window.onload = async () => {
+    await fetchDynamicTargets();
+  };
+
+  function switchView(viewId) {
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    document.getElementById(`nav-${viewId}`).classList.add('active');
+    document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+    document.getElementById(`view-${viewId}`).classList.add('active');
+  }
+
+  // ==========================================
+  // DYNAMIC TARGET DROPDOWN (Batches & Courses)
+  // ==========================================
+  async function fetchDynamicTargets() {
+    try {
+      const response = await fetch(APPS_SCRIPT_URL + "?nocache=" + new Date().getTime());
+      const data = await response.json();
+      spreadsheetData = data;
+      populateCandidateSuggestions(data);
+    } catch (e) {
+      console.error("Failed to load targets", e);
+    }
+  }
+
+
+
+  // ==========================================
+  // SYNC CERTIFICATES LOGIC (NEW FEATURE)
+  // ==========================================
+  document.getElementById('search-candidate').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      searchCandidate();
+    }
+  });
+
+  document.getElementById('search-candidate').addEventListener('input', function() {
+    selectedCertificateCandidate = null;
+    document.getElementById('candidate-details').style.display = 'none';
+    document.getElementById('selected-candidate-hint').innerText = '';
+    updateCandidateSuggestionPanel(this.value.trim());
+  });
+
+  document.getElementById('search-candidate').addEventListener('blur', function() {
+    const query = this.value.trim();
+    setTimeout(() => {
+      if (query) ensureCandidateSelection(query);
+      closeCandidateSuggestionPanel();
+    }, 150);
+  });
+
+  document.getElementById('admin-sync-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('btn-run-sync');
+    const alertBox = document.getElementById('sync-alert');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...'; 
+    btn.disabled = true; 
+    alertBox.style.display = 'none';
+
+    const driveLink = document.getElementById('certificate-drive-link').value.trim();
+    const fileInput = document.getElementById('certificate-file');
+    const query = document.getElementById('search-candidate').value.trim();
+
+    if (!selectedCertificateCandidate && query) {
+      ensureCandidateSelection(query);
+    }
+
+    if (!selectedCertificateCandidate) {
+      showSyncError('Please search and select a candidate before uploading a certificate.', btn);
+      return;
+    }
+
+    if (!driveLink && fileInput.files.length === 0) {
+      showSyncError('You must upload a PDF or provide a Drive link.', btn);
+      return;
+    }
+
+    const selectedRegNo = getCandidateRegNo(selectedCertificateCandidate);
+    const selectedName = getCandidateName(selectedCertificateCandidate);
+    const existingCertLink = getCertificateLink(selectedCertificateCandidate);
+    const existingCertValid = certificateExists(selectedCertificateCandidate);
+
+    if (!selectedRegNo) {
+      showSyncError('The selected candidate does not have a valid registration number.', btn);
+      return;
+    }
+
+    if (existingCertValid) {
+      showSyncError('Certificate already exists for this candidate. Duplicate upload skipped.', btn);
+      return;
+    }
+
+    // Helper to send the payload once we have the data
+    const sendPayload = async (base64Data, fileName) => {
+      const payload = {
+        action: 'upload_certificate',
+        candidate_registration_no: selectedRegNo,
+        candidate_name: selectedName,
+        drive_link: driveLink,
+        file_name: fileName,
+        file_data: base64Data, // The actual PDF content!
+        has_file: base64Data !== null
+      };
+
+      try {
+        const response = await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        });
+        const result = await response.json();
+
+        if (result.status === 'success') {
+          alertBox.className = 'alert-box alert-success';
+          alertBox.innerHTML = '<i class="fas fa-check-circle"></i> ' + result.message;
+          document.getElementById('certificate-file').value = '';
+          document.getElementById('certificate-drive-link').value = '';
+          selectedCertificateCandidate['Certificate Link'] = driveLink || fileName || 'uploaded';
+        } else {
+          throw new Error(result.message);
+        }
+      } catch (error) {
+        showSyncError(error.message, btn);
+      } finally {
+        alertBox.style.display = 'block';
+        btn.innerHTML = '<i class="fas fa-upload"></i> Upload Certificate'; 
+        btn.disabled = false;
+      }
+    };
+
+    // If there is a file, read it as Base64 first. Otherwise, just send the drive link.
+    if (fileInput.files.length > 0) {
+      const file = fileInput.files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        // Strip the metadata prefix (e.g., "data:application/pdf;base64,") to get raw data
+        const base64Data = e.target.result.split(',')[1];
+        sendPayload(base64Data, file.name);
+      };
+      reader.onerror = function() {
+        showSyncError('Error reading the file from your computer.', btn);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      sendPayload(null, '');
+    }
+  });
+
+  function showSyncError(msg, btn) {
+    const alertBox = document.getElementById('sync-alert');
+    alertBox.className = 'alert-box alert-error';
+    alertBox.innerHTML = '<i class="fas fa-exclamation-triangle"></i> ' + msg;
+    alertBox.style.display = 'block';
+    btn.innerHTML = '<i class="fas fa-upload"></i> Upload Certificate';
+    btn.disabled = false;
+  }
+
+  function getCandidateRegNo(row) {
+    return String(
+      row['Candidate_registration_no'] ||
+      row['Registration No'] ||
+      row['Registration No.'] ||
+      row['Candidate Registration No'] ||
+      row['Candidate Reg No'] ||
+      row['Reg_No'] ||
+      row['Reg No'] ||
+      row['Registration Number'] ||
+      ''
+    ).trim();
+  }
+
+  function getCandidateName(row) {
+    return String(row['Candidate_Name'] || row['Name'] || row['Candidate Name'] || '').trim();
+  }
+
+  function getCertificateLink(row) {
+    return String(
+      row['Certificate Link'] ||
+      row['Certificate_Link'] ||
+      row['certificate_link'] ||
+      row['certificate link'] ||
+      row['CertificateLink'] ||
+      row['CertificateURL'] ||
+      row['Certificate_URL'] ||
+      row['Certificates'] ||
+      row['certificate'] ||
+      row['certificate_url'] ||
+      ''
+    ).trim();
+  }
+
+  function certificateExists(row) {
+    const link = getCertificateLink(row);
+    if (!link) return false;
+    const normalized = link.trim().toLowerCase();
+    return normalized !== '' && !['n/a', 'na', 'none', 'pending', 'not uploaded', 'no certificate', '-', 'null', 'undefined'].includes(normalized);
+  }
+
+  function getCandidateDisplayValue(row) {
+    const reg = getCandidateRegNo(row);
+    const name = getCandidateName(row);
+    return reg ? `${reg}${name ? ' - ' + name : ''}` : name;
+  }
+
+  function populateCandidateSuggestions(data) {
+    const list = document.getElementById('candidate-suggestions');
+    if (!list) return;
+    const seen = new Set();
+    list.innerHTML = '';
+    data.forEach(row => {
+      const optionValue = getCandidateDisplayValue(row);
+      if (!optionValue) return;
+      if (!seen.has(optionValue)) {
+        seen.add(optionValue);
+        list.innerHTML += `<option value="${optionValue}">`;
+      }
+    });
+  }
+
+  function updateCandidateSuggestionPanel(query) {
+    const panel = document.getElementById('candidate-suggestion-panel');
+    if (!panel) return;
+    if (!query) {
+      panel.style.display = 'none';
+      panel.innerHTML = '';
+      return;
+    }
+
+    const normalized = query.toLowerCase();
+    const matches = spreadsheetData.filter(row => {
+      const reg = getCandidateRegNo(row).toLowerCase();
+      const name = getCandidateName(row).toLowerCase();
+      return (reg && reg.includes(normalized)) || (name && name.includes(normalized));
+    }).slice(0, 10);
+
+    if (matches.length === 0) {
+      panel.style.display = 'none';
+      panel.innerHTML = '';
+      return;
+    }
+
+    panel.innerHTML = matches.map((candidate, index) => {
+      const regNo = getCandidateRegNo(candidate);
+      const name = getCandidateName(candidate);
+      return `<div class="candidate-option" data-index="${index}" style="padding: 10px 14px; cursor: pointer; border-bottom: 1px solid #e2e8f0; background: white;">` +
+        `<strong>${regNo || 'N/A'}</strong> - ${name}` +
+      `</div>`;
+    }).join('');
+    panel.style.display = 'block';
+
+    panel.querySelectorAll('.candidate-option').forEach(el => {
+      el.addEventListener('mousedown', function(e) {
+        e.preventDefault();
+        const candidate = matches[Number(this.dataset.index)];
+        if (candidate) {
+          selectCandidate(candidate);
+          closeCandidateSuggestionPanel();
+        }
+      });
+    });
+  }
+
+  function closeCandidateSuggestionPanel() {
+    const panel = document.getElementById('candidate-suggestion-panel');
+    if (!panel) return;
+    panel.style.display = 'none';
+  }
+
+  function findCandidateByInput(query) {
+    const normalized = query.toLowerCase();
+    return spreadsheetData.find(row => {
+      const display = getCandidateDisplayValue(row).toLowerCase();
+      const reg = getCandidateRegNo(row).toLowerCase();
+      const name = getCandidateName(row).toLowerCase();
+      return display === normalized || reg === normalized || name === normalized;
+    });
+  }
+
+  function ensureCandidateSelection(query) {
+    if (selectedCertificateCandidate) return;
+    const exactCandidate = findCandidateByInput(query);
+    if (exactCandidate) {
+      selectCandidate(exactCandidate);
+      return;
+    }
+
+    const normalized = query.toLowerCase();
+    const matches = spreadsheetData.filter(row => {
+      const reg = getCandidateRegNo(row).toLowerCase();
+      const name = getCandidateName(row).toLowerCase();
+      return (reg && reg.includes(normalized)) || (name && name.includes(normalized));
+    });
+
+    if (matches.length === 1) {
+      selectCandidate(matches[0]);
+    }
+  }
+
+  function renderCandidateDetails(candidate) {
+    selectedCertificateCandidate = candidate;
+    const detailBox = document.getElementById('candidate-details');
+    const content = document.getElementById('candidate-details-content');
+    const regNo = getCandidateRegNo(candidate) || 'N/A';
+    const name = getCandidateName(candidate) || 'N/A';
+    const father = String(candidate['Father_Name'] || candidate['Father Name'] || 'N/A');
+    const mother = String(candidate['Mother_Name'] || candidate['Mother Name'] || 'N/A');
+    const dob = String(candidate['Candidate_Birth_date'] || candidate['DOB'] || 'N/A');
+    const batch = String(candidate['Batch Wise'] || candidate['Batch'] || 'N/A');
+    const course = String(candidate['Courses'] || candidate['Course'] || 'N/A');
+
+    content.innerHTML = `
+      <div><strong>Reg. No.</strong><div>${regNo}</div></div>
+      <div><strong>Name</strong><div>${name}</div></div>
+      <div><strong>Father's Name</strong><div>${father}</div></div>
+      <div><strong>Mother's Name</strong><div>${mother}</div></div>
+      <div><strong>Date of Birth</strong><div>${dob}</div></div>
+      <div><strong>Batch</strong><div>${batch}</div></div>
+      <div><strong>Course</strong><div>${course}</div></div>
+    `;
+    detailBox.style.display = 'block';
+    document.getElementById('selected-candidate-hint').innerText = 'Candidate selected. Upload certificate for this candidate.';
+  }
+
+  function selectCandidate(candidate) {
+    document.getElementById('search-candidate').value = getCandidateDisplayValue(candidate);
+    renderCandidateDetails(candidate);
+  }
+
+  async function searchCandidate() {
+    const query = document.getElementById('search-candidate').value.trim();
+    const detailBox = document.getElementById('candidate-details');
+    const alertBox = document.getElementById('sync-alert');
+    alertBox.style.display = 'none';
+    detailBox.style.display = 'none';
+    selectedCertificateCandidate = null;
+
+    if (!query) return;
+
+    const normalizedQuery = query.toLowerCase();
+    const matches = spreadsheetData.filter(row => {
+      const reg = getCandidateRegNo(row).toLowerCase();
+      const name = getCandidateName(row).toLowerCase();
+      return (reg && reg.includes(normalizedQuery)) || (name && name.includes(normalizedQuery));
+    });
+
+    if (matches.length === 0) {
+      alertBox.className = 'alert-box alert-error';
+      alertBox.innerHTML = '<i class="fas fa-exclamation-triangle"></i> No matching candidate found. Please try a different name or registration number.';
+      alertBox.style.display = 'block';
+      return;
+    }
+
+    if (matches.length === 1) {
+      selectCandidate(matches[0]);
+      return;
+    }
+
+    const content = document.getElementById('candidate-details-content');
+    const optionsHtml = matches.slice(0, 8).map((candidate, index) => {
+      const regNo = String(candidate['Candidate_registration_no'] || candidate['Registration No'] || '').trim();
+      const name = String(candidate['Candidate_Name'] || candidate['Name'] || '').trim();
+      return `<div data-candidate-index="${index}" style="padding: 10px 14px; border:1px solid #d1d5db; border-radius:10px; margin-bottom:8px; cursor:pointer; background:white;">
+          <strong>${regNo}</strong> - ${name}
+        </div>`;
+    }).join('');
+
+    content.innerHTML = `<div style="grid-column:1/-1; color:#0f172a; font-weight:700; margin-bottom:10px;">Multiple matches found. Click one to select.</div>${optionsHtml}`;
+    content.querySelectorAll('[data-candidate-index]').forEach(el => {
+      el.addEventListener('click', () => selectCandidate(matches[Number(el.dataset.candidateIndex)]));
+    });
+    detailBox.style.display = 'block';
+    document.getElementById('selected-candidate-hint').innerText = 'Select the correct candidate from the list below.';
+  }
+
+  // ==========================================
+  // BULK UPLOAD LOGIC
+  // ==========================================
+  async function startBulkUpload() {
+    const fileInput = document.getElementById('bulk-files');
+    const btn = document.getElementById('btn-bulk-sync');
+    const progressBox = document.getElementById('bulk-progress');
+    const logBox = document.getElementById('bulk-log');
+
+    if (fileInput.files.length === 0) {
+      alert("Please select at least one PDF file.");
+      return;
+    }
+
+    btn.disabled = true;
+    progressBox.style.display = 'block';
+    logBox.style.display = 'block';
+    logBox.innerHTML = ''; // Clear old logs
+
+    const files = Array.from(fileInput.files);
+    let successCount = 0;
+    let failCount = 0;
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      progressBox.innerText = `Processing file ${i + 1} of ${files.length} (Please do not close page)...`;
+      
+      // Extract Reg No from filename: Matches all numbers/letters before the first underscore or space
+      const regNoMatch = file.name.match(/^([a-zA-Z0-9]+)/); 
+      const extractedRegNo = regNoMatch ? regNoMatch[1] : null;
+
+      if (!extractedRegNo) {
+        logMessage(`[SKIP] ${file.name}: Could not extract Reg No from name.`, '#dc2626');
+        failCount++;
+        continue;
+      }
+
+      // Find candidate in the local data
+      const candidate = spreadsheetData.find(row => getCandidateRegNo(row).toLowerCase() === extractedRegNo.toLowerCase());
+      if (!candidate) {
+        logMessage(`[SKIP] ${file.name}: Reg No ${extractedRegNo} not found in database.`, '#d97706');
+        failCount++;
+        continue;
+      }
+
+      if (certificateExists(candidate)) {
+        logMessage(`[SKIP] ${file.name}: Candidate ${extractedRegNo} already has a certificate attached.`, '#d97706');
+        continue;
+      }
+
+      // Read File and Send to Backend
+      try {
+        const base64Data = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = e => resolve(e.target.result.split(',')[1]);
+          reader.onerror = () => reject(new Error("File read error"));
+          reader.readAsDataURL(file);
+        });
+
+        const payload = {
+          action: 'upload_certificate',
+          candidate_registration_no: extractedRegNo,
+          candidate_name: getCandidateName(candidate),
+          drive_link: '',
+          file_name: file.name,
+          file_data: base64Data,
+          has_file: true
+        };
+
+        const response = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
+        const result = await response.json();
+
+        if (result.status === 'success') {
+          logMessage(`[SUCCESS] Attached ${file.name} to ${getCandidateName(candidate)}`, '#166534');
+          candidate['Certificate Link'] = file.name;
+          successCount++;
+        } else {
+          throw new Error(result.message);
+        }
+      } catch (e) {
+        logMessage(`[ERROR] ${file.name}: ${e.message}`, '#dc2626');
+        failCount++;
+      }
+    }
+
+    progressBox.innerText = `Bulk Upload Complete! ${successCount} Successful, ${failCount} Failed.`;
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-play-circle"></i> Start Bulk Upload';
+    fileInput.value = '';
+  }
+
+  function logMessage(msg, color) {
+    const box = document.getElementById('bulk-log');
+    box.innerHTML += `<div style="color: ${color}; margin-bottom: 4px; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;">${msg}</div>`;
+    box.scrollTop = box.scrollHeight; // Auto-scroll to bottom
+  }
+
+  function logout() { sessionStorage.clear(); window.location.replace('login.html'); }
+</script>
+</body>
+</html>

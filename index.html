@@ -3,349 +3,373 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IndiaAI Skill Development Initiative</title>
+<title>IndiaAI Skill Development - NIELIT Ropar</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<!-- Include Chart.js for live data rendering -->
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 
+<script src="https://code.highcharts.com/maps/highmaps.js"></script>
+<script src="https://code.highcharts.com/mapdata/countries/in/in-all.js"></script>
+
 <style>
-  /* =========================================================
-     CSS VARIABLES & RESET
-  ========================================================= */
   :root {
-    --bg-body: #f8fafc;
-    --bg-surface: #ffffff;
-    --text-main: #0f172a;
-    --text-muted: #64748b;
-    --border: #e2e8f0;
-    
-    --primary: #FF9933; /* IndiaAI Saffron */
-    --primary-hover: #e58a2e;
-    --navy: #0D1B4B;
-    --green: #138808;
-    
-    --font-sans: 'Inter', sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
-    
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    --radius-md: 8px;
-    --radius-lg: 12px;
+    --bg-body: #f8fafc; --bg-surface: #ffffff; --text-main: #0f172a; --text-muted: #64748b;
+    --border: #e2e8f0; --primary: #FF9933; --primary-hover: #e58a2e; --navy: #0D1B4B; --green: #138808;
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05); --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    --radius-md: 8px; --radius-lg: 12px;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  
-  body { 
-    font-family: var(--font-sans); background-color: var(--bg-body); 
-    color: var(--text-main); -webkit-font-smoothing: antialiased; line-height: 1.6;
-  }
+  body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); color: var(--text-main); line-height: 1.6; }
 
-  /* =========================================================
-     NAVIGATION HEADER
-  ========================================================= */
+  /* HEADER & LOGOS */
   header {
-    background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px);
-    border-bottom: 1px solid var(--border); padding: 16px 5%;
-    display: flex; justify-content: space-between; align-items: center;
-    position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-sm);
+    background-color: var(--bg-surface); border-bottom: 1px solid var(--border); padding: 12px 5%;
+    display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-sm);
   }
-
-  .brand { display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 1.25rem; color: var(--navy); text-decoration: none;}
-  .brand i { color: var(--primary); font-size: 1.5rem; }
-
-  .nav-links { display: flex; align-items: center; gap: 24px; }
-  .nav-links a { color: var(--text-muted); text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: color 0.2s; }
-  .nav-links a:hover { color: var(--primary); }
-
+  .logos-container { display: flex; align-items: center; gap: 15px; }
+  
+  /* Fallback text if logos don't load */
+  .logo-text { font-size: 1.25rem; font-weight: 800; color: var(--navy); display: flex; align-items: center; gap: 10px; }
+  .logo-text i { color: var(--primary); }
+  .logos-container .divider { width: 1px; height: 30px; background: var(--border); }
+  
   .header-actions { display: flex; gap: 12px; }
-  .btn {
-    display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; 
-    border-radius: var(--radius-md); font-size: 0.9rem; font-weight: 600;
-    text-decoration: none; cursor: pointer; transition: all 0.2s; border: 1px solid var(--border);
-  }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: var(--radius-md); font-size: 0.9rem; font-weight: 600; text-decoration: none; cursor: pointer; transition: all 0.2s; border: 1px solid var(--border); }
   .btn-outline { background: transparent; color: var(--text-main); border-color: var(--border); }
   .btn-outline:hover { background: #f1f5f9; }
   .btn-primary { background: var(--primary); color: white; border-color: var(--primary); }
   .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255, 153, 51, 0.2); }
 
-  /* =========================================================
-     HERO SECTION
-  ========================================================= */
-  .hero { padding: 80px 5%; text-align: center; max-width: 1000px; margin: 0 auto; }
-  .hero-badge {
-    display: inline-block; padding: 6px 16px; background: #fff7ed; color: var(--primary);
-    border-radius: 50px; font-size: 0.875rem; font-weight: 700; margin-bottom: 24px; border: 1px solid #ffedd5;
-  }
-  .hero h1 { font-size: 3rem; font-weight: 800; color: var(--navy); line-height: 1.15; margin-bottom: 24px; letter-spacing: -0.02em; }
-  .hero p { font-size: 1.15rem; color: var(--text-muted); margin-bottom: 40px; max-width: 800px; margin-left: auto; margin-right: auto; }
+  /* HERO SECTION */
+  .hero { padding: 60px 5% 40px; text-align: center; max-width: 1200px; margin: 0 auto; }
+  .hero h1 { font-size: 2.5rem; font-weight: 800; color: var(--navy); line-height: 1.2; margin-bottom: 16px; }
+  .hero p { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 40px; }
 
-  /* =========================================================
-     LIVE STATS CARDS
-  ========================================================= */
-  .dashboard-preview { padding: 0 5% 60px; max-width: 1400px; margin: 0 auto; }
-  .section-header { text-align: center; margin-bottom: 40px; }
+  /* COURSE GRID */
+  .course-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
+  .course-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; text-align: left; text-decoration: none; color: var(--text-main); box-shadow: var(--shadow-sm); transition: all 0.3s ease; display: flex; align-items: center; gap: 16px; }
+  .course-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); border-color: var(--primary); }
+  .course-icon { width: 50px; height: 50px; border-radius: 10px; background: #fff7ed; color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0; }
+  .course-info h3 { font-size: 1.1rem; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+  .course-info span { font-size: 0.85rem; color: var(--primary); font-weight: 600; }
+
+  /* DASHBOARD SECTION */
+  .dashboard-preview { padding: 20px 5% 60px; max-width: 1400px; margin: 0 auto; }
+  .section-header { text-align: center; margin-bottom: 30px; padding-top: 40px; border-top: 1px solid var(--border); }
   .section-header h2 { font-size: 2rem; color: var(--navy); margin-bottom: 8px; }
   .section-header p { color: var(--text-muted); }
-  
-  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 40px; }
-  .stat-card {
-    background: var(--bg-surface); padding: 24px; border-radius: var(--radius-lg);
-    border: 1px solid var(--border); box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 20px;
-  }
+
+  #loader { text-align: center; font-weight: 600; color: var(--primary); padding: 60px; font-size: 1.2rem; }
+
+  /* STATS */
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 30px; }
+  .stat-card { background: var(--bg-surface); padding: 24px; border-radius: var(--radius-lg); border: 1px solid var(--border); box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 20px; }
   .stat-icon { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; }
   .stat-icon.blue { background: #eff6ff; color: #2563eb; }
   .stat-icon.green { background: #dcfce7; color: var(--green); }
   .stat-icon.orange { background: #fff7ed; color: var(--primary); }
   .stat-icon.purple { background: #f3e8ff; color: #9333ea; }
-  
   .stat-info h3 { font-size: 0.875rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-bottom: 4px; }
   .stat-info .value { font-size: 2.25rem; font-weight: 800; color: var(--navy); line-height: 1; }
 
-  /* =========================================================
-     LIVE CHARTS GRID
-  ========================================================= */
-  .charts-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
-  .chart-container {
-    background: var(--bg-surface); padding: 24px; border-radius: var(--radius-lg); 
-    border: 1px solid var(--border); box-shadow: var(--shadow-sm);
-  }
+  /* MAP & CHARTS */
+  .map-container { background: var(--bg-surface); padding: 20px; border-radius: var(--radius-lg); border: 1px solid var(--border); box-shadow: var(--shadow-sm); margin-bottom: 30px; }
+  #india-map { height: 500px; width: 100%; }
+
+  .charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 24px; }
+  .chart-container { background: var(--bg-surface); padding: 24px; border-radius: var(--radius-lg); border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
   .chart-header { font-size: 1.1rem; font-weight: 700; color: var(--navy); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); padding-bottom: 12px;}
   .chart-header i { color: var(--primary); }
   .chart-wrapper { height: 300px; position: relative; }
 
-  #loader { text-align: center; font-weight: 600; color: var(--primary); padding: 40px; font-size: 1.2rem; grid-column: span 2; }
+  footer { padding: 40px 5%; text-align: center; color: var(--text-muted); font-size: 0.875rem; border-top: 1px solid var(--border); background: var(--bg-surface); margin-top: 40px; }
 
-  /* =========================================================
-     FOOTER
-  ========================================================= */
-  footer { padding: 40px 5%; text-align: center; color: var(--text-muted); font-size: 0.875rem; border-top: 1px solid var(--border); background: var(--bg-surface); margin-top: 60px; }
-
-  @media (max-width: 900px) {
-    .charts-grid { grid-template-columns: 1fr; }
-    #loader { grid-column: span 1; }
-    .hero h1 { font-size: 2.25rem; }
-  }
-  @media (max-width: 768px) {
-    .nav-links { display: none; }
-  }
+  @media (max-width: 900px) { .charts-grid { grid-template-columns: 1fr; } .hero h1 { font-size: 2rem; } }
 </style>
 </head>
 <body>
 
-  <!-- HEADER -->
   <header>
-    <a href="index.html" class="brand"><i class="fas fa-graduation-cap"></i> IndiaAI</a>
-    <div class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="#">About Scheme</a>
-      <a href="#">Curriculum</a>
+    <div class="logos-container">
+      <!-- Fixed the image loop. If it fails, it just hides the image safely. -->
+      <div class="logo-text"><i class="fas fa-graduation-cap"></i> IndiaAI</div>
+      <div class="divider"></div>
+      <div class="logo-text">NIELIT Ropar</div>
     </div>
     <div class="header-actions">
-      <a href="candidate-login.html" class="btn btn-outline"><i class="fas fa-user"></i> Candidate Login</a>
-      <a href="admin-login.html" class="btn btn-primary"><i class="fas fa-shield-alt"></i> Admin Access</a>
+      <a href="admin-dashboard.html" class="btn" id="admin-portal-btn" style="display: none; color: #FF9933; border-color: #FF9933;"><i class="fas fa-shield-alt"></i> Admin Portal</a>
+      <a href="login.html" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Login</a>
     </div>
+    <script>
+      // Show admin portal button if admin is logged in
+      if (sessionStorage.getItem('isAdminLoggedIn') === 'true') {
+        document.getElementById('admin-portal-btn').style.display = 'inline-flex';
+      }
+    </script>
   </header>
 
-  <!-- HERO SECTION -->
   <section class="hero">
-    <div class="hero-badge"><i class="fas fa-satellite-dish"></i> Live Program Tracking</div>
-    <h1>Empowering the Future Workforce with Advanced AI Skills</h1>
-    <p>The IndiaAI Skill Development Initiative brings government-accredited Artificial Intelligence, Machine Learning, and Data Science training to students across the nation. Track our real-time impact below.</p>
-    <div style="margin-top: 20px;">
-      <a href="candidate-login.html" class="btn btn-primary" style="padding: 14px 28px; font-size: 1.1rem;"><i class="fas fa-laptop-code"></i> View Your Results</a>
-    </div>
+    <h1>IndiaAI Skill Development Initiative - Ropar</h1>
+    <p>Select an ongoing course program below to view detailed curriculum and enrollments.</p>
+    <div id="dynamic-courses-grid" class="course-grid"></div>
   </section>
 
-  <!-- LIVE DASHBOARD PREVIEW -->
   <section class="dashboard-preview">
     <div class="section-header">
-      <h2>Program Impact in Numbers</h2>
-      <p>Data synced directly from our national registration centers in real-time.</p>
+      <h2>National & Regional Impact</h2>
+      <p>Live enrollment and performance data synced directly from our servers.</p>
     </div>
 
-    <!-- STAT CARDS -->
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-icon blue"><i class="fas fa-users"></i></div>
-        <div class="stat-info"><h3>Total Candidates</h3><div class="value" id="stat-total">--</div></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon green"><i class="fas fa-certificate"></i></div>
-        <div class="stat-info"><h3>Certified / Passed</h3><div class="value" id="stat-pass">--</div></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon orange"><i class="fas fa-layer-group"></i></div>
-        <div class="stat-info"><h3>Active Batches</h3><div class="value" id="stat-batch">--</div></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon purple"><i class="fas fa-map-marked-alt"></i></div>
-        <div class="stat-info"><h3>States / Regions</h3><div class="value" id="stat-loc">--</div></div>
-      </div>
-    </div>
+    <!-- MAIN LOADER -->
+    <div id="loader"><i class="fas fa-spinner fa-spin"></i> Establishing secure connection to database...</div>
 
-    <div id="loader"><i class="fas fa-spinner fa-spin"></i> Fetching Live National Data...</div>
-
-    <!-- CHARTS GRID -->
-    <div class="charts-grid" id="charts-wrapper" style="display: none;">
+    <!-- WRAPPER (HIDDEN UNTIL LOAD) -->
+    <div id="dashboard-content" style="display: none;">
       
-      <!-- Chart 1: Performance -->
-      <div class="chart-container">
-        <div class="chart-header"><i class="fas fa-chart-pie"></i> Result Distribution</div>
-        <div class="chart-wrapper"><canvas id="chartResult"></canvas></div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon blue"><i class="fas fa-users"></i></div>
+          <div class="stat-info"><h3>Total Candidates</h3><div class="value" id="stat-total">0</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green"><i class="fas fa-certificate"></i></div>
+          <div class="stat-info"><h3>Certified / Passed</h3><div class="value" id="stat-pass">0</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon orange"><i class="fas fa-layer-group"></i></div>
+          <div class="stat-info"><h3>Active Batches</h3><div class="value" id="stat-batch">0</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon purple"><i class="fas fa-map-marked-alt"></i></div>
+          <div class="stat-info"><h3>States Reached</h3><div class="value" id="stat-loc">0</div></div>
+        </div>
       </div>
 
-      <!-- Chart 2: Diversity/Gender -->
-      <div class="chart-container">
-        <div class="chart-header"><i class="fas fa-venus-mars"></i> Gender Ratio</div>
-        <div class="chart-wrapper"><canvas id="chartGender"></canvas></div>
+      <div class="map-container">
+        <div id="india-map"></div>
       </div>
 
-      <!-- Chart 3: NEW Category Distribution -->
-      <div class="chart-container">
-        <div class="chart-header"><i class="fas fa-users-viewfinder"></i> Category Distribution</div>
-        <div class="chart-wrapper"><canvas id="chartCategory"></canvas></div>
+      <div class="charts-grid">
+        <div class="chart-container">
+          <div class="chart-header"><i class="fas fa-laptop-code"></i> Enrollment by Course</div>
+          <div class="chart-wrapper"><canvas id="chartCourse"></canvas></div>
+        </div>
+        <div class="chart-container">
+          <div class="chart-header"><i class="fas fa-chalkboard-teacher"></i> Ongoing Batches</div>
+          <div class="chart-wrapper"><canvas id="chartBatch"></canvas></div>
+        </div>
+        <div class="chart-container">
+          <div class="chart-header"><i class="fas fa-chart-pie"></i> Result Analytics</div>
+          <div class="chart-wrapper"><canvas id="chartResult"></canvas></div>
+        </div>
+        <div class="chart-container">
+          <div class="chart-header"><i class="fas fa-venus-mars"></i> Gender Diversity</div>
+          <div class="chart-wrapper"><canvas id="chartGender"></canvas></div>
+        </div>
+        <div class="chart-container">
+          <div class="chart-header"><i class="fas fa-users-viewfinder"></i> Category Distribution</div>
+          <div class="chart-wrapper"><canvas id="chartCategory"></canvas></div>
+        </div>
+        <div class="chart-container">
+          <div class="chart-header"><i class="fas fa-city"></i> Top Regional Enrollments</div>
+          <div class="chart-wrapper"><canvas id="chartLocation"></canvas></div>
+        </div>
       </div>
-
-      <!-- Chart 4: Top Locations -->
-      <div class="chart-container">
-        <div class="chart-header"><i class="fas fa-city"></i> Top Enrolled Locations</div>
-        <div class="chart-wrapper"><canvas id="chartLocation"></canvas></div>
-      </div>
-
     </div>
   </section>
 
-  <!-- FOOTER -->
   <footer>
-    <p>&copy; 2026 IndiaAI Dashboard — Developed under the IndiaAI Mission. All rights reserved.</p>
+    <p>&copy; 2026 NIELIT Ropar — Developed under the IndiaAI Mission. All rights reserved.</p>
   </footer>
 
-  <!-- DATA FETCHING & RENDERING SCRIPT -->
   <script>
-    // YOUR APPS SCRIPT URL HERE
+    // === INSERT YOUR GOOGLE APPS SCRIPT URL HERE ===
     const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyKu3tB206mwE7ef_rULrZ_17E5xTfp5rLWlSgY3vuKToj-0UxTvRodyhZYQb8d7qNH/exec';
 
     async function fetchPublicData() {
       try {
+        console.log("Starting data fetch...");
         const response = await fetch(APPS_SCRIPT_URL + "?nocache=" + new Date().getTime());
-        if (!response.ok) throw new Error("Network response was not ok");
+        
+        if (!response.ok) throw new Error("Network error - Status: " + response.status);
         
         const rawData = await response.json();
         if (rawData.error) throw new Error(rawData.error);
-        
-        // Hide loader, show charts
-        document.getElementById('loader').style.display = 'none';
-        document.getElementById('charts-wrapper').style.display = 'grid';
+        if (!Array.isArray(rawData)) throw new Error("Data returned is not an array");
 
-        processMetrics(rawData);
-        renderCharts(rawData);
+        console.log("Data loaded successfully. Records: ", rawData.length);
+
+        // 1. Force the UI to show up IMMEDIATELY even if charts crash
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('dashboard-content').style.display = 'block';
+
+        // 2. Wrap each function in its own Try/Catch block
+        try { processMetricsAndCourses(rawData); } 
+        catch (e) { console.error("Error in Stats/Courses:", e); }
+
+        try { renderCharts(rawData); } 
+        catch (e) { console.error("Error in Charts:", e); }
+
+        try { renderMap(rawData); } 
+        catch (e) { console.error("Error in Map:", e); }
 
       } catch (error) {
-        console.error("Fetch Error:", error);
-        document.getElementById('loader').innerHTML = '<span style="color:var(--danger)"><i class="fas fa-exclamation-triangle"></i> Data sync temporarily unavailable.</span>';
+        console.error("Critical Fetch Error:", error);
+        document.getElementById('loader').innerHTML = '<span style="color:var(--danger)"><i class="fas fa-exclamation-triangle"></i> Cannot connect to database. Please refresh page or check URL.</span>';
       }
     }
 
-    function processMetrics(data) {
+    // Process Top Level Numbers and Hero Cards
+    function processMetricsAndCourses(data) {
       let pass = 0; 
       const batches = new Set();
       const locations = new Set();
+      const coursesSet = new Set();
 
       data.forEach(row => {
         const res = String(row['Result'] || '').toLowerCase();
         if (res === 'pass' || res === 'passed') pass++;
         
         if (row['Batch Wise'] && row['Batch Wise'].trim() !== '') batches.add(row['Batch Wise'].trim());
+        
         if (row['Candidate_Perm_Address_City_State'] && row['Candidate_Perm_Address_City_State'].trim() !== '') {
-          // Attempt to extract State if format is "City, State"
           let loc = row['Candidate_Perm_Address_City_State'].split(',').pop().trim();
           locations.add(loc);
         }
+        
+        if (row['Courses'] && row['Courses'].trim() !== '') {
+          coursesSet.add(row['Courses'].trim());
+        }
       });
 
-      // Animate numbers for visual effect
-      animateValue("stat-total", 0, data.length, 1500);
-      animateValue("stat-pass", 0, pass, 1500);
-      animateValue("stat-batch", 0, batches.size || 1, 1500);
-      animateValue("stat-loc", 0, locations.size || 1, 1500);
+      const courseGrid = document.getElementById('dynamic-courses-grid');
+      courseGrid.innerHTML = ''; 
+      
+      if (coursesSet.size === 0) {
+        courseGrid.innerHTML = '<p style="grid-column: 1/-1;">Courses are currently being updated.</p>';
+      } else {
+        [...coursesSet].sort().forEach(courseName => {
+          const pageLink = courseName.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.html';
+          courseGrid.innerHTML += `
+            <a href="${pageLink}" class="course-card">
+              <div class="course-icon"><i class="fas fa-layer-group"></i></div>
+              <div class="course-info">
+                <h3>${courseName}</h3>
+                <span>View Details <i class="fas fa-arrow-right" style="font-size:0.75rem; margin-left:4px;"></i></span>
+              </div>
+            </a>
+          `;
+        });
+      }
+
+      animateValue("stat-total", 0, data.length, 1200);
+      animateValue("stat-pass", 0, pass, 1200);
+      animateValue("stat-batch", 0, batches.size || 0, 1200);
+      animateValue("stat-loc", 0, locations.size || 0, 1200);
     }
 
+    // Bulletproof Animation Function
+    function animateValue(id, start, end, duration) {
+      const obj = document.getElementById(id);
+      if (!obj) return;
+      if (start === end) { obj.innerHTML = end; return; }
+      
+      let startTimestamp = null;
+      const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        obj.innerHTML = Math.floor(progress * (end - start) + start);
+        if (progress < 1) {
+          window.requestAnimationFrame(step);
+        } else {
+          obj.innerHTML = end;
+        }
+      };
+      window.requestAnimationFrame(step);
+    }
+
+    // Render the Interactive Highcharts Map
+    function renderMap(data) {
+      const stateCounts = {};
+      data.forEach(row => {
+        let loc = String(row['Candidate_Perm_Address_City_State'] || '').split(',').pop().trim();
+        if (loc && loc.toLowerCase() !== 'unknown' && loc.toLowerCase() !== 'n/a' && loc !== '') {
+          let state = loc.toLowerCase().replace(/\b\w/g, s => s.toUpperCase());
+          stateCounts[state] = (stateCounts[state] || 0) + 1;
+        }
+      });
+
+      const mapData = Object.entries(stateCounts).map(([key, value]) => ({
+        name: key,
+        value: value
+      }));
+
+      Highcharts.mapChart('india-map', {
+        chart: { map: 'countries/in/in-all' },
+        title: { text: 'National Reach (By State)', style: { fontFamily: 'Inter', fontWeight: 'bold', color: '#0D1B4B' } },
+        mapNavigation: { enabled: true, buttonOptions: { verticalAlign: 'bottom' } },
+        colorAxis: { min: 0, minColor: '#fff7ed', maxColor: '#FF9933' },
+        series: [{
+          data: mapData,
+          name: 'Candidates Enrolled',
+          joinBy: ['name', 'name'],
+          states: { hover: { color: '#0D1B4B' } },
+          dataLabels: { enabled: true, format: '{point.name}' }
+        }],
+        credits: { enabled: false }
+      });
+    }
+
+    // Render all Chart.js instances
     function renderCharts(data) {
-      // 1. Result Data
-      const resCounts = { Pass: 0, Fail: 0, Pending: 0 };
-      // 2. Gender Data
-      const genCounts = {};
-      // 3. Category Data (NEW)
-      const catCounts = {};
-      // 4. Location Data
-      const locCounts = {};
+      const resCounts = { Pass: 0, Fail: 0, Pending: 0, Dropout: 0 };
+      const genCounts = {}; const catCounts = {}; const locCounts = {};
+      const courseCounts = {}; const batchCounts = {};
 
       data.forEach(r => {
-        // Results
         let res = String(r['Result'] || '').toLowerCase();
         if(res === 'pass' || res === 'passed') resCounts.Pass++;
         else if (res === 'fail' || res === 'failed') resCounts.Fail++;
+        else if (res === 'dropout') resCounts.Dropout++;
         else resCounts.Pending++;
 
-        // Gender
         let g = r['Candidate_Gender'] || 'Not Specified';
         genCounts[g] = (genCounts[g] || 0) + 1;
 
-        // Category
         let c = r['Category'] || 'General/Unspecified';
         catCounts[c] = (catCounts[c] || 0) + 1;
 
-        // Locations
         let loc = r['Candidate_Perm_Address_City_State'] || 'Unknown';
-        if(loc !== 'Unknown') locCounts[loc] = (locCounts[loc] || 0) + 1;
+        if(loc !== 'Unknown' && loc.trim() !== '') locCounts[loc] = (locCounts[loc] || 0) + 1;
+
+        let crs = r['Courses'] || 'Unassigned';
+        if(crs.trim() !== '') courseCounts[crs] = (courseCounts[crs] || 0) + 1;
+
+        let btc = r['Batch Wise'] || 'Unassigned';
+        if(btc.trim() !== '' && btc !== 'Unassigned') batchCounts[btc] = (batchCounts[btc] || 0) + 1;
       });
 
-      // Generate Charts
-      createChart('chartResult', 'doughnut', Object.keys(resCounts), Object.values(resCounts), ['#138808', '#dc2626', '#cbd5e1']);
+      createChart('chartCourse', 'doughnut', Object.keys(courseCounts), Object.values(courseCounts), ['#0D1B4B', '#2563eb', '#FF9933', '#10b981', '#8b5cf6']);
+      createChart('chartBatch', 'bar', Object.keys(batchCounts), Object.values(batchCounts), ['#3b82f6', '#60a5fa', '#93c5fd', '#bfdbfe']);
+      createChart('chartResult', 'pie', Object.keys(resCounts), Object.values(resCounts), ['#138808', '#dc2626', '#f59e0b', '#64748b']);
       createChart('chartGender', 'pie', Object.keys(genCounts), Object.values(genCounts), ['#2563eb', '#db2777', '#8b5cf6', '#cbd5e1']);
-      
-      // Category Chart (Saffron, Blue, Green, Purple palettes)
-      createChart('chartCategory', 'pie', Object.keys(catCounts), Object.values(catCounts), ['#FF9933', '#3b82f6', '#10b981', '#f59e0b', '#64748b']);
-
+      createChart('chartCategory', 'doughnut', Object.keys(catCounts), Object.values(catCounts), ['#FF9933', '#3b82f6', '#10b981', '#f59e0b', '#64748b']);
       const sortedLocs = Object.entries(locCounts).sort((a,b) => b[1] - a[1]).slice(0, 5);
       createChart('chartLocation', 'bar', sortedLocs.map(i=>i[0]), sortedLocs.map(i=>i[1]), ['#FF9933', '#fca5a5', '#fcd34d', '#86efac', '#93c5fd']);
     }
 
-    // Utility: Create Chart.js Instance
     function createChart(canvasId, type, labels, data, colors) {
-      const ctx = document.getElementById(canvasId).getContext('2d');
-      new Chart(ctx, {
+      new Chart(document.getElementById(canvasId).getContext('2d'), {
         type: type,
-        data: {
-          labels: labels,
-          datasets: [{ data: data, backgroundColor: colors, borderWidth: 1, borderColor: '#fff', borderRadius: type === 'bar' ? 4 : 0 }]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8, font: {family: 'Inter'} } } },
-          scales: type === 'bar' ? { y: { beginAtZero: true, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } } : {}
-        }
+        data: { labels: labels, datasets: [{ data: data, backgroundColor: colors, borderWidth: 1, borderColor: '#fff', borderRadius: type === 'bar' ? 6 : 0 }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8, font: {family: 'Inter'} } } }, scales: type === 'bar' ? { y: { beginAtZero: true }, x: { grid: { display: false } } } : {} }
       });
     }
 
-    // Utility: Animate numbers counting up
-    function animateValue(id, start, end, duration) {
-      if (start === end) return;
-      let range = end - start;
-      let current = start;
-      let increment = end > start ? 1 : -1;
-      let stepTime = Math.abs(Math.floor(duration / range));
-      let obj = document.getElementById(id);
-      let timer = setInterval(function() {
-        current += increment;
-        obj.innerHTML = current;
-        if (current == end) clearInterval(timer);
-      }, stepTime);
-    }
-
-    // Boot Data Fetch on Page Load
+    // Start everything when the page loads
     window.onload = fetchPublicData;
   </script>
 </body>
