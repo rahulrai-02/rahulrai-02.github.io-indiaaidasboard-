@@ -343,6 +343,16 @@
     <!-- RIGHT COLUMN: SIDEBAR WIDGETS -->
     <aside class="hub-sidebar">
       
+      <!-- Daily Attendance Widget -->
+      <div class="widget-card">
+        <h4><i class="fas fa-calendar-check" style="color: #16a34a;"></i> Daily Attendance</h4>
+        <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 12px;">Please mark your attendance for today's session.</p>
+        <button id="btn-mark-attendance" class="btn btn-primary" style="width: 100%; justify-content: center;" onclick="markAttendance()">
+          <i class="fas fa-check-circle"></i> Mark Present
+        </button>
+        <div id="attendance-msg" style="display:none; font-size: 0.85rem; font-weight: 600; text-align: center; margin-top: 10px;"></div>
+      </div>
+      
       <!-- Timer Widget -->
       <div class="widget-card" style="background: var(--navy); border: none;">
         <h4 style="color: white; margin-bottom: 10px;"><i class="fas fa-stopwatch" style="color: #38bdf8;"></i> Session Timer</h4>

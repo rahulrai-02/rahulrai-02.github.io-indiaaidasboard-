@@ -234,6 +234,55 @@
     }
   }
 
+  async function markAttendance() {
+    const btn = document.getElementById('btn-mark-attendance');
+    const msgDiv = document.getElementById('attendance-msg');
+    
+    // Put button in loading state
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Marking...';
+    btn.disabled = true;
+    msgDiv.style.display = 'none';
+
+    // Retrieve data
+    const regNo = String(candidateData['Candidate_registration_no'] || candidateData['Candidate Registration No'] || candidateData['Registration No'] || candidateData['RegistrationNo'] || candidateData['regno'] || '').trim();
+    const name = String(candidateData['Candidate_Name'] || candidateData['Candidate Name'] || 'Candidate').trim() || 'Candidate';
+
+    try {
+      const payload = {
+        action: 'mark_attendance',
+        Candidate_registration_no: regNo,
+        Candidate_Name: name
+      };
+
+      const response = await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      });
+      const result = await response.json();
+
+      if (result.status === 'success' || result.status === 'info') {
+        btn.innerHTML = '<i class="fas fa-check"></i> Present Today';
+        btn.style.background = '#94a3b8'; // gray
+        btn.style.borderColor = '#94a3b8';
+        btn.disabled = true;
+        
+        msgDiv.style.display = 'block';
+        msgDiv.style.color = '#16a34a';
+        msgDiv.innerText = result.message || 'Attendance marked successfully!';
+      } else {
+        throw new Error(result.message || 'Failed to mark attendance.');
+      }
+    } catch (e) {
+      console.error(e);
+      btn.innerHTML = '<i class="fas fa-check-circle"></i> Mark Present';
+      btn.disabled = false;
+      
+      msgDiv.style.display = 'block';
+      msgDiv.style.color = '#dc2626';
+      msgDiv.innerText = e.message || 'Error occurred. Try again.';
+    }
+  }
+
   function getCertificateLink() {
     const keys = ['Certificate Link', 'Certificate_Link', 'certificate_link', 'certificate link', 'CertificateLink', 'CertificateURL', 'Certificate_URL'];
     for (const key of keys) {
