@@ -253,45 +253,32 @@
   };
 
   // Fetch the live queue of today's attendance checks
-  async function syncLiveQueue() {
+ async function syncLiveQueue() {
     try {
-      const response = await fetch(APPS_SCRIPT_URL, {
+      const response = await fetch(APPS_SCRIPT_URL + '?nocache=' + Date.now(), {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({ action: 'fetch_live_attendance' })
       });
-      const result = await response.json();
+      const data = await response.json();
       
-      document.getElementById('summary-active-today').innerText = result.active !== undefined ? result.active : '--';
-      document.getElementById('summary-verified-today').innerText = result.verified !== undefined ? result.verified : '--';
+      // DEBUG LOG
+      console.log("Raw Data from Sheet:", data);
       
-      const tbody = document.getElementById('queue-body');
-      if (!result.pending || result.pending.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding: 30px; color: var(--text-muted);">
-          <i class="fas fa-check-circle" style="color: #10b981; font-size: 1.5rem; display:block; margin-bottom:10px;"></i> 
-          All active students are verified!
-        </td></tr>`;
-      } else {
-        tbody.innerHTML = result.pending.map(p => `
-          <tr>
-            <td>
-              <strong style="color:var(--navy); font-size: 1.05rem;">${p.name}</strong><br>
-              <span style="font-size:0.85rem; color:var(--text-muted);">${p.regNo}</span>
-            </td>
-            <td><i class="fas fa-clock" style="color:#cbd5e1; margin-right:5px;"></i> ${p.time}</td>
-            <td>
-              <button class="btn btn-success" onclick="verifyStudent(${p.row}, this)">
-                <i class="fas fa-check"></i> Verify
-              </button>
-            </td>
-          </tr>
-        `).join('');
-      }
+      // The Logic: Look at the column 'Last_Login_Date'
+      const today = new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'2-digit', year:'numeric' }).split('/').join('-');
+      
+      const activeStudents = data.filter(r => String(r['Last_Login_Date']).trim() === today);
+      
+      console.log("Calculated Today:", today);
+      console.log("Filtered Active Students:", activeStudents);
+
+      document.getElementById('summary-active-today').innerText = activeStudents.length;
+      
     } catch(e) {
       console.error("Queue sync failed", e);
     }
   }
-
   // Admin clicks to verify a student
   async function verifyStudent(rowIndex, btnElement) {
     btnElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
