@@ -8,16 +8,6 @@
   if (sessionStorage.getItem('isCandidateLoggedIn') !== 'true') {
     window.location.replace('login.html');
   }
-  
-  // Show admin portal link if admin is logged in
-  window.addEventListener('DOMContentLoaded', function() {
-    if (sessionStorage.getItem('isAdminLoggedIn') === 'true') {
-      const adminLink = document.getElementById('admin-nav-item');
-      if (adminLink) {
-        adminLink.style.display = 'flex';
-      }
-    }
-  });
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -39,8 +29,6 @@
   
   .nav-item { padding: 15px 20px; color: #cbd5e1; text-decoration: none; display: flex; align-items: center; gap: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s; border-left: 4px solid transparent; }
   .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.05); color: white; border-left-color: var(--primary); }
-  .nav-item#admin-nav-item { display: none; color: #ffd700; border-left-color: #ffd700; }
-  .nav-item#admin-nav-item:hover { color: #ffed4e; }
   .logout-btn { margin-top: auto; color: #fca5a5; }
   .logout-btn:hover { color: #ef4444; background: rgba(239, 68, 68, 0.1); border-left-color: #ef4444; }
 
@@ -113,9 +101,6 @@
   <!-- SIDEBAR NAVIGATION -->
   <div class="sidebar">
     <div class="brand"><i class="fas fa-graduation-cap"></i> Candidate Hub</div>
-    <a href="admin-dashboard.html" class="nav-item" id="admin-nav-item">
-      <i class="fas fa-shield-alt"></i> Admin Portal
-    </a>
     <a class="nav-item active" onclick="switchView('profile')" id="nav-profile">
       <i class="fas fa-user-circle"></i> My Profile
     </a>
@@ -136,7 +121,7 @@
         <p style="color:var(--text-muted); font-size:0.9rem;">Batch: <strong id="display_batch">---</strong> | Result: <strong id="display_status">---</strong></p>
       </div>
       <div id="certificate-container" style="display: none;">
-        <!-- Button triggers the New Tab function -->
+        <!-- Securely opens certificate in a new tab -->
         <button onclick="openCertificate()" class="btn" style="background:#16a34a; color:white;">
           <i class="fas fa-award"></i> View Certificate
         </button>
@@ -165,7 +150,7 @@
       </div>
     </div>
 
-    <!-- VIEW 2: ASSIGNMENTS -->
+    <!-- VIEW 2: ASSIGNMENTS & SANDBOX -->
     <div class="view-section" id="view-assignments">
       
       <!-- List View -->
@@ -187,7 +172,7 @@
           <div class="sandbox-pane card" style="margin-bottom: 0;">
             <div class="pane-header" id="sandbox-title">Assignment Title</div>
             <div class="question-viewer" id="sandbox-question-container">
-              <!-- Content injected via JS based on Text or URL -->
+              <!-- Content injected via JS -->
             </div>
           </div>
 
@@ -221,104 +206,100 @@
   </div>
 
 <script>
-  // YOUR APPS SCRIPT URL
   const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyAfhakyTh0j_StQ3a2MpnZlqQq-46kuW45Vw8V2V8gIUa9Prr-c21K-d5ZoTYAEnU2VQ/exec';
   let candidateData = {};
   let currentEditorMode = 'text';
 
-  document.addEventListener('DOMContentLoaded', () => {
+  // ==========================================
+  // INITIALIZATION & SILENT PING
+  // ==========================================
+  window.onload = async () => {
     const rawData = sessionStorage.getItem('currentCandidateData');
     if (!rawData) return;
+    
     candidateData = JSON.parse(rawData);
     
+    // Set up top bar
     document.getElementById('display_name').innerText = candidateData['Candidate_Name'] || 'Student';
-    document.getElementById('display_batch').innerText = candidateData['Batch Wise'] || 'Unassigned';
+    document.getElementById('display_batch').innerText = candidateData['Batch Wise'] || candidateData['Batch'] || 'Unassigned';
     document.getElementById('display_status').innerText = candidateData['Result'] || 'Pending';
     
-    if (candidateData['Certificate Link']) {
+    // Check for certificate
+    if (candidateData['Certificate Link'] && candidateData['Certificate Link'].trim() !== '') {
       document.getElementById('certificate-container').style.display = 'block';
     }
     
+    // Fill out profile form
     const fields = ['Candidate_Name', 'Courses', 'Apaar', 'Candidate_Mobile', 'Candidate_Email', 'Candidate_Perm_Address_City_State', 'Candidate_registration_no'];
     fields.forEach(f => { if(document.getElementById(f) && candidateData[f]) document.getElementById(f).value = candidateData[f]; });
 
     setupAntiCheat();
 
-    /* ==========================================
-       SILENT PING: Auto-Check in for Attendance
-       ========================================== */
+    // Fire the Silent Ping for Live Attendance
     silentPing();
-  });
+  };
 
-  // ==========================================
-  // SILENT ATTENDANCE PING LOGIC
-  // ==========================================
+  // Sends attendance logic in background
   async function silentPing() {
-    const regNo = candidateData['Candidate_registration_no'];
-    const name = candidateData['Candidate_Name'];
+    const candidateReg = candidateData['Candidate_registration_no'];
+    const candidateName = candidateData['Candidate_Name'] || 'Candidate';
 
-    if (!regNo) return; // Failsafe
+    if(!candidateReg) return; 
 
     const payload = {
       action: 'candidate_ping',
-      Candidate_registration_no: regNo,
-      Candidate_Name: name
+      Candidate_registration_no: candidateReg,
+      Candidate_Name: candidateName
     };
 
     try {
-      // Send silent POST to register login time and mark them 'Pending Verification'
       await fetch(APPS_SCRIPT_URL, { 
         method: 'POST', 
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // Bypasses CORS
         body: JSON.stringify(payload) 
       });
-      console.log("Attendance Ping sent successfully.");
-    } catch (e) {
-      console.error("Attendance Ping failed:", e);
+      console.log("Session logged to attendance queue.");
+    } catch(e) {
+      console.error("Session ping failed.", e);
     }
   }
 
+  // ==========================================
+  // NAVIGATION LOGIC
+  // ==========================================
   function switchView(viewId) {
     document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
     document.getElementById(`nav-${viewId}`).classList.add('active');
     document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
     document.getElementById(`view-${viewId}`).classList.add('active');
+    
     if(viewId === 'assignments') fetchAssignments();
   }
 
   // ==========================================
-  // CERTIFICATE VIEW LOGIC (NEW TAB)
+  // CERTIFICATE LOGIC (NEW TAB)
   // ==========================================
   function openCertificate() {
     let certUrl = candidateData['Certificate Link'];
-    
     if (certUrl) {
-      // Clean up the URL: if it has /preview, change it back to /view so it opens beautifully in a new tab
+      // Clean up the URL so it opens properly
       if (certUrl.includes('/preview')) {
         certUrl = certUrl.replace('/preview', '/view');
       }
-      
-      // Open the official Google Drive viewer securely in a new browser tab
       window.open(certUrl, '_blank');
     } else {
-      alert("Certificate not found in the database. Please contact administration.");
+      alert("Certificate not found.");
     }
   }
 
   // ==========================================
-  // ANTI-CHEAT: STRICT MODE ENFORCEMENT
+  // ANTI-CHEAT
   // ==========================================
   function setupAntiCheat() {
     const editor = document.getElementById('sandbox-editor');
-    
-    // Block Paste via Mouse
-    editor.addEventListener('paste', e => { e.preventDefault(); alert("Security Alert: Copy/Pasting is disabled for assessments."); });
-    // Block Drag & Drop
+    editor.addEventListener('paste', e => { e.preventDefault(); alert("Security Alert: Copy/Pasting is disabled."); });
     editor.addEventListener('drop', e => { e.preventDefault(); alert("Security Alert: Drag & Drop is disabled."); });
-    // Block Right Click Menu
     editor.addEventListener('contextmenu', e => e.preventDefault());
-    
-    // Block Keyboard Shortcuts (Ctrl+V, Cmd+V, Ctrl+C)
     editor.addEventListener('keydown', function(e) {
       if ((e.ctrlKey || e.metaKey) && (e.key === 'v' || e.key === 'V' || e.key === 'c' || e.key === 'C')) {
         e.preventDefault();
@@ -328,14 +309,13 @@
   }
 
   // ==========================================
-  // FETCH ASSIGNMENTS
+  // LMS: FETCH ASSIGNMENTS
   // ==========================================
   async function fetchAssignments() {
     const grid = document.getElementById('assignment-grid');
     const loader = document.getElementById('loader-assignments');
     grid.innerHTML = ''; loader.style.display = 'block';
     
-    // Updated Payload: Sends both Batch and Course for accurate matching
     const payload = { 
       action: 'fetch_assignments', 
       'Batch Wise': candidateData['Batch Wise'] || candidateData['Batch'] || 'Unassigned',
@@ -357,7 +337,6 @@
       }
 
       assignments.forEach(task => {
-        // Encode the question safely before passing to the function
         const safeTitle = encodeURIComponent(task.Title);
         const safeQuestion = encodeURIComponent(task.Question);
         
@@ -377,7 +356,7 @@
   }
 
   // ==========================================
-  // SMART SPLIT-SCREEN RENDERER
+  // LMS: SANDBOX RENDERER
   // ==========================================
   function openSandbox(id, encTitle, encQuestion) {
     const title = decodeURIComponent(encTitle);
@@ -387,19 +366,15 @@
     document.getElementById('sandbox-container').style.display = 'block';
     document.getElementById('submission-alert').style.display = 'none';
     document.getElementById('sandbox-editor').value = ''; 
-    
     document.getElementById('current_assignment_id').value = id;
     document.getElementById('sandbox-title').innerText = title;
     
     const qContainer = document.getElementById('sandbox-question-container');
     
-    // Check if the Admin pasted a URL (Like a Google Drive PDF link)
     if (question.startsWith('http://') || question.startsWith('https://')) {
-      // If it's a Drive link, change /view to /preview for perfect embedding
       let embedUrl = question.replace('/view', '/preview');
       qContainer.innerHTML = `<iframe src="${embedUrl}" width="100%" height="100%" style="border:none; flex:1;"></iframe>`;
     } else {
-      // Otherwise, render it as standard text
       qContainer.innerHTML = `<div class="question-text">${question}</div>`;
     }
   }
@@ -414,13 +389,12 @@
     const editor = document.getElementById('sandbox-editor');
     document.getElementById('btn-mode-text').classList.remove('active');
     document.getElementById('btn-mode-code').classList.remove('active');
-    
     document.getElementById(`btn-mode-${mode}`).classList.add('active');
     editor.className = `sandbox-area mode-${mode}`;
   }
 
   // ==========================================
-  // SUBMISSION LOGIC
+  // SUBMISSION: PROFILE AND LMS
   // ==========================================
   document.getElementById('submission-form').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -448,20 +422,21 @@
       alertBox.style.display = 'block';
       setTimeout(closeSandbox, 2000);
     } catch(err) {
-      alert("Failed to submit assignment. Check connection.");
+      alert("Failed to submit assignment.");
     } finally {
       btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Submit Answer'; btn.disabled = false;
     }
   });
 
-  // Profile Edit Form Submit
   document.getElementById('profile-edit-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const btn = document.getElementById('save-profile-btn');
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...'; btn.disabled = true;
+    
     let payload = { action: 'candidate_edit' };
     Object.assign(payload, candidateData); 
     ['Candidate_Mobile', 'Candidate_Email', 'Candidate_Perm_Address_City_State'].forEach(f => { payload[f] = document.getElementById(f).value; });
+    
     try {
       await fetch(APPS_SCRIPT_URL, { 
         method: 'POST', 
@@ -470,8 +445,11 @@
       });
       document.getElementById('profile-alert').style.display = 'block';
       sessionStorage.setItem('currentCandidateData', JSON.stringify(payload));
-    } catch(err) { alert("Failed to submit request."); } 
-    finally { btn.innerHTML = '<i class="fas fa-paper-plane"></i> Request Update'; btn.disabled = false; }
+    } catch(err) { 
+      alert("Failed to submit request."); 
+    } finally { 
+      btn.innerHTML = '<i class="fas fa-paper-plane"></i> Request Update'; btn.disabled = false; 
+    }
   });
 
   function logout() { sessionStorage.clear(); window.location.replace('login.html'); }
