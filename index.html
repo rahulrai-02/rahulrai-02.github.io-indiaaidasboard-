@@ -1,230 +1,1702 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IndiaAI Skill Development - NIELIT Ropar</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IndiaAI Skill Development — NIELIT Ropar</title>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <!-- SEO & Meta Tags -->
+  <meta name="description"
+    content="IndiaAI Skill Development Program by NIELIT Ropar. Empowering India's youth with advanced Artificial Intelligence, Machine Learning, and Data Science skills.">
+  <meta name="keywords"
+    content="India AI, IndiaAI, NIELIT Ropar, Artificial Intelligence Training India, AI Skill Development, Machine Learning, Data Science, AI Dashboard, India AI Dashboard">
+  <meta name="author" content="NIELIT Ropar">
+  <meta name="robots" content="index, follow">
 
-<script src="https://code.highcharts.com/maps/highmaps.js"></script>
-<script src="https://code.highcharts.com/mapdata/countries/in/in-all.js"></script>
+  <!-- Open Graph / Social Media -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="IndiaAI Skill Development — NIELIT Ropar">
+  <meta property="og:description"
+    content="Empowering India's youth with advanced Artificial Intelligence, Machine Learning, and Data Science skills.">
 
-<style>
-  :root {
-    --bg-body: #f8fafc; --bg-surface: #ffffff; --text-main: #0f172a; --text-muted: #64748b;
-    --border: #e2e8f0; --primary: #FF9933; --primary-hover: #e58a2e; --navy: #0D1B4B; --green: #138808;
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05); --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-    --radius-md: 8px; --radius-lg: 12px;
-  }
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="IndiaAI Skill Development — NIELIT Ropar">
+  <meta property="twitter:description"
+    content="Empowering India's youth with advanced Artificial Intelligence, Machine Learning, and Data Science skills.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <script src="https://code.highcharts.com/maps/highmaps.js"></script>
+  <script src="https://code.highcharts.com/mapdata/countries/in/custom/in-all-disputed.js"></script>
+  <link rel="stylesheet" href="g-flat.css">
+  <script src="lang-support.js" defer></script>
+  <style>
+    :root {
+      --gray-400: #94a3b8;
+      --gray-500: #64748b;
+      --gray-600: #475569;
+      --gray-700: #334155;
+      --gray-800: #1e293b;
+      --gray-900: #0f172a;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 24px;
+      --radius-xl: 32px;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+      --shadow-xl: 0 16px 36px rgba(0, 0, 0, 0.15);
+    }
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); color: var(--text-main); line-height: 1.6; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-  /* HEADER & LOGOS */
-  header {
-    background-color: var(--bg-surface); border-bottom: 1px solid var(--border); padding: 12px 5%;
-    display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-sm);
-  }
-  .logos-container { display: flex; align-items: center; gap: 15px; }
-  
-  /* Fallback text if logos don't load */
-  .logo-text { font-size: 1.25rem; font-weight: 800; color: var(--navy); display: flex; align-items: center; gap: 10px; }
-  .logo-text i { color: var(--primary); }
-  .logos-container .divider { width: 1px; height: 30px; background: var(--border); }
-  
-  .header-actions { display: flex; gap: 12px; }
-  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: var(--radius-md); font-size: 0.9rem; font-weight: 600; text-decoration: none; cursor: pointer; transition: all 0.2s; border: 1px solid var(--border); }
-  .btn-outline { background: transparent; color: var(--text-main); border-color: var(--border); }
-  .btn-outline:hover { background: #f1f5f9; }
-  .btn-primary { background: var(--primary); color: white; border-color: var(--primary); }
-  .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255, 153, 51, 0.2); }
+    html {
+      scroll-behavior: smooth;
+    }
 
-  /* HERO SECTION */
-  .hero { padding: 60px 5% 40px; text-align: center; max-width: 1200px; margin: 0 auto; }
-  .hero h1 { font-size: 2.5rem; font-weight: 800; color: var(--navy); line-height: 1.2; margin-bottom: 16px; }
-  .hero p { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 40px; }
+    body {
+      font-family: 'Outfit', 'Inter', sans-serif;
+      color: var(--gray-800);
+      line-height: 1.6;
+      background: var(--offwhite);
+      overflow-x: hidden;
+    }
 
-  /* COURSE GRID */
-  .course-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
-  .course-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; text-align: left; text-decoration: none; color: var(--text-main); box-shadow: var(--shadow-sm); transition: all 0.3s ease; display: flex; align-items: center; gap: 16px; }
-  .course-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); border-color: var(--primary); }
-  .course-icon { width: 50px; height: 50px; border-radius: 10px; background: #fff7ed; color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0; }
-  .course-info h3 { font-size: 1.1rem; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
-  .course-info span { font-size: 0.85rem; color: var(--primary); font-weight: 600; }
 
-  /* DASHBOARD SECTION */
-  .dashboard-preview { padding: 20px 5% 60px; max-width: 1400px; margin: 0 auto; }
-  .section-header { text-align: center; margin-bottom: 30px; padding-top: 40px; border-top: 1px solid var(--border); }
-  .section-header h2 { font-size: 2rem; color: var(--navy); margin-bottom: 8px; }
-  .section-header p { color: var(--text-muted); }
 
-  #loader { text-align: center; font-weight: 600; color: var(--primary); padding: 60px; font-size: 1.2rem; }
+    /* ===== HERO ===== */
+    .hero-section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      background: linear-gradient(135deg, #fff8f0 0%, #ffffff 40%, #f0f9ff 100%);
+      padding: 120px 24px 60px;
+      overflow: hidden;
+    }
 
-  /* STATS */
-  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 30px; }
-  .stat-card { background: var(--bg-surface); padding: 24px; border-radius: var(--radius-lg); border: 1px solid var(--border); box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 20px; }
-  .stat-icon { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; }
-  .stat-icon.blue { background: #eff6ff; color: #2563eb; }
-  .stat-icon.green { background: #dcfce7; color: var(--green); }
-  .stat-icon.orange { background: #fff7ed; color: var(--primary); }
-  .stat-icon.purple { background: #f3e8ff; color: #9333ea; }
-  .stat-info h3 { font-size: 0.875rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-bottom: 4px; }
-  .stat-info .value { font-size: 2.25rem; font-weight: 800; color: var(--navy); line-height: 1; }
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      top: -10%;
+      right: -5%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(255, 153, 51, 0.12) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
 
-  /* MAP & CHARTS */
-  .map-container { background: var(--bg-surface); padding: 20px; border-radius: var(--radius-lg); border: 1px solid var(--border); box-shadow: var(--shadow-sm); margin-bottom: 30px; }
-  #india-map { height: 500px; width: 100%; }
+    .hero-section::after {
+      content: '';
+      position: absolute;
+      bottom: -10%;
+      left: -5%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(19, 136, 8, 0.08) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
 
-  .charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 24px; }
-  .chart-container { background: var(--bg-surface); padding: 24px; border-radius: var(--radius-lg); border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
-  .chart-header { font-size: 1.1rem; font-weight: 700; color: var(--navy); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); padding-bottom: 12px;}
-  .chart-header i { color: var(--primary); }
-  .chart-wrapper { height: 300px; position: relative; }
+    .hero-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
 
-  footer { padding: 40px 5%; text-align: center; color: var(--text-muted); font-size: 0.875rem; border-top: 1px solid var(--border); background: var(--bg-surface); margin-top: 40px; }
+    .hero-badge-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
 
-  @media (max-width: 900px) { .charts-grid { grid-template-columns: 1fr; } .hero h1 { font-size: 2rem; } }
-</style>
-</head>
-<body>
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      background: white;
+      border: 1px solid var(--gray-200);
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--gray-600);
+      box-shadow: var(--shadow-sm);
+    }
 
-  <header>
-    <div class="logos-container">
-      <!-- Fixed the image loop. If it fails, it just hides the image safely. -->
-      <div class="logo-text"><i class="fas fa-graduation-cap"></i> IndiaAI</div>
-      <div class="divider"></div>
-      <div class="logo-text">NIELIT Ropar</div>
-    </div>
-    <div class="header-actions">
-      <a href="admin-dashboard.html" class="btn" id="admin-portal-btn" style="display: none; color: #FF9933; border-color: #FF9933;"><i class="fas fa-shield-alt"></i> Admin Portal</a>
-      <a href="login.html" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Login</a>
-    </div>
-    <script>
-      // Show admin portal button if admin is logged in
-      if (sessionStorage.getItem('isAdminLoggedIn') === 'true') {
-        document.getElementById('admin-portal-btn').style.display = 'inline-flex';
+    .hero-pill i {
+      color: var(--saffron);
+    }
+
+    .hero-title {
+      font-size: clamp(2.5rem, 5vw, 4.2rem);
+      font-weight: 900;
+      line-height: 1.1;
+      color: var(--navy);
+      letter-spacing: -1.5px;
+      margin-bottom: 20px;
+    }
+
+    .hero-title .highlight {
+      color: var(--saffron);
+    }
+
+    .hero-desc {
+      font-size: 1.15rem;
+      color: var(--gray-600);
+      max-width: 540px;
+      line-height: 1.8;
+      margin-bottom: 32px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 32px;
+      background: var(--navy);
+      color: white;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 30px rgba(10, 22, 40, 0.25);
+    }
+
+    .btn-primary:hover {
+      background: var(--saffron);
+      transform: translateY(-2px);
+      box-shadow: 0 14px 40px rgba(255, 153, 51, 0.3);
+    }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 32px;
+      background: white;
+      color: var(--gray-800);
+      border: 1.5px solid var(--gray-200);
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .btn-outline:hover {
+      border-color: var(--saffron);
+      color: var(--saffron);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* LIVE STATS BAR — RIGHT BELOW HERO BUTTONS */
+    .live-stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      background: white;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--gray-200);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+    }
+
+    .live-stat-item {
+      padding: 28px 20px;
+      text-align: center;
+      position: relative;
+    }
+
+    .live-stat-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 1px;
+      height: 50px;
+      background: var(--gray-200);
+    }
+
+    .live-stat-number {
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: var(--navy);
+      line-height: 1;
+    }
+
+    .live-stat-number .suffix {
+      font-size: 1.3rem;
+      color: var(--saffron);
+    }
+
+    .live-stat-label {
+      font-size: 0.85rem;
+      color: var(--gray-500);
+      font-weight: 600;
+      margin-top: 8px;
+    }
+
+    .live-stat-loading {
+      font-size: 1.2rem;
+      color: var(--gray-400);
+    }
+
+    .live-stat-item .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--green);
+      background: var(--green-light);
+      padding: 3px 10px;
+      border-radius: 999px;
+      margin-bottom: 8px;
+    }
+
+    .live-stat-item .live-badge i {
+      font-size: 0.6rem;
+    }
+
+    .hero-visual {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-image-main {
+      width: 100%;
+      max-width: 520px;
+      aspect-ratio: 1;
+      border-radius: var(--radius-xl);
+      background: linear-gradient(135deg, #fff 0%, #f8f4ff 100%);
+      box-shadow: var(--shadow-xl);
+      overflow: hidden;
+      position: relative;
+      border: 1px solid var(--gray-200);
+    }
+
+    .hero-image-main img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .hero-float-card {
+      position: absolute;
+      background: white;
+      padding: 18px 22px;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-xl);
+      border: 1px solid var(--gray-100);
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .hero-float-card.top-left {
+      top: -20px;
+      left: -20px;
+      animation-delay: 0s;
+    }
+
+    .hero-float-card.bottom-right {
+      bottom: 20px;
+      right: -20px;
+      animation-delay: 3s;
+    }
+
+    .hero-float-card .float-label {
+      font-size: 0.75rem;
+      color: var(--gray-400);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .hero-float-card .float-value {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--navy);
+    }
+
+    .hero-float-card .float-sub {
+      font-size: 0.8rem;
+      color: var(--gray-500);
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0);
       }
-    </script>
-  </header>
 
-  <section class="hero">
-    <h1>IndiaAI Skill Development Initiative - Ropar</h1>
-    <p>Select an ongoing course program below to view detailed curriculum and enrollments.</p>
-    <div id="dynamic-courses-grid" class="course-grid"></div>
+      50% {
+        transform: translateY(-12px);
+      }
+    }
+
+    /* ===== SECTIONS COMMON ===== */
+    .section {
+      padding: 100px 24px;
+      position: relative;
+    }
+
+    .section-container {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto 60px;
+    }
+
+    .section-label {
+      display: inline-block;
+      padding: 6px 16px;
+      background: var(--saffron-light);
+      color: var(--saffron);
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      border-radius: 999px;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 800;
+      color: var(--navy);
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .section-desc {
+      font-size: 1.1rem;
+      color: var(--gray-500);
+      line-height: 1.7;
+    }
+
+    /* ===== FEATURES ===== */
+    .features-section {
+      background: white;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+    }
+
+    .feature-card {
+      padding: 36px 32px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--gray-100);
+      background: white;
+      transition: all 0.35s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--saffron), var(--green));
+      transform: scaleX(0);
+      transition: transform 0.35s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-xl);
+      border-color: transparent;
+    }
+
+    .feature-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .feature-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+    }
+
+    .feature-icon.orange {
+      background: var(--saffron-light);
+      color: var(--saffron);
+    }
+
+    .feature-icon.green {
+      background: var(--green-light);
+      color: var(--green);
+    }
+
+    .feature-icon.blue {
+      background: #eff6ff;
+      color: #2563eb;
+    }
+
+    .feature-card h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 10px;
+    }
+
+    .feature-card p {
+      font-size: 0.95rem;
+      color: var(--gray-500);
+      line-height: 1.7;
+    }
+
+    /* ===== COORDINATORS — CIRCLE LAYOUT ===== */
+    .coordinators-section {
+      background: linear-gradient(180deg, var(--offwhite) 0%, white 100%);
+    }
+
+    .coord-circle-layout {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .coord-top-row {
+      display: flex;
+      gap: 60px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .coord-bottom-row {
+      display: flex;
+      justify-content: center;
+    }
+
+    .coord-card-circle {
+      background: white;
+      border-radius: var(--radius-xl);
+      padding: 40px 32px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--gray-100);
+      text-align: center;
+      width: 440px;
+      transition: all 0.4s ease;
+      position: relative;
+    }
+
+    .coord-card-circle:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .coord-card-circle.head {
+      border-top: 4px solid var(--saffron);
+    }
+
+    .coord-card-circle.cohead {
+      border-top: 4px solid var(--green);
+    }
+
+    .coord-card-circle.centre {
+      border-top: 4px solid #2563eb;
+    }
+
+    .coord-avatar {
+      width: 4in;
+      height: 4in;
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      padding: 6px;
+      background: linear-gradient(135deg, var(--saffron), var(--green), #2563eb, #ff9933);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+    }
+
+    .coord-avatar img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      background: white;
+      display: block;
+    }
+
+    .coord-role-tag {
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+
+    .coord-role-tag.head-tag {
+      background: var(--saffron-light);
+      color: var(--saffron);
+    }
+
+    .coord-role-tag.cohead-tag {
+      background: var(--green-light);
+      color: var(--green);
+    }
+
+    .coord-role-tag.centre-tag {
+      background: #eff6ff;
+      color: #2563eb;
+    }
+
+    .coord-name {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+
+    .coord-qual {
+      font-size: 0.95rem;
+      color: var(--green);
+      font-weight: 700;
+      margin-bottom: 16px;
+      letter-spacing: 0.3px;
+    }
+
+    .coord-desc {
+      font-size: 0.9rem;
+      color: var(--gray-500);
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    .coord-badges {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .coord-badge {
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      background: var(--gray-50);
+      color: var(--gray-600);
+      border: 1px solid var(--gray-200);
+    }
+
+    .connector-line {
+      width: 2px;
+      height: 40px;
+      background: linear-gradient(180deg, var(--gray-300), transparent);
+      margin: 0 auto;
+    }
+
+    /* ===== COURSES ===== */
+    .courses-section {
+      background: white;
+    }
+
+    .courses-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .course-card {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 28px;
+      background: white;
+      border: 1px solid var(--gray-100);
+      border-radius: var(--radius-lg);
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.3s ease;
+    }
+
+    .course-card:hover {
+      border-color: var(--saffron);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .course-icon-box {
+      width: 56px;
+      height: 56px;
+      border-radius: var(--radius-md);
+      background: var(--saffron-light);
+      color: var(--saffron);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+
+    .course-info h4 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+
+    .course-info span {
+      font-size: 0.85rem;
+      color: var(--saffron);
+      font-weight: 600;
+    }
+
+    /* ===== DASHBOARD ===== */
+    .dashboard-section {
+      background: var(--offwhite);
+    }
+
+    .dashboard-loader {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--gray-500);
+      font-weight: 600;
+    }
+
+    .dashboard-loader i {
+      color: var(--saffron);
+      font-size: 2rem;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .dash-stat {
+      background: white;
+      padding: 28px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--gray-100);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      transition: all 0.3s ease;
+    }
+
+    .dash-stat:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .dash-stat-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+    }
+
+    .dash-stat-icon.blue {
+      background: #eff6ff;
+      color: #2563eb;
+    }
+
+    .dash-stat-icon.green {
+      background: var(--green-light);
+      color: var(--green);
+    }
+
+    .dash-stat-icon.orange {
+      background: var(--saffron-light);
+      color: var(--saffron);
+    }
+
+    .dash-stat-icon.purple {
+      background: #f3e8ff;
+      color: #9333ea;
+    }
+
+    .dash-stat-info h4 {
+      font-size: 0.8rem;
+      color: var(--gray-400);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .dash-stat-info .value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--navy);
+      line-height: 1;
+    }
+
+    .map-wrap {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      border: 1px solid var(--gray-100);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 40px;
+    }
+
+    #india-map {
+      height: 500px;
+      width: 100%;
+    }
+
+    .map-caption {
+      text-align: center;
+      color: var(--gray-400);
+      font-size: 0.9rem;
+      margin-top: 16px;
+    }
+
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .chart-box {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      border: 1px solid var(--gray-100);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .chart-box.wide {
+      grid-column: span 2;
+    }
+
+    .chart-header {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--gray-100);
+    }
+
+    .chart-header i {
+      color: var(--saffron);
+    }
+
+    .chart-canvas-wrap {
+      height: 280px;
+      position: relative;
+    }
+
+    /* ===== GALLERY PREVIEW ===== */
+    .gallery-section {
+      background: white;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .gallery-item {
+      aspect-ratio: 4/3;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.08);
+    }
+
+    .gallery-item.featured {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+
+    .gallery-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(10, 22, 40, 0.7), transparent);
+      display: flex;
+      align-items: flex-end;
+      padding: 20px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .gallery-item:hover .gallery-overlay {
+      opacity: 1;
+    }
+
+    .gallery-overlay span {
+      color: white;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+
+
+    /* ===== ANIMATIONS ===== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      .hero-container {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .hero-visual {
+        order: -1;
+      }
+
+      .live-stats-bar {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .live-stat-item:nth-child(2)::after {
+        display: none;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .chart-box.wide {
+        grid-column: span 1;
+      }
+
+      .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .gallery-item.featured {
+        grid-column: span 2;
+        grid-row: span 1;
+      }
+
+      .footer-top {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+
+      .hero-title {
+        font-size: 2.2rem;
+      }
+
+      .live-stats-bar {
+        grid-template-columns: 1fr;
+      }
+
+      .live-stat-item::after {
+        display: none !important;
+      }
+
+      .coord-top-row {
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+      }
+
+      .coord-card-circle {
+        width: 100%;
+        max-width: 340px;
+      }
+
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-top {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-float-card {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body class="has-navbar">
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <div class="nav-logo" onclick="window.location.href='index.html'" style="cursor: pointer;">
+        <img src="photos/India logo .png" alt="IndiaAI Logo" style="height: 48px; width: auto; object-fit: contain;">
+        <div class="logo-divider"></div>
+        <img src="photos/emblem.jpeg" alt="Emblem of India" class="nav-partner-logo">
+        <img src="photos/ndu-logo.jpeg" alt="NDU Logo" class="nav-partner-logo">
+      </div>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle Navigation">
+        <span class="hamburger"></span>
+      </button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about-us.html">About</a>
+        <a href="training-curriculum.html">Training</a>
+        <a href="index.html#coordinators">Team</a>
+        <a href="index.html#dashboard">Insights</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="contact-us.html">Contact</a>
+        <a href="login.html" class="nav-cta">Login</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero-section">
+    <div class="hero-container">
+      <div class="hero-content">
+
+        <h1 class="hero-title"><span data-i18n="Building Bharat's">Building Bharat's</span> <span class="highlight"
+            data-i18n="AI Workforce">AI Workforce</span> <span data-i18n="for Tomorrow">for Tomorrow</span></h1>
+        <p class="hero-desc">IndiaAI Skill Development Initiative by NIELIT Ropar — empowering candidates with hands-on
+          training in Artificial Intelligence, Robotics, and Digital Hardware across every state and union territory.
+        </p>
+        <div class="hero-actions">
+          <a href="#dashboard" class="btn-primary"><i class="fas fa-chart-line"></i> View Insights</a>
+          <a href="gallery.html" class="btn-outline"><i class="fas fa-images"></i> Program Gallery</a>
+        </div>
+
+        <!-- LIVE STATS BAR — FETCHED FROM SHEET -->
+        <div class="live-stats-bar" id="live-stats-bar">
+          <div class="live-stat-item">
+            <div class="live-badge"><i class="fas fa-circle"></i> LIVE</div>
+            <div class="live-stat-number live-stat-loading" id="live-total"><i class="fas fa-circle-notch fa-spin"></i>
+            </div>
+            <div class="live-stat-label">Total Candidates</div>
+          </div>
+          <div class="live-stat-item">
+            <div class="live-badge"><i class="fas fa-circle"></i> LIVE</div>
+            <div class="live-stat-number live-stat-loading" id="live-batch"><i class="fas fa-circle-notch fa-spin"></i>
+            </div>
+            <div class="live-stat-label">Training Batches</div>
+          </div>
+          <div class="live-stat-item">
+            <div class="live-badge"><i class="fas fa-circle"></i> LIVE</div>
+            <div class="live-stat-number live-stat-loading" id="live-loc"><i class="fas fa-circle-notch fa-spin"></i>
+            </div>
+            <div class="live-stat-label">States & UTs</div>
+          </div>
+          <div class="live-stat-item">
+            <div class="live-badge"><i class="fas fa-circle"></i> LIVE</div>
+            <div class="live-stat-number live-stat-loading" id="live-pass"><i class="fas fa-circle-notch fa-spin"></i>
+            </div>
+            <div class="live-stat-label">Certified / Passed</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="hero-image-main">
+          <img src="photos/WhatsApp Image 2026-05-25 at 14.41.31 (1).jpeg" alt="IndiaAI Training"
+            onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg, #fff8f0, #f0f9ff)'">
+        </div>
+        <div class="hero-float-card top-left">
+          <div class="float-label">Candidates Trained</div>
+          <div class="float-value" id="float-total">—</div>
+          <div class="float-sub">Across India</div>
+        </div>
+        <div class="hero-float-card bottom-right">
+          <div class="float-label">Certification Rate</div>
+          <div class="float-value" id="float-rate">—%</div>
+          <div class="float-sub">Industry Recognized</div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- COORDINATORS — CIRCLE LAYOUT -->
+  <section class="section coordinators-section" id="coordinators">
+    <div class="section-container">
+      <div class="section-header reveal">
+        <h2 class="section-title">Program Coordinators</h2>
+        <p class="section-desc">Experienced professionals steering the IndiaAI mission with academic rigor and industry
+          expertise.</p>
+      </div>
+      <div class="coord-circle-layout reveal">
+        <div class="coord-top-row">
+          <div class="coord-card-circle head">
+            <div class="coord-avatar">
+              <img src="photos/Anita Budhiraja Madam.jpg" alt="Anita Budhiraja"
+                onerror="this.innerHTML='<i class=\\'fas fa-user\\'></i>'; this.style.background='linear-gradient(135deg, #fff5eb, #fde68a)'; this.style.color='var(--saffron)'">
+            </div>
+            <div class="coord-name">Ms. Anita Budhiraja</div>
+            <div class="coord-qual">Scientist - E & Head (AI)</div>
+            <p class="coord-desc">Leading overall training operations and curriculum delivery across all centres,
+              ensuring quality standards and candidate outcomes.</p>
+            <div class="coord-badges">
+              <span class="coord-badge">Training Operations</span>
+              <span class="coord-badge">Quality Assurance</span>
+            </div>
+          </div>
+          <div class="coord-card-circle cohead">
+            <div class="coord-avatar">
+              <img src="photos/Dr. sarwan singh.jpg" alt="Dr. Sarwan Singh"
+                onerror="this.innerHTML='<i class=\\'fas fa-user\\'></i>'; this.style.background='linear-gradient(135deg, #e8f5e9, #86efac)'; this.style.color='var(--green)'">
+            </div>
+            <div class="coord-name">Dr. Sarwan Singh</div>
+            <div class="coord-qual">Scientist 'D', NIELIT</div>
+            <p class="coord-desc">Driving technical research, AI lab infrastructure, and industry partnerships to bridge
+              academia and real-world applications.</p>
+            <div class="coord-badges">
+              <span class="coord-badge">AI Research</span>
+              <span class="coord-badge">Lab Infrastructure</span>
+            </div>
+          </div>
+        </div>
+        <div class="connector-line"></div>
+        <div class="coord-bottom-row">
+          <div class="coord-card-circle centre">
+            <div class="coord-avatar">
+              <img src="photos/ravneet kaur.jpg" alt="Ravneet Kaur"
+                onerror="this.innerHTML='<i class=\\'fas fa-user\\'></i>'; this.style.background='linear-gradient(135deg, #eff6ff, #bfdbfe)'; this.style.color='#2563eb'">
+            </div>
+
+            <div class="coord-name">Ms. Ravneet Kaur</div>
+            <div class="coord-qual">IT Faculty, NIELIT Ropar</div>
+            <p class="coord-desc">Managing day-to-day centre operations, student engagement, and coordinating between
+              faculty, candidates, and the central team.</p>
+            <div class="coord-badges">
+              <span class="coord-badge">Student Engagement</span>
+              <span class="coord-badge">Centre Operations</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- CANDIDATES MARQUEE INFINITE LOOP -->
+  <section class="section candidate-marquee-section">
+    <div class="section-container">
+      <div class="section-header reveal">
+        <h2 class="section-title">Our Successful Candidates</h2>
+        <p class="section-desc">Empowering students from top institutions and universities across the nation.</p>
+      </div>
+
+      <div class="marquee-wrapper reveal">
+        <div class="marquee-content">
+          <div class="candidate-marquee-card">
+            <div class="cand-avatar">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200"
+                alt="Candidate">
+            </div>
+            <div class="cand-info">
+              <h4 class="cand-name">Aarav Sharma</h4>
+              <p class="cand-course">Foundation of AI</p>
+              <p class="cand-college">IIT Ropar</p>
+            </div>
+          </div>
+          <div class="candidate-marquee-card">
+            <div class="cand-avatar">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200"
+                alt="Candidate">
+            </div>
+            <div class="cand-info">
+              <h4 class="cand-name">Priya Patel</h4>
+              <p class="cand-course">Data Curation</p>
+              <p class="cand-college">Delhi University</p>
+            </div>
+          </div>
+          <div class="candidate-marquee-card">
+            <div class="cand-avatar">
+              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200"
+                alt="Candidate">
+            </div>
+            <div class="cand-info">
+              <h4 class="cand-name">Gurpreet Singh</h4>
+              <p class="cand-course">Advanced Annotation</p>
+              <p class="cand-college">PEC Chandigarh</p>
+            </div>
+          </div>
+          <div class="candidate-marquee-card">
+            <div class="cand-avatar">
+              <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200"
+                alt="Candidate">
+            </div>
+            <div class="cand-info">
+              <h4 class="cand-name">Ananya Iyer</h4>
+              <p class="cand-course">Foundation of AI</p>
+              <p class="cand-college">Anna University</p>
+            </div>
+          </div>
+          <div class="candidate-marquee-card">
+            <div class="cand-avatar">
+              <img src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&q=80&w=200"
+                alt="Candidate">
+            </div>
+            <div class="cand-info">
+              <h4 class="cand-name">Rahul Verma</h4>
+              <p class="cand-course">Data Curation</p>
+              <p class="cand-college">Thapar University</p>
+            </div>
+          </div>
+          <div class="candidate-marquee-card">
+            <div class="cand-avatar">
+              <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=200"
+                alt="Candidate">
+            </div>
+            <div class="cand-info">
+              <h4 class="cand-name">Mehak Kaur</h4>
+              <p class="cand-course">Advanced Annotation</p>
+              <p class="cand-college">GNDU Amritsar</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="marquee-content" aria-hidden="true">
+          <div class="candidate-marquee-card">
+            <div class="cand-avatar">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200"
+                alt="Candidate">
+            </div>
+            <div class="cand-info">
+              <h4 class="cand-name">Aarav Sharma</h4>
+              <p class="cand-course">Foundation of AI</p>
+              <p class="cand-college">IIT Ropar</p>
+            </div>
+          </div>
+          <div class="candidate-marquee-card">
+            <div class="cand-avatar">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200"
+                alt="Candidate">
+            </div>
+            <div class="cand-info">
+              <h4 class="cand-name">Priya Patel</h4>
+              <p class="cand-course">Data Curation</p>
+              <p class="cand-college">Delhi University</p>
+            </div>
+          </div>
+          <div class="candidate-marquee-card">
+            <div class="cand-avatar">
+              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200"
+                alt="Candidate">
+            </div>
+            <div class="cand-info">
+              <h4 class="cand-name">Gurpreet Singh</h4>
+              <p class="cand-course">Advanced Annotation</p>
+              <p class="cand-college">PEC Chandigarh</p>
+            </div>
+          </div>
+          <div class="candidate-marquee-card">
+            <div class="cand-avatar">
+              <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200"
+                alt="Candidate">
+            </div>
+            <div class="cand-info">
+              <h4 class="cand-name">Ananya Iyer</h4>
+              <p class="cand-course">Foundation of AI</p>
+              <p class="cand-college">Anna University</p>
+            </div>
+          </div>
+          <div class="candidate-marquee-card">
+            <div class="cand-avatar">
+              <img src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&q=80&w=200"
+                alt="Candidate">
+            </div>
+            <div class="cand-info">
+              <h4 class="cand-name">Rahul Verma</h4>
+              <p class="cand-course">Data Curation</p>
+              <p class="cand-college">Thapar University</p>
+            </div>
+          </div>
+          <div class="candidate-marquee-card">
+            <div class="cand-avatar">
+              <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=200"
+                alt="Candidate">
+            </div>
+            <div class="cand-info">
+              <h4 class="cand-name">Mehak Kaur</h4>
+              <p class="cand-course">Advanced Annotation</p>
+              <p class="cand-college">GNDU Amritsar</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <section class="dashboard-preview">
-    <div class="section-header">
-      <h2>National & Regional Impact</h2>
-      <p>Live enrollment and performance data synced directly from our servers.</p>
+  <!-- COURSES -->
+  <section class="section courses-section" id="courses">
+    <div class="section-container">
+      <div class="section-header reveal">
+        <h2 class="section-title">Featured Courses</h2>
+        <p class="section-desc">Hands-on, industry-relevant programs designed to build India's next generation of AI and
+          technology professionals.</p>
+      </div>
+      <div class="courses-grid" id="dynamic-courses-grid"></div>
     </div>
+  </section>
 
-    <!-- MAIN LOADER -->
-    <div id="loader"><i class="fas fa-spinner fa-spin"></i> Establishing secure connection to database...</div>
-
-    <!-- WRAPPER (HIDDEN UNTIL LOAD) -->
-    <div id="dashboard-content" style="display: none;">
-      
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-icon blue"><i class="fas fa-users"></i></div>
-          <div class="stat-info"><h3>Total Candidates</h3><div class="value" id="stat-total">0</div></div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon green"><i class="fas fa-certificate"></i></div>
-          <div class="stat-info"><h3>Certified / Passed</h3><div class="value" id="stat-pass">0</div></div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon orange"><i class="fas fa-layer-group"></i></div>
-          <div class="stat-info"><h3>Active Batches</h3><div class="value" id="stat-batch">0</div></div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon purple"><i class="fas fa-map-marked-alt"></i></div>
-          <div class="stat-info"><h3>States Reached</h3><div class="value" id="stat-loc">0</div></div>
-        </div>
+  <!-- DASHBOARD -->
+  <section class="section dashboard-section" id="dashboard">
+    <div class="section-container">
+      <div class="section-header reveal">
+        <h2 class="section-title">National & Regional Impact</h2>
+        <p class="section-desc">Real-time enrollment and performance insights powered by our integrated candidate
+          management system.</p>
       </div>
-
-      <div class="map-container">
-        <div id="india-map"></div>
+      <div id="loader" class="dashboard-loader">
+        <i class="fas fa-circle-notch fa-spin"></i>
+        Loading candidate insights from the configured data source...
       </div>
-
-      <div class="charts-grid">
-        <div class="chart-container">
-          <div class="chart-header"><i class="fas fa-laptop-code"></i> Enrollment by Course</div>
-          <div class="chart-wrapper"><canvas id="chartCourse"></canvas></div>
+      <div id="dashboard-content" style="display:none;">
+        <div class="dashboard-grid reveal">
+          <div class="dash-stat">
+            <div class="dash-stat-icon blue"><i class="fas fa-users"></i></div>
+            <div class="dash-stat-info">
+              <h4>Total Candidates</h4>
+              <div class="value" id="stat-total">0</div>
+            </div>
+          </div>
+          <div class="dash-stat">
+            <div class="dash-stat-icon green"><i class="fas fa-certificate"></i></div>
+            <div class="dash-stat-info">
+              <h4>Certified / Passed</h4>
+              <div class="value" id="stat-pass">0</div>
+            </div>
+          </div>
+          <div class="dash-stat">
+            <div class="dash-stat-icon orange"><i class="fas fa-layer-group"></i></div>
+            <div class="dash-stat-info">
+              <h4>Active Batches</h4>
+              <div class="value" id="stat-batch">0</div>
+            </div>
+          </div>
+          <div class="dash-stat">
+            <div class="dash-stat-icon purple"><i class="fas fa-map-marked-alt"></i></div>
+            <div class="dash-stat-info">
+              <h4>States Reached</h4>
+              <div class="value" id="stat-loc">0</div>
+            </div>
+          </div>
         </div>
-        <div class="chart-container">
-          <div class="chart-header"><i class="fas fa-chalkboard-teacher"></i> Ongoing Batches</div>
-          <div class="chart-wrapper"><canvas id="chartBatch"></canvas></div>
+        <div class="map-wrap reveal">
+          <div id="india-map"></div>
+          <p class="map-caption">Full India coverage including all states, union territories, and district-level
+            touchpoints.</p>
         </div>
-        <div class="chart-container">
-          <div class="chart-header"><i class="fas fa-chart-pie"></i> Result Analytics</div>
-          <div class="chart-wrapper"><canvas id="chartResult"></canvas></div>
-        </div>
-        <div class="chart-container">
-          <div class="chart-header"><i class="fas fa-venus-mars"></i> Gender Diversity</div>
-          <div class="chart-wrapper"><canvas id="chartGender"></canvas></div>
-        </div>
-        <div class="chart-container">
-          <div class="chart-header"><i class="fas fa-users-viewfinder"></i> Category Distribution</div>
-          <div class="chart-wrapper"><canvas id="chartCategory"></canvas></div>
-        </div>
-        <div class="chart-container">
-          <div class="chart-header"><i class="fas fa-city"></i> Top Regional Enrollments</div>
-          <div class="chart-wrapper"><canvas id="chartLocation"></canvas></div>
+        <div class="charts-grid">
+          <div class="chart-box reveal">
+            <div class="chart-header"><i class="fas fa-laptop-code"></i> Enrollment by Course</div>
+            <div class="chart-canvas-wrap"><canvas id="chartCourse"></canvas></div>
+          </div>
+          <div class="chart-box reveal">
+            <div class="chart-header"><i class="fas fa-chalkboard-teacher"></i> Ongoing Batches</div>
+            <div class="chart-canvas-wrap"><canvas id="chartBatch"></canvas></div>
+          </div>
+          <div class="chart-box reveal">
+            <div class="chart-header"><i class="fas fa-chart-pie"></i> Result Analytics</div>
+            <div class="chart-canvas-wrap"><canvas id="chartResult"></canvas></div>
+          </div>
+          <div class="chart-box reveal">
+            <div class="chart-header"><i class="fas fa-venus-mars"></i> Gender Diversity</div>
+            <div class="chart-canvas-wrap"><canvas id="chartGender"></canvas></div>
+          </div>
+          <div class="chart-box reveal">
+            <div class="chart-header"><i class="fas fa-users-viewfinder"></i> Category Distribution</div>
+            <div class="chart-canvas-wrap"><canvas id="chartCategory"></canvas></div>
+          </div>
+          <div class="chart-box reveal">
+            <div class="chart-header"><i class="fas fa-city"></i> Top Regional Enrollments</div>
+            <div class="chart-canvas-wrap"><canvas id="chartLocation"></canvas></div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <footer>
-    <p>&copy; 2026 NIELIT Ropar — Developed under the IndiaAI Mission. All rights reserved.</p>
+  <!-- GALLERY PREVIEW -->
+  <section class="section gallery-section">
+    <div class="section-container">
+      <div class="section-header reveal">
+        <h2 class="section-title">Program Gallery</h2>
+        <p class="section-desc">Glimpses from training sessions, workshops, and celebrations across India.</p>
+      </div>
+      <div class="gallery-grid reveal">
+        <div class="gallery-item featured">
+          <img src="photos/WhatsApp Image 2026-05-25 at 14.41.30.jpeg" alt="Training Session"
+            onerror="this.style.display='none'; this.parentElement.style.background='var(--gray-100)'">
+          <div class="gallery-overlay"><span>Training Session — NIELIT Ropar</span></div>
+        </div>
+        <div class="gallery-item">
+          <img src="photos/WhatsApp Image 2026-05-25 at 14.41.30 (1).jpeg" alt="Workshop"
+            onerror="this.style.display='none'; this.parentElement.style.background='var(--gray-100)'">
+          <div class="gallery-overlay"><span>Hands-on Workshop</span></div>
+        </div>
+        <div class="gallery-item">
+          <img src="photos/WhatsApp Image 2026-05-25 at 14.41.30 (2).jpeg" alt="Lab Session"
+            onerror="this.style.display='none'; this.parentElement.style.background='var(--gray-100)'">
+          <div class="gallery-overlay"><span>Lab Practical</span></div>
+        </div>
+        <div class="gallery-item">
+          <img src="photos/WhatsApp Image 2026-05-25 at 14.41.30 (3).jpeg" alt="Certification"
+            onerror="this.style.display='none'; this.parentElement.style.background='var(--gray-100)'">
+          <div class="gallery-overlay"><span>Certification Event</span></div>
+        </div>
+        <div class="gallery-item">
+          <img src="photos/WhatsApp Image 2026-05-25 at 14.41.31 (1).jpeg" alt="Group Photo"
+            onerror="this.style.display='none'; this.parentElement.style.background='var(--gray-100)'">
+          <div class="gallery-overlay"><span>Batch Group Photo</span></div>
+        </div>
+      </div>
+      <div style="text-align:center; margin-top: 40px;">
+        <a href="gallery.html" class="btn-outline"><i class="fas fa-images"></i> View Full Gallery</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <img src="photos/India logo .png" alt="IndiaAI Logo"
+            style="height: 60px; width: auto; object-fit: contain; margin-bottom: 10px; display: block;">
+          <p>IndiaAI Skill Development Initiative by NIELIT Ropar, funded by MeitY, Government of India. Building
+            Bharat's technology workforce.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <a href="index.html#dashboard">Insights Dashboard</a>
+          <a href="index.html#courses">Courses</a>
+          <a href="gallery.html">Photo Gallery</a>
+          <a href="login.html">Candidate Login</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="#">Training Manual</a>
+          <a href="#">Assessment Guidelines</a>
+          <a href="#">Centre Directory</a>
+          <a href="#">Help & Support</a>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <a href="contact-us.html">NIELIT Ropar</a>
+          <a href="contact-us.html">Punjab, India</a>
+          <a href="mailto:info@nielit.gov.in">info@nielit.gov.in</a>
+          <a href="tel:+911144446777">+91-11-44446777</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 NIELIT Ropar — Developed under the IndiaAI Mission. All rights reserved.</p>
+        <p>Ministry of Electronics & Information Technology, Govt. of India</p>
+      </div>
+    </div>
   </footer>
 
   <script>
-    // === INSERT YOUR GOOGLE APPS SCRIPT URL HERE ===
-    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyKu3tB206mwE7ef_rULrZ_17E5xTfp5rLWlSgY3vuKToj-0UxTvRodyhZYQb8d7qNH/exec';
+
+
+    // ===== SCROLL REVEAL =====
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('active'); revealObserver.unobserve(entry.target); } });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // ===== GOOGLE APPS SCRIPT URL =====
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyAfhakyTh0j_StQ3a2MpnZlqQq-46kuW45Vw8V2V8gIUa9Prr-c21K-d5ZoTYAEnU2VQ/exec';
+
+    // Global data store
+    let globalData = [];
 
     async function fetchPublicData() {
+      const loader = document.getElementById('loader');
+      const dashboard = document.getElementById('dashboard-content');
+      dashboard.style.display = 'none';
+      loader.style.display = 'block';
+
       try {
-        console.log("Starting data fetch...");
-        const response = await fetch(APPS_SCRIPT_URL + "?nocache=" + new Date().getTime());
-        
+        const response = await fetchWithTimeout(APPS_SCRIPT_URL + "?nocache=" + new Date().getTime(), {}, 12000);
         if (!response.ok) throw new Error("Network error - Status: " + response.status);
-        
         const rawData = await response.json();
         if (rawData.error) throw new Error(rawData.error);
         if (!Array.isArray(rawData)) throw new Error("Data returned is not an array");
 
-        console.log("Data loaded successfully. Records: ", rawData.length);
+        globalData = rawData;
+        loader.style.display = 'none';
+        dashboard.style.display = 'block';
 
-        // 1. Force the UI to show up IMMEDIATELY even if charts crash
-        document.getElementById('loader').style.display = 'none';
-        document.getElementById('dashboard-content').style.display = 'block';
+        // Update LIVE stats bar in hero
+        updateLiveStats(rawData);
 
-        // 2. Wrap each function in its own Try/Catch block
-        try { processMetricsAndCourses(rawData); } 
-        catch (e) { console.error("Error in Stats/Courses:", e); }
-
-        try { renderCharts(rawData); } 
-        catch (e) { console.error("Error in Charts:", e); }
-
-        try { renderMap(rawData); } 
-        catch (e) { console.error("Error in Map:", e); }
-
+        // Process dashboard + courses
+        try { processMetricsAndCourses(rawData); } catch (e) { console.error("Stats/Courses error:", e); }
+        try { renderCharts(rawData); } catch (e) { console.error("Charts error:", e); }
+        try { renderMap(rawData); } catch (e) { console.error("Map error:", e); }
+        try { renderDynamicMarquee(rawData); } catch (e) { console.error("Marquee error:", e); }
       } catch (error) {
-        console.error("Critical Fetch Error:", error);
-        document.getElementById('loader').innerHTML = '<span style="color:var(--danger)"><i class="fas fa-exclamation-triangle"></i> Cannot connect to database. Please refresh page or check URL.</span>';
+        console.error("Fetch Error:", error);
+        loader.innerHTML = '<span style="color:#dc2626"><i class="fas fa-exclamation-triangle"></i> Data fetch failed. Please verify the data source URL.</span>';
+        // Show fallback on live stats
+        ['live-total', 'live-batch', 'live-loc', 'live-pass'].forEach(id => {
+          document.getElementById(id).innerHTML = '<span style="font-size:1rem; color:#9ca3af">—</span>';
+        });
       }
     }
 
-    // Process Top Level Numbers and Hero Cards
+    // ===== RENDER DYNAMIC MARQUEE FROM MASTER LIST =====
+    function renderDynamicMarquee(data) {
+      const primaryContainer = document.querySelector('.marquee-wrapper .marquee-content:not([aria-hidden="true"])');
+      const duplicateContainer = document.querySelector('.marquee-wrapper .marquee-content[aria-hidden="true"]');
+
+      if (!primaryContainer || !duplicateContainer) return;
+
+      // Load saved selections from localStorage
+      let selectedBatches = [];
+      try {
+        const saved = localStorage.getItem('selectedBatchesForMainPage');
+        if (saved) {
+          selectedBatches = JSON.parse(saved);
+        }
+      } catch (e) {
+        console.error("Error reading selected batches from localStorage:", e);
+      }
+
+      // Filter to rows that have at least a name
+      let filtered = data.filter(row => {
+        const name = String(row['Candidate_Name'] || row['Name'] || '').trim();
+        return name !== '';
+      });
+
+      // Filter by selected batches if they exist and are not empty
+      if (selectedBatches && selectedBatches.length > 0) {
+        filtered = filtered.filter(row => {
+          const batch = String(row['Batch Wise'] || row['Batch'] || '').trim();
+          return selectedBatches.includes(batch);
+        });
+      }
+
+      // Reverse so that the most recently added candidates appear at the beginning of the marquee
+      filtered.reverse();
+
+      // Fallback if no candidates match selection: show all candidates (reversed)
+      if (filtered.length === 0) {
+        filtered = data.filter(row => {
+          const name = String(row['Candidate_Name'] || row['Name'] || '').trim();
+          return name !== '';
+        }).reverse();
+      }
+
+      const candidates = filtered;
+
+      if (candidates.length === 0) return;
+
+      const femalePhotos = [
+        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200",
+        "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200",
+        "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=200",
+        "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&q=80&w=200",
+        "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&q=80&w=200"
+      ];
+      const malePhotos = [
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200",
+        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200",
+        "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&q=80&w=200",
+        "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=200",
+        "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=200"
+      ];
+
+      const getPhoto = (row, idx) => {
+        const photoLink = String(row['Photo Link'] || row['Profile_Photo'] || row['Photo'] || '').trim();
+        if (photoLink && photoLink.startsWith('http')) {
+          const driveMatch = photoLink.match(/\/d\/([a-zA-Z0-9_-]+)/);
+          if (driveMatch && driveMatch[1]) {
+            return `https://drive.google.com/thumbnail?id=${driveMatch[1]}&sz=w800`;
+          }
+          return photoLink;
+        }
+
+        const gender = String(row['Candidate_Gender'] || '').toLowerCase();
+        if (gender === 'female' || gender === 'f') {
+          return femalePhotos[idx % femalePhotos.length];
+        } else if (gender === 'male' || gender === 'm') {
+          return malePhotos[idx % malePhotos.length];
+        } else {
+          return idx % 2 === 0 ? femalePhotos[idx % femalePhotos.length] : malePhotos[idx % malePhotos.length];
+        }
+      };
+
+      const getName = (row) => {
+        return String(row['Candidate_Name'] || row['Name'] || '').trim();
+      };
+
+      const getCourse = (row) => {
+        return String(row['Courses'] || row['Course'] || '').trim();
+      };
+
+      const getLocation = (row) => {
+        return String(row['Candidate_Perm_Address_City_State'] || '').trim();
+      };
+
+      const cardsHtml = candidates.map((row, idx) => {
+        const name = getName(row) || 'Student';
+        const course = getCourse(row) || 'AI Development';
+        const location = getLocation(row) || 'Punjab, India';
+        const photoUrl = getPhoto(row, idx);
+
+        return `
+          <div class="candidate-marquee-card">
+            <div class="cand-avatar">
+              <img src="${photoUrl}" alt="${name}" onerror="this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=200'">
+            </div>
+            <div class="cand-info">
+              <h4 class="cand-name">${name}</h4>
+              <p class="cand-course">${course}</p>
+              <p class="cand-college">${location}</p>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      primaryContainer.innerHTML = cardsHtml;
+      duplicateContainer.innerHTML = cardsHtml;
+
+      // Adjust animation duration dynamically based on the number of candidates so it doesn't zip by too fast
+      // Minimum duration 40s. Adds roughly 3.5 seconds per additional card.
+      const duration = Math.max(40, candidates.length * 3.5) + 's';
+      primaryContainer.style.animationDuration = duration;
+      duplicateContainer.style.animationDuration = duration;
+    }
+
+    // ===== STORAGE EVENT LISTENER FOR REAL-TIME BATCH SYNC =====
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'selectedBatchesForMainPage' && globalData.length > 0) {
+        renderDynamicMarquee(globalData);
+      }
+    });
+
+    // ===== UPDATE LIVE STATS BAR (HERO) =====
+    const validIndianStates = [
+      'andhra pradesh', 'arunachal pradesh', 'assam', 'bihar', 'chhattisgarh', 'goa', 'gujarat', 'haryana',
+      'himachal pradesh', 'jharkhand', 'karnataka', 'kerala', 'madhya pradesh', 'maharashtra', 'manipur',
+      'meghalaya', 'mizoram', 'nagaland', 'odisha', 'punjab', 'rajasthan', 'sikkim', 'tamil nadu', 'telangana',
+      'tripura', 'uttar pradesh', 'uttarakhand', 'west bengal', 'andaman and nicobar', 'chandigarh',
+      'dadra and nagar haveli', 'daman and diu', 'lakshadweep', 'delhi', 'puducherry', 'jammu and kashmir', 'ladakh'
+    ];
+
+    function updateLiveStats(data) {
+      let pass = 0;
+      const batches = new Set();
+      const locations = new Set();
+
+      data.forEach(row => {
+        const res = String(row['Result'] || '').toLowerCase();
+        if (res === 'pass' || res === 'passed') pass++;
+        if (row['Batch Wise'] && row['Batch Wise'].trim() !== '') batches.add(row['Batch Wise'].trim());
+        let stateVal = row['State'] || row['state'];
+        let loc = stateVal ? String(stateVal).trim() : String(row['Candidate_Perm_Address_City_State'] || '').split(',').pop().trim();
+        if (loc && loc.toLowerCase() !== 'unknown' && loc.toLowerCase() !== 'n/a' && loc !== '') {
+          let lowerLoc = loc.toLowerCase();
+          let matched = validIndianStates.find(s => lowerLoc.includes(s));
+          if (matched) locations.add(matched);
+        }
+      });
+
+      // Animate live stats
+      animateValue("live-total", 0, data.length, 1500);
+      animateValue("live-batch", 0, batches.size || 0, 1500);
+      animateValue("live-loc", 0, locations.size || 0, 1500);
+      animateValue("live-pass", 0, pass, 1500);
+
+      // Update floating cards too
+      document.getElementById('float-total').textContent = data.length.toLocaleString();
+      const rate = data.length > 0 ? Math.round((pass / data.length) * 100) : 0;
+      document.getElementById('float-rate').textContent = rate + '%';
+    }
+
+    // ===== PROCESS DASHBOARD METRICS + COURSES =====
     function processMetricsAndCourses(data) {
-      let pass = 0; 
+      let pass = 0;
       const batches = new Set();
       const locations = new Set();
       const coursesSet = new Set();
@@ -232,98 +1704,191 @@
       data.forEach(row => {
         const res = String(row['Result'] || '').toLowerCase();
         if (res === 'pass' || res === 'passed') pass++;
-        
         if (row['Batch Wise'] && row['Batch Wise'].trim() !== '') batches.add(row['Batch Wise'].trim());
-        
-        if (row['Candidate_Perm_Address_City_State'] && row['Candidate_Perm_Address_City_State'].trim() !== '') {
-          let loc = row['Candidate_Perm_Address_City_State'].split(',').pop().trim();
-          locations.add(loc);
+        let stateVal = row['State'] || row['state'];
+        let loc = stateVal ? String(stateVal).trim() : String(row['Candidate_Perm_Address_City_State'] || '').split(',').pop().trim();
+        if (loc && loc.toLowerCase() !== 'unknown' && loc.toLowerCase() !== 'n/a' && loc !== '') {
+          let lowerLoc = loc.toLowerCase();
+          let matched = validIndianStates.find(s => lowerLoc.includes(s));
+          if (matched) locations.add(matched);
         }
-        
-        if (row['Courses'] && row['Courses'].trim() !== '') {
-          coursesSet.add(row['Courses'].trim());
-        }
+        if (row['Courses'] && row['Courses'].trim() !== '') coursesSet.add(row['Courses'].trim());
       });
 
+      // Populate courses grid
       const courseGrid = document.getElementById('dynamic-courses-grid');
-      courseGrid.innerHTML = ''; 
-      
+      courseGrid.innerHTML = '';
       if (coursesSet.size === 0) {
-        courseGrid.innerHTML = '<p style="grid-column: 1/-1;">Courses are currently being updated.</p>';
+        courseGrid.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:var(--gray-400); padding:40px;">Courses are currently being updated.</p>';
       } else {
         [...coursesSet].sort().forEach(courseName => {
           const pageLink = courseName.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.html';
           courseGrid.innerHTML += `
-            <a href="${pageLink}" class="course-card">
-              <div class="course-icon"><i class="fas fa-layer-group"></i></div>
-              <div class="course-info">
-                <h3>${courseName}</h3>
-                <span>View Details <i class="fas fa-arrow-right" style="font-size:0.75rem; margin-left:4px;"></i></span>
-              </div>
-            </a>
-          `;
+          <a href="${pageLink}" class="course-card">
+            <div class="course-icon-box"><i class="fas fa-layer-group"></i></div>
+            <div class="course-info">
+              <h4>${courseName}</h4>
+              <span>View Details <i class="fas fa-arrow-right" style="font-size:0.7rem; margin-left:4px;"></i></span>
+            </div>
+          </a>`;
         });
       }
 
+      // Animate dashboard stats
       animateValue("stat-total", 0, data.length, 1200);
       animateValue("stat-pass", 0, pass, 1200);
       animateValue("stat-batch", 0, batches.size || 0, 1200);
       animateValue("stat-loc", 0, locations.size || 0, 1200);
     }
 
-    // Bulletproof Animation Function
+    // ===== ANIMATE NUMBER =====
     function animateValue(id, start, end, duration) {
       const obj = document.getElementById(id);
       if (!obj) return;
-      if (start === end) { obj.innerHTML = end; return; }
-      
+      if (start === end) { obj.innerHTML = end.toLocaleString(); return; }
       let startTimestamp = null;
       const step = (timestamp) => {
         if (!startTimestamp) startTimestamp = timestamp;
         const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-        obj.innerHTML = Math.floor(progress * (end - start) + start);
-        if (progress < 1) {
-          window.requestAnimationFrame(step);
-        } else {
-          obj.innerHTML = end;
-        }
+        obj.innerHTML = Math.floor(progress * (end - start) + start).toLocaleString();
+        if (progress < 1) window.requestAnimationFrame(step);
+        else obj.innerHTML = end.toLocaleString();
       };
       window.requestAnimationFrame(step);
     }
 
-    // Render the Interactive Highcharts Map
-    function renderMap(data) {
+    async function fetchWithTimeout(url, options = {}, timeout = 12000) {
+      return Promise.race([
+        fetch(url, options),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Request timed out')), timeout))
+      ]);
+    }
+
+    // ===== RENDER HIGHCHARTS MAP =====
+    async function renderMap(data) {
       const stateCounts = {};
       data.forEach(row => {
-        let loc = String(row['Candidate_Perm_Address_City_State'] || '').split(',').pop().trim();
+        let stateVal = row['State'] || row['state'];
+        let loc = stateVal ? String(stateVal).trim() : String(row['Candidate_Perm_Address_City_State'] || '').split(',').pop().trim();
         if (loc && loc.toLowerCase() !== 'unknown' && loc.toLowerCase() !== 'n/a' && loc !== '') {
           let state = loc.toLowerCase().replace(/\b\w/g, s => s.toUpperCase());
           stateCounts[state] = (stateCounts[state] || 0) + 1;
         }
       });
 
-      const mapData = Object.entries(stateCounts).map(([key, value]) => ({
-        name: key,
-        value: value
-      }));
+      // Fetch TopoJSON map data to "use geojason fily type that helps to do more"
+      const topology = await fetch('https://code.highcharts.com/mapdata/countries/in/custom/in-all-disputed.topo.json')
+        .then(response => response.json());
+
+      function getTricolorColor(name, count) {
+        const n = (name || '').toLowerCase();
+
+        // Northern / Western states (Saffron)
+        const saffronStates = [
+          'jammu and kashmir', 'ladakh', 'himachal pradesh', 'punjab', 'uttarakhand',
+          'haryana', 'delhi', 'rajasthan', 'uttar pradesh', 'gujarat', 'chandigarh', 'bihar'
+        ];
+
+        // Southern / South-Western/Eastern coastal states (Green)
+        const greenStates = [
+          'maharashtra', 'goa', 'karnataka', 'telangana', 'andhra pradesh',
+          'kerala', 'tamil nadu', 'odisha', 'puducherry', 'lakshadweep',
+          'dadra and nagar haveli and daman and diu'
+        ];
+
+        if (saffronStates.some(s => n.includes(s))) {
+          return count > 0 ? '#FF9933' : 'rgba(255, 153, 51, 0.25)';
+        } else if (greenStates.some(s => n.includes(s))) {
+          return count > 0 ? '#128807' : 'rgba(18, 136, 7, 0.25)';
+        } else {
+          // Central / Eastern states (White / Light Silver)
+          return count > 0 ? '#cbd5e1' : 'rgba(241, 245, 249, 0.6)';
+        }
+      }
+
+      const mapData = [];
+      const addedStates = new Set();
+
+      if (topology && topology.objects && topology.objects.default && topology.objects.default.geometries) {
+        topology.objects.default.geometries.forEach(geo => {
+          const name = geo.properties.name;
+          if (name && !addedStates.has(name)) {
+            const count = stateCounts[name] || 0;
+            mapData.push({
+              name: name,
+              value: count,
+              color: getTricolorColor(name, count)
+            });
+            addedStates.add(name);
+          }
+        });
+      }
+
+      Object.entries(stateCounts).forEach(([name, count]) => {
+        if (!addedStates.has(name)) {
+          mapData.push({
+            name: name,
+            value: count,
+            color: getTricolorColor(name, count)
+          });
+          addedStates.add(name);
+        }
+      });
 
       Highcharts.mapChart('india-map', {
-        chart: { map: 'countries/in/in-all' },
-        title: { text: 'National Reach (By State)', style: { fontFamily: 'Inter', fontWeight: 'bold', color: '#0D1B4B' } },
+        chart: { map: topology, backgroundColor: 'transparent' },
+        title: { text: 'Candidate Distribution Across India', style: { fontFamily: 'Outfit', fontWeight: '800', fontSize: '18px', color: 'var(--navy)' } },
+        subtitle: { text: 'Operational outreach mapped across all states and union territories', style: { fontFamily: 'Outfit', color: 'var(--text-muted)', fontSize: '13px' } },
         mapNavigation: { enabled: true, buttonOptions: { verticalAlign: 'bottom' } },
-        colorAxis: { min: 0, minColor: '#fff7ed', maxColor: '#FF9933' },
+        tooltip: {
+          useHTML: true,
+          headerFormat: '<span style="font-family: Outfit; font-size: 10px; color: #64748b; font-weight: 600; text-transform: uppercase;">State Details</span><br/>',
+          pointFormat: '<div style="font-family: Outfit; padding: 4px;"><span style="font-size: 13px; font-weight: 700; color: #000080;">{point.name}</span><br/><span style="font-size: 18px; font-weight: 800; color: #FF9933;">{point.value}</span> <span style="font-size: 11px; color: #64748b; font-weight: 600;">Candidates Enrolled</span></div>',
+          backgroundColor: '#ffffff',
+          borderWidth: 1,
+          borderColor: '#e2e8f0',
+          shadow: true,
+          borderRadius: 8
+        },
         series: [{
           data: mapData,
           name: 'Candidates Enrolled',
           joinBy: ['name', 'name'],
-          states: { hover: { color: '#0D1B4B' } },
-          dataLabels: { enabled: true, format: '{point.name}' }
+          states: {
+            hover: {
+              color: '#000080', // Rich Navy Blue on hover
+              borderColor: '#ffffff', // Thick stark white border
+              borderWidth: 4, // Gives a "raised" outline popup effect
+              brightness: 0.1,
+              shadow: {
+                color: 'rgba(0,0,0,0.5)',
+                offsetX: 4,
+                offsetY: 4,
+                width: 8,
+                opacity: 0.6
+              } // Creates a 3D "slight up" pop-up effect
+            },
+            inactive: {
+              opacity: 0.35 // Dims other states to make hovered state stand out dramatically
+            }
+          },
+          dataLabels: {
+            enabled: true,
+            format: '{point.name}',
+            style: {
+              fontFamily: 'Outfit',
+              fontSize: '10px',
+              fontWeight: '600',
+              textOutline: 'none',
+              color: '#1e293b'
+            }
+          }
         }],
         credits: { enabled: false }
       });
     }
 
-    // Render all Chart.js instances
+    // ===== RENDER ALL CHARTS =====
     function renderCharts(data) {
       const resCounts = { Pass: 0, Fail: 0, Pending: 0, Dropout: 0 };
       const genCounts = {}; const catCounts = {}; const locCounts = {};
@@ -331,7 +1896,7 @@
 
       data.forEach(r => {
         let res = String(r['Result'] || '').toLowerCase();
-        if(res === 'pass' || res === 'passed') resCounts.Pass++;
+        if (res === 'pass' || res === 'passed') resCounts.Pass++;
         else if (res === 'fail' || res === 'failed') resCounts.Fail++;
         else if (res === 'dropout') resCounts.Dropout++;
         else resCounts.Pending++;
@@ -342,35 +1907,409 @@
         let c = r['Category'] || 'General/Unspecified';
         catCounts[c] = (catCounts[c] || 0) + 1;
 
-        let loc = r['Candidate_Perm_Address_City_State'] || 'Unknown';
-        if(loc !== 'Unknown' && loc.trim() !== '') locCounts[loc] = (locCounts[loc] || 0) + 1;
+        let loc = r['State'] || r['state'] || r['Candidate_Perm_Address_City_State'] || 'Unknown';
+        if (loc !== 'Unknown' && loc.trim() !== '') locCounts[loc] = (locCounts[loc] || 0) + 1;
 
         let crs = r['Courses'] || 'Unassigned';
-        if(crs.trim() !== '') courseCounts[crs] = (courseCounts[crs] || 0) + 1;
+        if (crs.trim() !== '') courseCounts[crs] = (courseCounts[crs] || 0) + 1;
 
         let btc = r['Batch Wise'] || 'Unassigned';
-        if(btc.trim() !== '' && btc !== 'Unassigned') batchCounts[btc] = (batchCounts[btc] || 0) + 1;
+        if (btc.trim() !== '' && btc !== 'Unassigned') batchCounts[btc] = (batchCounts[btc] || 0) + 1;
       });
 
-      createChart('chartCourse', 'doughnut', Object.keys(courseCounts), Object.values(courseCounts), ['#0D1B4B', '#2563eb', '#FF9933', '#10b981', '#8b5cf6']);
+      createChart('chartCourse', 'doughnut', Object.keys(courseCounts), Object.values(courseCounts), ['#0a1628', '#2563eb', '#FF9933', '#138808', '#8b5cf6', '#f59e0b']);
       createChart('chartBatch', 'bar', Object.keys(batchCounts), Object.values(batchCounts), ['#3b82f6', '#60a5fa', '#93c5fd', '#bfdbfe']);
-      createChart('chartResult', 'pie', Object.keys(resCounts), Object.values(resCounts), ['#138808', '#dc2626', '#f59e0b', '#64748b']);
-      createChart('chartGender', 'pie', Object.keys(genCounts), Object.values(genCounts), ['#2563eb', '#db2777', '#8b5cf6', '#cbd5e1']);
-      createChart('chartCategory', 'doughnut', Object.keys(catCounts), Object.values(catCounts), ['#FF9933', '#3b82f6', '#10b981', '#f59e0b', '#64748b']);
-      const sortedLocs = Object.entries(locCounts).sort((a,b) => b[1] - a[1]).slice(0, 5);
-      createChart('chartLocation', 'bar', sortedLocs.map(i=>i[0]), sortedLocs.map(i=>i[1]), ['#FF9933', '#fca5a5', '#fcd34d', '#86efac', '#93c5fd']);
+      createChart('chartResult', 'pie', Object.keys(resCounts), Object.values(resCounts), ['#138808', '#dc2626', '#f59e0b', '#6b7280']);
+      createChart('chartGender', 'pie', Object.keys(genCounts), Object.values(genCounts), ['#2563eb', '#db2777', '#8b5cf6', '#d1d5db']);
+      createChart('chartCategory', 'doughnut', Object.keys(catCounts), Object.values(catCounts), ['#FF9933', '#3b82f6', '#138808', '#f59e0b', '#6b7280']);
+      const sortedLocs = Object.entries(locCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+      createChart('chartLocation', 'bar', sortedLocs.map(i => i[0]), sortedLocs.map(i => i[1]), ['#FF9933', '#fca5a5', '#fcd34d', '#86efac', '#93c5fd']);
     }
 
     function createChart(canvasId, type, labels, data, colors) {
       new Chart(document.getElementById(canvasId).getContext('2d'), {
         type: type,
         data: { labels: labels, datasets: [{ data: data, backgroundColor: colors, borderWidth: 1, borderColor: '#fff', borderRadius: type === 'bar' ? 6 : 0 }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8, font: {family: 'Inter'} } } }, scales: type === 'bar' ? { y: { beginAtZero: true }, x: { grid: { display: false } } } : {} }
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8, padding: 16, font: { family: 'Inter', size: 11 } } } },
+          scales: type === 'bar' ? { y: { beginAtZero: true, grid: { color: '#f3f4f6' } }, x: { grid: { display: false } } } : {}
+        }
       });
     }
 
-    // Start everything when the page loads
-    window.onload = fetchPublicData;
+    window.addEventListener('load', fetchPublicData);
+  </script>
+  <!-- RAVU CHATBOT -->
+  <div id="ravu-chatbot" class="chatbot-container">
+    <div class="chatbot-toggle" id="chatbot-toggle">
+      <i class="fas fa-robot"></i>
+      <span class="tooltip">Chat with Ravu</span>
+    </div>
+    <div class="chatbot-window" id="chatbot-window">
+      <div class="chatbot-header">
+        <div class="header-info">
+          <div class="avatar"><i class="fas fa-robot"></i></div>
+          <div>
+            <h4>Ravu</h4>
+            <span>Online</span>
+          </div>
+        </div>
+        <button class="close-btn" id="chatbot-close"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="chatbot-messages" id="chatbot-messages">
+        <div class="message bot-message">
+          Hi there! I'm <strong>Ravu</strong>, your virtual assistant. How can I help you today?
+        </div>
+      </div>
+      <div class="chatbot-input">
+        <input type="text" id="chatbot-text" placeholder="Type a message..." />
+        <button id="chatbot-send"><i class="fas fa-paper-plane"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    /* RAVU CHATBOT STYLES */
+    .chatbot-container {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 9999;
+      font-family: 'Outfit', 'Inter', sans-serif;
+    }
+
+    .chatbot-toggle {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--saffron), var(--green));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.8rem;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+    }
+
+    .chatbot-toggle:hover {
+      transform: scale(1.1);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+    }
+
+    .chatbot-toggle .tooltip {
+      position: absolute;
+      right: 75px;
+      background: white;
+      color: var(--navy);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(10px);
+      transition: all 0.3s ease;
+    }
+
+    .chatbot-toggle:hover .tooltip {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .chatbot-window {
+      position: absolute;
+      bottom: 80px;
+      right: 0;
+      width: 350px;
+      height: 500px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transform: scale(0.9) translateY(20px);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transform-origin: bottom right;
+    }
+
+    .chatbot-window.active {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .chatbot-header {
+      background: linear-gradient(135deg, var(--saffron), var(--green));
+      color: white;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chatbot-header .header-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .chatbot-header .avatar {
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .chatbot-header h4 {
+      font-size: 1.1rem;
+      margin: 0;
+      font-weight: 700;
+    }
+
+    .chatbot-header span {
+      font-size: 0.8rem;
+      opacity: 0.9;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .chatbot-header span::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: #4ade80;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .chatbot-header .close-btn {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+
+    .chatbot-header .close-btn:hover {
+      opacity: 1;
+    }
+
+    .chatbot-messages {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      background: #f8fafc;
+    }
+
+    .chatbot-messages::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .chatbot-messages::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 3px;
+    }
+
+    .message {
+      max-width: 80%;
+      padding: 12px 16px;
+      border-radius: 16px;
+      font-size: 0.95rem;
+      line-height: 1.4;
+      animation: message-pop 0.3s ease-out forwards;
+    }
+
+    @keyframes message-pop {
+      0% {
+        transform: scale(0.9);
+        opacity: 0;
+      }
+
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .bot-message {
+      background: white;
+      color: var(--gray-700);
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .user-message {
+      background: var(--navy);
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .chatbot-input {
+      padding: 16px;
+      background: white;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      gap: 10px;
+    }
+
+    .chatbot-input input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid #e2e8f0;
+      border-radius: 999px;
+      outline: none;
+      font-family: inherit;
+      font-size: 0.95rem;
+      background: #f8fafc;
+      transition: border-color 0.3s;
+    }
+
+    .chatbot-input input:focus {
+      border-color: var(--saffron);
+      background: white;
+    }
+
+    .chatbot-input button {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: none;
+      background: var(--navy);
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+    }
+
+    .chatbot-input button:hover {
+      background: var(--saffron);
+      transform: scale(1.05);
+    }
+  </style>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggle = document.getElementById('chatbot-toggle');
+      const windowEl = document.getElementById('chatbot-window');
+      const closeBtn = document.getElementById('chatbot-close');
+      const input = document.getElementById('chatbot-text');
+      const sendBtn = document.getElementById('chatbot-send');
+      const messagesContainer = document.getElementById('chatbot-messages');
+
+      function toggleChat() {
+        windowEl.classList.toggle('active');
+        if (windowEl.classList.contains('active')) {
+          setTimeout(() => input.focus(), 300);
+        }
+      }
+
+      toggle.addEventListener('click', toggleChat);
+      closeBtn.addEventListener('click', toggleChat);
+
+      function generateBotResponse(text) {
+        const lowerText = text.toLowerCase();
+
+        // Wait until data is loaded
+        if (!globalData || globalData.length === 0) {
+          if (lowerText.includes('hello') || lowerText.includes('hi ') || lowerText === 'hi') {
+            return "Hello! I am still loading the latest data. Please give me a moment and ask again.";
+          }
+          return "I am currently loading the latest program data. Please wait a moment and try asking again!";
+        }
+
+        // Keyword matching
+        if (lowerText.includes('how many students') || lowerText.includes('total students') || lowerText.includes('total candidates')) {
+          return `We currently have **${globalData.length.toLocaleString()}** students enrolled in our programs.`;
+        }
+        else if (lowerText.includes('pass') || lowerText.includes('certified') || lowerText.includes('result')) {
+          const passCount = globalData.filter(r => {
+            const res = String(r['Result'] || '').toLowerCase();
+            return res === 'pass' || res === 'passed';
+          }).length;
+          return `So far, **${passCount.toLocaleString()}** students have successfully passed and been certified.`;
+        }
+        else if (lowerText.includes('batch') || lowerText.includes('batches')) {
+          const batches = new Set(globalData.map(r => String(r['Batch Wise'] || '').trim()).filter(b => b));
+          return `We are currently running **${batches.size}** active batches.`;
+        }
+        else if (lowerText.includes('state') || lowerText.includes('location') || lowerText.includes('where')) {
+          return `Our programs have reached candidates across multiple states in India. You can check our interactive map on the dashboard for detailed regional distribution!`;
+        }
+        else if (lowerText.includes('course') || lowerText.includes('programs') || lowerText.includes('training')) {
+          const courses = new Set(globalData.map(r => String(r['Courses'] || '').trim()).filter(c => c));
+          const courseList = Array.from(courses).join(', ');
+          return `We offer cutting-edge AI courses, including:<br><br><strong>${courseList}</strong>.`;
+        }
+        else if (lowerText.includes('faculty') || lowerText.includes('coordinator') || lowerText.includes('head') || lowerText.includes('teacher')) {
+          return `Our program is guided by expert coordinators from NIELIT Ropar:<br>- <strong>Dr.Sarwan Singh</strong> (Training Head)<br>- <strong>Ms. Anita Budhiraja (scientist E)</strong> (Head)`;
+        }
+        else if (lowerText.includes('hello') || lowerText.includes('hi ') || lowerText === 'hi' || lowerText.includes('hey')) {
+          return "Hello! How can I help you with information about the IndiaAI Skill Development program? You can ask me about students, courses, batches, or faculty.";
+        }
+        else {
+          return "I can provide aggregated information about the program such as the number of students, available courses, active batches, and faculty. Try asking <em>'How many students are enrolled?'</em> or <em>'What courses do you offer?'</em>.";
+        }
+      }
+
+      function sendMessage() {
+        const text = input.value.trim();
+        if (!text) return;
+
+        // Add user message
+        const userMsg = document.createElement('div');
+        userMsg.className = 'message user-message';
+        userMsg.textContent = text;
+        messagesContainer.appendChild(userMsg);
+
+        input.value = '';
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+        // Simulate typing delay for bot reply
+        setTimeout(() => {
+          const botMsg = document.createElement('div');
+          botMsg.className = 'message bot-message';
+
+          // Generate response based on data
+          botMsg.innerHTML = generateBotResponse(text);
+
+          messagesContainer.appendChild(botMsg);
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }, 800); // 800ms delay for realism
+      }
+
+      sendBtn.addEventListener('click', sendMessage);
+      input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendMessage();
+      });
+    });
   </script>
 </body>
-</html>
+
+</html>'''

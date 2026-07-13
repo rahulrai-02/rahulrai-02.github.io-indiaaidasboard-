@@ -1,112 +1,649 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Candidate Hub - NIELIT Ropar</title>
-<script>
-  if (sessionStorage.getItem('isCandidateLoggedIn') !== 'true') {
-    window.location.replace('login.html');
-  }
-</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<style>
-  :root {
-    --bg-body: #f8fafc; --bg-surface: #ffffff; --text-main: #0f172a; --text-muted: #64748b;
-    --border: #e2e8f0; --primary: #FF9933; --primary-hover: #e58a2e; --navy: #0D1B4B;
-    --code-bg: #1e1e1e; --code-text: #d4d4d4;
-  }
-  
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Candidate Hub - NIELIT Ropar</title>
+  <script>
+    if (sessionStorage.getItem('isCandidateLoggedIn') !== 'true') {
+      window.location.replace('login.html');
+    }
 
-  /* SIDEBAR NAVIGATION */
-  .sidebar { width: 260px; background: var(--navy); color: white; display: flex; flex-direction: column; padding: 20px 0; flex-shrink: 0; }
-  .brand { padding: 0 20px 30px; font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px;}
-  .brand i { color: var(--primary); }
-  
-  .nav-item { padding: 15px 20px; color: #cbd5e1; text-decoration: none; display: flex; align-items: center; gap: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s; border-left: 4px solid transparent; }
-  .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.05); color: white; border-left-color: var(--primary); }
-  .logout-btn { margin-top: auto; color: #fca5a5; }
-  .logout-btn:hover { color: #ef4444; background: rgba(239, 68, 68, 0.1); border-left-color: #ef4444; }
+    // Removed admin link logic to prevent confusion
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="g-flat.css">
+  <script src="lang-support.js" defer></script>
+  <style>
+    :root {
+      --bg-body: #f8f9fa;
+      --bg-surface: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --primary: #FF9933;
+      --primary-hover: #e68a2e;
+      --navy: #000080;
+      --success: #138808;
+      --warning: #F59E0B;
+      --danger: #dc2626;
+      --code-bg: #1e1e1e;
+      --code-text: #d4d4d4;
+    }
 
-  /* MAIN CONTENT AREA */
-  .main-content { flex: 1; overflow-y: auto; padding: 40px; position: relative; }
-  .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
-  
-  .card { background: var(--bg-surface); padding: 30px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05); margin-bottom: 24px; }
-  
-  .view-section { display: none; animation: fadeIn 0.3s ease; }
-  .view-section.active { display: block; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  /* PROFILE FORMS */
-  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  .form-group { display: flex; flex-direction: column; gap: 6px; }
-  .form-group.full { grid-column: span 2; }
-  label { font-size: 0.85rem; font-weight: 600; color: var(--text-main); }
-  input { padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-family: 'Inter', sans-serif; }
-  input[readonly] { background: #f1f5f9; color: var(--text-muted); cursor: not-allowed; }
-  
-  .btn { padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; transition: 0.2s; display: inline-flex; align-items: center; gap: 8px;}
-  .btn-primary { background: var(--primary); color: white; }
-  .btn-primary:hover { background: var(--primary-hover); }
+    body {
+      font-family: 'Outfit', 'Inter', sans-serif;
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
 
-  /* ASSIGNMENTS LIST */
-  .assignment-list { display: grid; gap: 15px; }
-  .assignment-card { border: 1px solid var(--border); border-radius: 8px; padding: 20px; display: flex; justify-content: space-between; align-items: center; background: white; transition: 0.2s; cursor: pointer; }
-  .assignment-card:hover { border-color: var(--primary); box-shadow: 0 4px 12px rgba(0,0,0,0.05); transform: translateY(-2px); }
-  .assignment-info h3 { color: var(--navy); margin-bottom: 4px; }
-  .assignment-info span { font-size: 0.8rem; color: var(--text-muted); background: #f1f5f9; padding: 2px 8px; border-radius: 4px; }
+    /* SIDEBAR NAVIGATION */
+    .sidebar {
+      width: 260px;
+      background: var(--navy);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      padding: 20px 0;
+      flex-shrink: 0;
+    }
 
-  /* SPLIT SCREEN SANDBOX */
-  .sandbox-split { display: flex; gap: 30px; align-items: stretch; }
-  .sandbox-pane { flex: 1; display: flex; flex-direction: column; }
-  .pane-header { font-size: 1.1rem; font-weight: 700; color: var(--navy); margin-bottom: 15px; border-bottom: 2px solid var(--border); padding-bottom: 10px; }
-  
-  /* Left Pane: Question Viewer */
-  .question-viewer { flex: 1; background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; }
-  .question-text { padding: 20px; font-size: 0.95rem; line-height: 1.6; white-space: pre-wrap; overflow-y: auto; flex: 1; }
-  
-  /* Right Pane: Anti-Cheat Editor */
-  .editor-toggle { display: flex; background: #f1f5f9; border-radius: 8px; padding: 4px; width: fit-content; margin-bottom: 10px; }
-  .editor-toggle button { padding: 6px 12px; border: none; background: transparent; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.8rem; color: var(--text-muted); }
-  .editor-toggle button.active { background: white; color: var(--navy); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .brand {
+      padding: 0 20px 30px;
+      font-size: 1.25rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 20px;
+    }
 
-  textarea.sandbox-area { flex: 1; width: 100%; min-height: 400px; padding: 15px; border-radius: 8px; border: 1px solid var(--border); resize: none; transition: all 0.3s; margin-bottom: 15px;}
-  textarea.mode-code { background: var(--code-bg); color: var(--code-text); font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; }
-  textarea.mode-text { background: white; color: var(--text-main); font-family: 'Inter', sans-serif; font-size: 0.95rem; }
-  
-  .anti-cheat-warning { font-size: 0.8rem; color: #dc2626; display: flex; align-items: center; gap: 5px; font-weight: 600; }
-  .alert-box { padding: 12px; border-radius: 8px; margin-top: 15px; font-weight: 500; display: none; text-align: center; }
-  .alert-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
-  
-  @media (max-width: 1024px) {
-    .sandbox-split { flex-direction: column; }
-    textarea.sandbox-area { min-height: 300px; }
-  }
-  @media (max-width: 768px) {
-    body { flex-direction: column; }
-    .sidebar { width: 100%; padding: 10px; flex-direction: row; flex-wrap: wrap; justify-content: center; }
-    .brand { border: none; padding: 10px; margin: 0; width: 100%; justify-content: center; }
-    .form-grid { grid-template-columns: 1fr; }
-    .form-group.full { grid-column: span 1; }
-  }
-</style>
+    .brand i {
+      color: var(--primary);
+    }
+
+    .nav-item {
+      padding: 15px 20px;
+      color: #cbd5e1;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      border-left: 4px solid transparent;
+    }
+
+    .nav-item:hover,
+    .nav-item.active {
+      background: rgba(255, 255, 255, 0.05);
+      color: white;
+      border-left-color: var(--primary);
+    }
+
+    .nav-item#admin-nav-item {
+      display: none;
+      color: #ffd700;
+      border-left-color: #ffd700;
+    }
+
+    .nav-item#admin-nav-item:hover {
+      color: #ffed4e;
+    }
+
+    .logout-btn {
+      margin-top: auto;
+      color: #fca5a5;
+    }
+
+    .logout-btn:hover {
+      color: #ef4444;
+      background: rgba(239, 68, 68, 0.1);
+      border-left-color: #ef4444;
+    }
+
+    /* MAIN CONTENT AREA */
+    .main-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 40px;
+      position: relative;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 20px;
+    }
+
+    .card {
+      background: var(--bg-surface);
+      padding: 30px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+      margin-bottom: 24px;
+    }
+
+    .view-section {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .view-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(5px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* PROFILE FORMS */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group.full {
+      grid-column: span 2;
+    }
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    input {
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    input[readonly] {
+      background: #f1f5f9;
+      color: var(--text-muted);
+      cursor: not-allowed;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    /* ASSIGNMENTS LIST */
+    .assignment-list {
+      display: grid;
+      gap: 15px;
+    }
+
+    .assignment-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: white;
+      transition: 0.2s;
+      cursor: pointer;
+    }
+
+    .assignment-card:hover {
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transform: translateY(-2px);
+    }
+
+    .assignment-info h3 {
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+
+    .assignment-info span {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      background: #f1f5f9;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    /* EXAM STYLE CODE RUNNER UI */
+    .exam-container {
+      display: flex;
+      height: calc(100vh - 180px);
+      background: #f8fafc;
+      gap: 20px;
+    }
+
+    .exam-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .exam-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      background: var(--navy);
+      color: white;
+    }
+
+    .exam-header h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .exam-content-split {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .exam-question {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      border-bottom: 2px solid var(--border);
+      background: #fafafa;
+    }
+
+    .exam-editor {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      background: white;
+      position: relative;
+    }
+
+    .exam-editor-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .exam-action-bar {
+      padding: 15px 20px;
+      background: #f1f5f9;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .exam-sidebar {
+      width: 320px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+
+    .exam-sidebar-header {
+      padding: 15px;
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+      font-weight: bold;
+      background: #f8fafc;
+    }
+
+    .exam-legends {
+      padding: 15px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      font-size: 0.8rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .legend-badge {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 0.75rem;
+    }
+
+    .legend-badge.not-visited {
+      background: #e2e8f0;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+    }
+
+    .legend-badge.not-answered {
+      background: #ef4444;
+      border: 1px solid #ef4444;
+    }
+
+    .legend-badge.answered {
+      background: #22c55e;
+      border: 1px solid #22c55e;
+    }
+
+    .legend-badge.marked {
+      background: #8b5cf6;
+      border: 1px solid #8b5cf6;
+    }
+
+    .exam-grid-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 15px;
+    }
+
+    .exam-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+    }
+
+    .grid-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+      background: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      color: #475569;
+    }
+
+    .grid-btn:hover {
+      border-color: var(--primary);
+    }
+
+    .grid-btn.not-visited {
+      background: #e2e8f0;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+    }
+
+    .grid-btn.not-answered {
+      background: #ef4444;
+      color: white;
+      border: 1px solid #ef4444;
+    }
+
+    .grid-btn.answered {
+      background: #22c55e;
+      color: white;
+      border: 1px solid #22c55e;
+    }
+
+    .grid-btn.marked {
+      background: #8b5cf6;
+      color: white;
+      border: 1px solid #8b5cf6;
+    }
+
+    .grid-btn.active-q {
+      border: 2px solid var(--navy);
+      transform: scale(1.1);
+      z-index: 10;
+      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8);
+    }
+
+    .exam-submit-area {
+      padding: 15px;
+      background: #f8fafc;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn-exam {
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid #cbd5e1;
+      background: white;
+      font-size: 0.85rem;
+      transition: 0.2s;
+      color: var(--text-main);
+    }
+
+    .btn-exam:hover {
+      background: #e2e8f0;
+    }
+
+    .btn-exam-green {
+      background: #22c55e;
+      color: white;
+      border: none;
+    }
+
+    .btn-exam-green:hover {
+      background: #16a34a;
+    }
+
+    .btn-exam-purple {
+      background: #8b5cf6;
+      color: white;
+      border: none;
+    }
+
+    .btn-exam-purple:hover {
+      background: #7c3aed;
+    }
+
+    .editor-toggle {
+      display: flex;
+      background: #f1f5f9;
+      border-radius: 8px;
+      padding: 4px;
+      width: fit-content;
+    }
+
+    .editor-toggle button {
+      padding: 6px 12px;
+      border: none;
+      background: transparent;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .editor-toggle button.active {
+      background: white;
+      color: var(--navy);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    textarea.sandbox-area {
+      flex: 1;
+      width: 100%;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      resize: none;
+      transition: all 0.3s;
+      margin-bottom: 8px;
+    }
+
+    textarea.mode-code {
+      background: var(--code-bg);
+      color: var(--code-text);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+    }
+
+    textarea.mode-text {
+      background: white;
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+    }
+
+    .anti-cheat-warning {
+      font-size: 0.8rem;
+      color: #dc2626;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: 600;
+    }
+
+    .alert-box {
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 15px;
+      font-weight: 500;
+      display: none;
+      text-align: center;
+    }
+
+    .alert-success {
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+
+    @media (max-width: 1024px) {
+      .exam-container {
+        flex-direction: column;
+        height: auto;
+      }
+
+      .exam-sidebar {
+        width: 100%;
+      }
+
+      .exam-main {
+        min-height: 600px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+        overflow: auto;
+        height: auto;
+      }
+
+      .sidebar {
+        width: 100%;
+        padding: 10px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .brand {
+        border: none;
+        padding: 10px;
+        margin: 0;
+        width: 100%;
+        justify-content: center;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-group.full {
+        grid-column: span 1;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
   <!-- SIDEBAR NAVIGATION -->
   <div class="sidebar">
-    <div class="brand"><i class="fas fa-graduation-cap"></i> Candidate Hub</div>
+    <div class="brand"><i class="fas fa-graduation-cap"></i> NIELIT Candidate</div>
     <a class="nav-item active" onclick="switchView('profile')" id="nav-profile">
       <i class="fas fa-user-circle"></i> My Profile
     </a>
     <a class="nav-item" onclick="switchView('assignments')" id="nav-assignments">
       <i class="fas fa-laptop-code"></i> Assignments Hub
     </a>
+    <a class="nav-item" onclick="switchView('practical')" id="nav-practical">
+      <i class="fas fa-file-code"></i> Practical Exam
+    </a>
+
     <a class="nav-item logout-btn" onclick="logout()">
       <i class="fas fa-sign-out-alt"></i> Logout
     </a>
@@ -114,24 +651,27 @@
 
   <!-- MAIN CONTENT -->
   <div class="main-content">
-    
-    <div class="top-bar">
+
+    <div class="top-bar" style="display: flex; gap: 20px; justify-content: flex-start; align-items: center;">
+      <div style="flex-shrink: 0;">
+        <img id="candidate_profile_photo"
+          src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=200"
+          alt="Profile"
+          style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+      </div>
       <div>
         <h2 style="color:var(--navy);">Welcome, <span id="display_name">Student</span></h2>
-        <p style="color:var(--text-muted); font-size:0.9rem;">Batch: <strong id="display_batch">---</strong> | Result: <strong id="display_status">---</strong></p>
-      </div>
-      <div id="certificate-container" style="display: none;">
-        <!-- Securely opens certificate in a new tab -->
-        <button onclick="openCertificate()" class="btn" style="background:#16a34a; color:white;">
-          <i class="fas fa-award"></i> View Certificate
-        </button>
+        <p style="color:var(--text-muted); font-size:0.9rem;">Batch: <strong id="display_batch">---</strong> | Result:
+          <strong id="display_status">---</strong>
+        </p>
       </div>
     </div>
 
     <!-- VIEW 1: PROFILE -->
     <div class="view-section active" id="view-profile">
       <div class="card">
-        <h3 style="margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px;">Account Details</h3>
+        <h3 style="margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px;">Account Details
+        </h3>
         <form id="profile-edit-form">
           <div class="form-grid">
             <div class="form-group"><label>Full Name</label><input type="text" id="Candidate_Name" readonly></div>
@@ -139,320 +679,764 @@
             <div class="form-group full"><label>Apaar / ABC ID</label><input type="text" id="Apaar" readonly></div>
             <div class="form-group"><label>Mobile Number</label><input type="text" id="Candidate_Mobile"></div>
             <div class="form-group"><label>Email Address</label><input type="email" id="Candidate_Email"></div>
-            <div class="form-group full"><label>Permanent Address</label><input type="text" id="Candidate_Perm_Address_City_State"></div>
+            <div class="form-group full"><label>Permanent Address</label><input type="text"
+                id="Candidate_Perm_Address_City_State"></div>
             <input type="hidden" id="Candidate_registration_no">
           </div>
-          <div style="margin-top: 20px; text-align: right;">
-            <button type="submit" class="btn btn-primary" id="save-profile-btn"><i class="fas fa-paper-plane"></i> Request Update</button>
+          <div style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 15px;">
+            <div id="certificate-container" style="display: none;">
+              <button type="button" onclick="openCertificate()" class="btn" style="background:#16a34a; color:white;">
+                <i class="fas fa-award"></i> View Certificate
+              </button>
+            </div>
+            <button type="submit" class="btn btn-primary" id="save-profile-btn"><i class="fas fa-paper-plane"></i>
+              Request Update</button>
           </div>
           <div id="profile-alert" class="alert-box alert-success"></div>
         </form>
       </div>
     </div>
 
-    <!-- VIEW 2: ASSIGNMENTS & SANDBOX -->
+    <!-- VIEW 2: ASSIGNMENTS -->
     <div class="view-section" id="view-assignments">
-      
+
       <!-- List View -->
       <div id="assignments-list-container">
         <h3 style="margin-bottom: 20px; color:var(--navy);">Pending Assignments</h3>
-        <div id="loader-assignments" style="color:var(--primary);"><i class="fas fa-spinner fa-spin"></i> Fetching your tasks...</div>
+        <div id="loader-assignments" style="color:var(--primary);"><i class="fas fa-spinner fa-spin"></i> Fetching your
+          tasks...</div>
         <div class="assignment-list" id="assignment-grid"></div>
       </div>
 
-      <!-- SPLIT SCREEN SANDBOX (Hidden by default) -->
+      <!-- EXAM SANDBOX (Hidden by default) -->
       <div id="sandbox-container" style="display: none;">
-        <button class="btn" style="background:var(--bg-surface); border:1px solid var(--border); color:var(--text-main); margin-bottom:20px;" onclick="closeSandbox()">
-          <i class="fas fa-arrow-left"></i> Back to List
-        </button>
-        
-        <div class="sandbox-split">
-          
-          <!-- LEFT PANE: Smart Question/PDF Viewer -->
-          <div class="sandbox-pane card" style="margin-bottom: 0;">
-            <div class="pane-header" id="sandbox-title">Assignment Title</div>
-            <div class="question-viewer" id="sandbox-question-container">
-              <!-- Content injected via JS -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+          <h3 style="color: var(--navy); margin: 0;"><i class="fas fa-laptop-code"></i> Assessment Portal</h3>
+          <button class="btn" style="background:white; border:1px solid var(--border); color:var(--danger);"
+            onclick="closeSandbox()">
+            <i class="fas fa-times"></i> Exit
+          </button>
+        </div>
+
+        <div class="exam-container">
+
+          <!-- LEFT PANE: Question & Editor -->
+          <div class="exam-main">
+            <div class="exam-header">
+              <h3 id="sandbox-title"><i class="fas fa-question-circle"></i> Question 1</h3>
+              <span id="exam-timer"
+                style="font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 6px;">--:--:--</span>
+            </div>
+
+            <div class="exam-content-split">
+              <!-- Top Half: Question -->
+              <div class="exam-question" id="sandbox-question-container">
+                <!-- Content injected via JS -->
+              </div>
+
+              <!-- Bottom Half: Code Editor -->
+              <div class="exam-editor">
+                <div class="exam-editor-header">
+                  <span style="font-weight: 600; color: var(--navy);"><i class="fas fa-code"></i> Code Runner
+                    Workspace</span>
+                  <div class="editor-toggle" style="margin:0;">
+                    <button type="button" id="btn-mode-text" class="active"
+                      onclick="setSandboxMode('text')">Text</button>
+                    <button type="button" id="btn-mode-code" onclick="setSandboxMode('code')">Code</button>
+                  </div>
+                </div>
+                <textarea id="sandbox-editor" class="sandbox-area mode-text"
+                  placeholder="Type your code or answer here. Paste is disabled." required></textarea>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span class="anti-cheat-warning"><i class="fas fa-shield-alt"></i> Strict Mode: Paste Disabled</span>
+                  <div id="submission-alert"
+                    style="display: none; color: #16a34a; font-weight: 600; font-size: 0.85rem;"><i
+                      class="fas fa-check"></i> Saved successfully</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bottom Actions -->
+            <div class="exam-action-bar">
+              <div style="display:flex; gap:10px; flex-wrap: wrap;">
+                <button class="btn-exam btn-exam-green" id="btn-save-next" onclick="examSaveAndNext()">Save &
+                  Next</button>
+                <button class="btn-exam" onclick="examClearResponse()">Clear</button>
+                <button class="btn-exam btn-exam-purple" onclick="examMarkAndNext()">Mark & Next</button>
+              </div>
+              <div style="display:flex; gap:10px;">
+                <button class="btn-exam" onclick="examBack()"><i class="fas fa-angle-double-left"></i></button>
+                <button class="btn-exam" onclick="examNext()"><i class="fas fa-angle-double-right"></i></button>
+              </div>
             </div>
           </div>
 
-          <!-- RIGHT PANE: Anti-Cheat Workspace -->
-          <div class="sandbox-pane card" style="margin-bottom: 0;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <div class="pane-header">Your Solution</div>
-              <div class="editor-toggle">
-                <button type="button" id="btn-mode-text" class="active" onclick="setSandboxMode('text')"><i class="fas fa-align-left"></i> Text/Algo</button>
-                <button type="button" id="btn-mode-code" onclick="setSandboxMode('code')"><i class="fas fa-code"></i> Write Code</button>
+          <!-- RIGHT PANE: Grid & Legends -->
+          <div class="exam-sidebar">
+            <div class="exam-sidebar-header">
+              Question Palette
+            </div>
+
+            <div class="exam-legends">
+              <div class="legend-item">
+                <div class="legend-badge answered" id="count-answered">0</div> Answered
+              </div>
+              <div class="legend-item">
+                <div class="legend-badge not-answered" id="count-not-answered">0</div> Unanswered
+              </div>
+              <div class="legend-item">
+                <div class="legend-badge not-visited" id="count-not-visited">0</div> Unvisited
+              </div>
+              <div class="legend-item">
+                <div class="legend-badge marked" id="count-marked">0</div> Marked
               </div>
             </div>
-            
-            <form id="submission-form" style="display: flex; flex-direction: column; flex: 1;">
-              <!-- The Anti-Cheat Textarea -->
-              <textarea id="sandbox-editor" class="sandbox-area mode-text" placeholder="Type your answer here. Paste is disabled." required></textarea>
-              <input type="hidden" id="current_assignment_id">
-              
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span class="anti-cheat-warning"><i class="fas fa-shield-alt"></i> Strict Mode: Copy & Paste Disabled</span>
-                <button type="submit" class="btn btn-primary" id="submit-answer-btn"><i class="fas fa-cloud-upload-alt"></i> Submit Answer</button>
+
+            <div class="exam-grid-container">
+              <div class="exam-grid" id="exam-grid-buttons">
+                <!-- Buttons injected via JS -->
               </div>
-              <div id="submission-alert" class="alert-box alert-success"></div>
-            </form>
+            </div>
+
+            <div class="exam-submit-area">
+              <button class="btn btn-primary" style="width:100%;" onclick="examSubmitAll()"><i
+                  class="fas fa-check-double"></i> Submit Assessment</button>
+            </div>
           </div>
 
         </div>
       </div>
 
     </div>
+
+    <!-- VIEW 3: PRACTICAL EXAM -->
+    <div class="view-section" id="view-practical">
+      <div class="card" style="max-width: 600px; margin: 0 auto;">
+        <h3 style="margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; color: var(--navy);">
+          <i class="fas fa-file-code" style="color: var(--primary);"></i> Practical Exam Submission
+        </h3>
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px;">
+          Please upload your completed Jupyter Notebook (.ipynb) file for the practical examination. Ensure your code is fully executed before submitting.
+        </p>
+        
+        <form id="practical-upload-form">
+          <div class="form-group" style="margin-bottom: 20px;">
+            <label>Select .ipynb File</label>
+            <input type="file" id="practical-file" accept=".ipynb" required style="padding: 15px; border: 2px dashed var(--primary); background: #f8fafc;">
+          </div>
+          <button type="submit" class="btn btn-primary" id="submit-practical-btn" style="width: 100%; justify-content: center;">
+            <i class="fas fa-cloud-upload-alt"></i> Submit Practical Exam
+          </button>
+          <div id="practical-alert" class="alert-box"></div>
+        </form>
+      </div>
+    </div>
+
+    <!-- CERTIFICATE MODAL -->
+    <div id="certificate-modal"
+      style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.75); align-items:center; justify-content:center; z-index:9999; padding:20px;">
+      <div
+        style="width:100%; max-width:960px; height:90%; background:#fff; border-radius:16px; overflow:hidden; display:flex; flex-direction:column;">
+        <div
+          style="display:flex; justify-content:space-between; align-items:center; padding:16px; border-bottom:1px solid #e5e7eb; background:#f8fafc;">
+          <div style="font-size:1rem; font-weight:700; color:#111827;">Certificate Preview</div>
+          <button type="button" class="btn" style="background:#ef4444; color:#fff;"
+            onclick="closeCertificateModal()">Close</button>
+        </div>
+        <iframe id="certificate-frame" src="" style="flex:1; width:100%; border:none; background:#f8fafc;"></iframe>
+      </div>
+    </div>
   </div>
 
-<script>
-  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyAfhakyTh0j_StQ3a2MpnZlqQq-46kuW45Vw8V2V8gIUa9Prr-c21K-d5ZoTYAEnU2VQ/exec';
-  let candidateData = {};
-  let currentEditorMode = 'text';
+  <script>
+    // YOUR APPS SCRIPT URL
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyAfhakyTh0j_StQ3a2MpnZlqQq-46kuW45Vw8V2V8gIUa9Prr-c21K-d5ZoTYAEnU2VQ/exec';
+    let candidateData = {};
 
-  // ==========================================
-  // INITIALIZATION & SILENT PING
-  // ==========================================
-  window.onload = async () => {
-    const rawData = sessionStorage.getItem('currentCandidateData');
-    if (!rawData) return;
-    
-    candidateData = JSON.parse(rawData);
-    
-    // Set up top bar
-    document.getElementById('display_name').innerText = candidateData['Candidate_Name'] || 'Student';
-    document.getElementById('display_batch').innerText = candidateData['Batch Wise'] || candidateData['Batch'] || 'Unassigned';
-    document.getElementById('display_status').innerText = candidateData['Result'] || 'Pending';
-    
-    // Check for certificate
-    if (candidateData['Certificate Link'] && candidateData['Certificate Link'].trim() !== '') {
-      document.getElementById('certificate-container').style.display = 'block';
-    }
-    
-    // Fill out profile form
-    const fields = ['Candidate_Name', 'Courses', 'Apaar', 'Candidate_Mobile', 'Candidate_Email', 'Candidate_Perm_Address_City_State', 'Candidate_registration_no'];
-    fields.forEach(f => { if(document.getElementById(f) && candidateData[f]) document.getElementById(f).value = candidateData[f]; });
+    // EXAM STATE
+    let examQuestions = [];
+    let currentExamIndex = 0;
 
-    setupAntiCheat();
+    document.addEventListener('DOMContentLoaded', () => {
+      const rawData = sessionStorage.getItem('currentCandidateData');
+      if (!rawData) return;
+      candidateData = JSON.parse(rawData);
 
-    // Fire the Silent Ping for Live Attendance
-    silentPing();
-  };
+      document.getElementById('display_name').innerText = candidateData['Candidate_Name'] || 'Student';
+      document.getElementById('display_batch').innerText = candidateData['Batch Wise'] || 'Unassigned';
+      document.getElementById('display_status').innerText = candidateData['Result'] || 'Pending';
 
-  // Sends attendance logic in background
-  async function silentPing() {
-    const candidateReg = candidateData['Candidate_registration_no'];
-    const candidateName = candidateData['Candidate_Name'] || 'Candidate';
+      const photoLink = String(candidateData['Photo Link'] || candidateData['Profile_Photo'] || candidateData['Photo'] || '').trim();
+      if (photoLink && photoLink.startsWith('http')) {
+        let finalUrl = photoLink;
+        const driveMatch = photoLink.match(/\/d\/([a-zA-Z0-9_-]+)/);
+        if (driveMatch && driveMatch[1]) {
+          finalUrl = `https://drive.google.com/thumbnail?id=${driveMatch[1]}&sz=w800`;
+        }
+        document.getElementById('candidate_profile_photo').src = finalUrl;
+      }
 
-    if(!candidateReg) return; 
+      if (candidateData['Certificate Link']) {
+        document.getElementById('certificate-container').style.display = 'block';
+      }
 
-    const payload = {
-      action: 'candidate_ping',
-      Candidate_registration_no: candidateReg,
-      Candidate_Name: candidateName
-    };
+      const fields = ['Candidate_Name', 'Courses', 'Apaar', 'Candidate_Mobile', 'Candidate_Email', 'Candidate_Perm_Address_City_State', 'Candidate_registration_no'];
+      fields.forEach(f => { if (document.getElementById(f) && candidateData[f]) document.getElementById(f).value = candidateData[f]; });
 
-    try {
-      await fetch(APPS_SCRIPT_URL, { 
-        method: 'POST', 
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // Bypasses CORS
-        body: JSON.stringify(payload) 
+      setupAntiCheat();
+
+      /* ==========================================
+         SILENT PING: Auto-Check in for Attendance
+         ========================================== */
+      silentPing();
+
+      /* ==========================================
+         CROSS-TAB SYNC: Prevent multiple candidate logins
+         ========================================== */
+      window.addEventListener('storage', async function (e) {
+        if (e.key === 'candidateLoginTrigger') {
+          const currentData = JSON.parse(sessionStorage.getItem('currentCandidateData') || '{}');
+          if (currentData['Candidate_registration_no'] && currentData['Candidate_registration_no'] !== e.newValue) {
+            alert("Another candidate logged in on this browser. You have been automatically logged out.");
+
+            // Send silent logout ping for the old session so it's recorded on backend
+            try {
+              await fetch(APPS_SCRIPT_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({
+                  action: 'candidate_logout',
+                  Candidate_registration_no: currentData['Candidate_registration_no'],
+                  Candidate_Name: currentData['Candidate_Name']
+                })
+              });
+            } catch (err) { }
+
+            sessionStorage.clear();
+            window.location.replace('login.html');
+          }
+        }
+        if (e.key === 'candidateLogoutTrigger') {
+          // Only log out if the logout trigger matches the currently logged in user
+          const currentData = JSON.parse(sessionStorage.getItem('currentCandidateData') || '{}');
+          if (currentData['Candidate_registration_no'] === e.newValue) {
+            sessionStorage.clear();
+            window.location.replace('login.html');
+          }
+        }
       });
-      console.log("Session logged to attendance queue.");
-    } catch(e) {
-      console.error("Session ping failed.", e);
-    }
-  }
-
-  // ==========================================
-  // NAVIGATION LOGIC
-  // ==========================================
-  function switchView(viewId) {
-    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-    document.getElementById(`nav-${viewId}`).classList.add('active');
-    document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-    document.getElementById(`view-${viewId}`).classList.add('active');
-    
-    if(viewId === 'assignments') fetchAssignments();
-  }
-
-  // ==========================================
-  // CERTIFICATE LOGIC (NEW TAB)
-  // ==========================================
-  function openCertificate() {
-    let certUrl = candidateData['Certificate Link'];
-    if (certUrl) {
-      // Clean up the URL so it opens properly
-      if (certUrl.includes('/preview')) {
-        certUrl = certUrl.replace('/preview', '/view');
-      }
-      window.open(certUrl, '_blank');
-    } else {
-      alert("Certificate not found.");
-    }
-  }
-
-  // ==========================================
-  // ANTI-CHEAT
-  // ==========================================
-  function setupAntiCheat() {
-    const editor = document.getElementById('sandbox-editor');
-    editor.addEventListener('paste', e => { e.preventDefault(); alert("Security Alert: Copy/Pasting is disabled."); });
-    editor.addEventListener('drop', e => { e.preventDefault(); alert("Security Alert: Drag & Drop is disabled."); });
-    editor.addEventListener('contextmenu', e => e.preventDefault());
-    editor.addEventListener('keydown', function(e) {
-      if ((e.ctrlKey || e.metaKey) && (e.key === 'v' || e.key === 'V' || e.key === 'c' || e.key === 'C')) {
-        e.preventDefault();
-        alert("Security Alert: Keyboard shortcuts for copy/paste are disabled.");
-      }
     });
-  }
 
-  // ==========================================
-  // LMS: FETCH ASSIGNMENTS
-  // ==========================================
-  async function fetchAssignments() {
-    const grid = document.getElementById('assignment-grid');
-    const loader = document.getElementById('loader-assignments');
-    grid.innerHTML = ''; loader.style.display = 'block';
-    
-    const payload = { 
-      action: 'fetch_assignments', 
-      'Batch Wise': candidateData['Batch Wise'] || candidateData['Batch'] || 'Unassigned',
-      'Courses': candidateData['Courses'] || 'None'
-    };
-    
-    try {
-      const response = await fetch(APPS_SCRIPT_URL, { 
-        method: 'POST', 
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(payload) 
-      });
-      const assignments = await response.json();
-      loader.style.display = 'none';
+    // ==========================================
+    // SILENT ATTENDANCE PING LOGIC
+    // ==========================================
+    async function silentPing() {
+      const regNo = candidateData['Candidate_registration_no'];
+      const name = candidateData['Candidate_Name'];
 
-      if(assignments.length === 0) {
-        grid.innerHTML = '<div style="padding:20px; background:white; border-radius:8px; border:1px solid var(--border);">No active assignments right now.</div>';
+      if (!regNo) return; // Failsafe
+
+      const payload = {
+        action: 'candidate_ping',
+        Candidate_registration_no: regNo,
+        Candidate_Name: name
+      };
+
+      try {
+        // Send silent POST to register login time and mark them 'Pending Verification'
+        await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+        console.log("Attendance Ping sent successfully.");
+      } catch (e) {
+        console.error("Attendance Ping failed:", e);
+      }
+    }
+
+    function switchView(viewId) {
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+      document.getElementById(`nav-${viewId}`).classList.add('active');
+      document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+      document.getElementById(`view-${viewId}`).classList.add('active');
+      if (viewId === 'assignments') fetchAssignments();
+    }
+
+    // ==========================================
+    // CERTIFICATE VIEW LOGIC (MODAL)
+    // ==========================================
+    function getCertificatePreviewUrl(url) {
+      if (!url) return '';
+      if (url.includes('drive.google.com/file/d/')) {
+        const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+        if (match && match[1]) {
+          return `https://drive.google.com/file/d/${match[1]}/preview`;
+        }
+      }
+      if (url.includes('/view')) return url.replace('/view', '/preview');
+      if (url.includes('/preview')) return url;
+      return url;
+    }
+
+    function openCertificate() {
+      let certUrl = candidateData['Certificate Link'];
+
+      if (certUrl) {
+        const previewUrl = getCertificatePreviewUrl(certUrl);
+        document.getElementById('certificate-frame').src = previewUrl;
+        document.getElementById('certificate-modal').style.display = 'flex';
+      } else {
+        alert("Certificate not found in the database. Please contact administration.");
+      }
+    }
+
+    function closeCertificateModal() {
+      document.getElementById('certificate-frame').src = '';
+      document.getElementById('certificate-modal').style.display = 'none';
+    }
+
+    // ==========================================
+    // PRACTICAL EXAM UPLOAD
+    // ==========================================
+    document.getElementById('practical-upload-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const btn = document.getElementById('submit-practical-btn');
+      const alertBox = document.getElementById('practical-alert');
+      const fileInput = document.getElementById('practical-file');
+      
+      if (fileInput.files.length === 0) return;
+      const file = fileInput.files[0];
+      if (!file.name.endsWith('.ipynb')) {
+        alertBox.className = 'alert-box alert-error';
+        alertBox.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Only .ipynb files are allowed.';
+        alertBox.style.display = 'block';
         return;
       }
-
-      assignments.forEach(task => {
-        const safeTitle = encodeURIComponent(task.Title);
-        const safeQuestion = encodeURIComponent(task.Question);
+      
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+      btn.disabled = true;
+      alertBox.style.display = 'none';
+      
+      const reader = new FileReader();
+      reader.onload = async function(ev) {
+        const base64Data = ev.target.result.split(',')[1];
+        const payload = {
+          action: 'submit_assignment',
+          Candidate_registration_no: candidateData['Candidate_registration_no'],
+          Candidate_Name: candidateData['Candidate_Name'],
+          'Batch Wise': candidateData['Batch Wise'],
+          Assignment_ID: 'PRACTICAL_EXAM',
+          Format: 'Jupyter Notebook (.ipynb)',
+          has_file: true,
+          file_name: file.name,
+          file_data: base64Data
+        };
         
-        grid.innerHTML += `
-          <div class="assignment-card" onclick="openSandbox('${task.Assignment_ID}', '${safeTitle}', '${safeQuestion}')">
-            <div class="assignment-info">
-              <h3>${task.Title}</h3>
-              <span>Due: ${task.Due_Date || 'No Date'}</span>
-            </div>
-            <button class="btn btn-primary" style="padding: 8px 16px;"><i class="fas fa-pen"></i> Solve</button>
+        try {
+          const response = await fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify(payload)
+          });
+          const result = await response.json();
+          if (result.status === 'success') {
+            alertBox.className = 'alert-box alert-success';
+            alertBox.innerHTML = '<i class="fas fa-check-circle"></i> Practical exam submitted successfully!';
+            fileInput.value = '';
+          } else {
+            throw new Error(result.message);
+          }
+        } catch (error) {
+          alertBox.className = 'alert-box alert-error';
+          alertBox.innerHTML = '<i class="fas fa-exclamation-triangle"></i> ' + error.message;
+        } finally {
+          alertBox.style.display = 'block';
+          btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Submit Practical Exam';
+          btn.disabled = false;
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // ==========================================
+    // ANTI-CHEAT: STRICT MODE ENFORCEMENT
+    // ==========================================
+    function setupAntiCheat() {
+      const editor = document.getElementById('sandbox-editor');
+
+      // Block Paste via Mouse
+      editor.addEventListener('paste', e => { e.preventDefault(); alert("Security Alert: Copy/Pasting is disabled for assessments."); });
+      // Block Drag & Drop
+      editor.addEventListener('drop', e => { e.preventDefault(); alert("Security Alert: Drag & Drop is disabled."); });
+      // Block Right Click Menu
+      editor.addEventListener('contextmenu', e => e.preventDefault());
+
+      // Block Keyboard Shortcuts (Ctrl+V, Cmd+V, Ctrl+C)
+      editor.addEventListener('keydown', function (e) {
+        if ((e.ctrlKey || e.metaKey) && (e.key === 'v' || e.key === 'V' || e.key === 'c' || e.key === 'C')) {
+          e.preventDefault();
+          alert("Security Alert: Keyboard shortcuts for copy/paste are disabled.");
+        }
+      });
+    }
+
+    // ==========================================
+    // FETCH ASSIGNMENTS
+    // ==========================================
+    async function fetchAssignments() {
+      const grid = document.getElementById('assignment-grid');
+      const loader = document.getElementById('loader-assignments');
+      grid.innerHTML = ''; loader.style.display = 'block';
+
+      const payload = {
+        action: 'fetch_assignments',
+        'Batch Wise': candidateData['Batch Wise'] || candidateData['Batch'] || 'Unassigned',
+        'Courses': candidateData['Courses'] || 'None'
+      };
+
+      const payloadSubmissions = {
+        action: 'fetch_my_submissions',
+        Candidate_registration_no: candidateData['Candidate_registration_no']
+      };
+
+      try {
+        const resAssign = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
+        const assignments = await resAssign.json();
+
+        let mySubmissions = [];
+        try {
+          const resSub = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(payloadSubmissions) });
+          const textSub = await resSub.text();
+          if (textSub && textSub.trim().startsWith('[')) {
+            mySubmissions = JSON.parse(textSub);
+          }
+        } catch (subErr) {
+          console.warn("Could not fetch submissions, backend might not be deployed yet:", subErr);
+        }
+
+        loader.style.display = 'none';
+
+        if (assignments.length === 0) {
+          grid.innerHTML = '<div style="padding:20px; background:white; border-radius:8px; border:1px solid var(--border);">No active assignments right now.</div>';
+          return;
+        }
+
+        // Initialize Exam State
+        examQuestions = [];
+        assignments.forEach((task, idx) => {
+          let numQ = parseInt(task.Number_of_Questions) || 1;
+          let parsedJSON = [];
+          try { if (task.Questions_JSON) parsedJSON = JSON.parse(task.Questions_JSON); } catch (e) { }
+
+          for (let i = 0; i < numQ; i++) {
+            let specificQ = task.Question;
+            if (parsedJSON && parsedJSON[i] && parsedJSON[i].q) specificQ = parsedJSON[i].q;
+
+            const aId = numQ > 1 ? `${task.Assignment_ID}-Q${i + 1}` : task.Assignment_ID;
+
+            // Match with existing submission
+            const existingSub = mySubmissions.find(sub => String(sub.Assignment_ID).trim() === aId.trim());
+
+            examQuestions.push({
+              ...task,
+              Assignment_ID: aId,
+              Title: numQ > 1 ? `${task.Title} (Q${i + 1})` : task.Title,
+              Question: specificQ,
+              status: existingSub ? 'answered' : 'not-visited',
+              answer: existingSub ? existingSub.Answer : '',
+              mode: existingSub && existingSub.Format === 'Code Logic' ? 'code' : 'text',
+              evalStatus: existingSub ? existingSub.Status : 'Not Submitted',
+              originalIndex: examQuestions.length + 1
+            });
+          }
+        });
+
+        updateDashboardProgressUI();
+      } catch (e) {
+        loader.innerHTML = '<span style="color:red;">Error loading assignments and submissions.</span>';
+      }
+    }
+
+    function updateDashboardProgressUI() {
+      const grid = document.getElementById('assignment-grid');
+      if (!grid || examQuestions.length === 0) return;
+
+      const total = examQuestions.length;
+      const answeredCount = examQuestions.filter(q => q.status === 'answered').length;
+      const pendingCount = total - answeredCount;
+
+      let progressHTML = `
+        <div class="card" style="margin-bottom: 30px; display:flex; flex-wrap:wrap; gap:20px; align-items:center; justify-content:space-between; border-left: 5px solid var(--primary);">
+          <div>
+            <h3 style="color:var(--navy); margin-bottom:10px;"><i class="fas fa-chart-pie"></i> Your Progress Report</h3>
+            <p style="color:var(--text-muted); font-size:0.95rem;">Keep track of your assessment scores and pending tasks.</p>
           </div>
-        `;
+          <div style="display:flex; gap:15px; flex-wrap:wrap;">
+            <div style="background:#f1f5f9; padding:12px 20px; border-radius:8px; text-align:center;">
+              <div style="font-size:1.4rem; font-weight:800; color:var(--text-main);">${total}</div>
+              <div style="font-size:0.8rem; font-weight:600; color:var(--text-muted); text-transform:uppercase;">Total Tasks</div>
+            </div>
+            <div style="background:#dcfce7; padding:12px 20px; border-radius:8px; text-align:center;">
+              <div style="font-size:1.4rem; font-weight:800; color:#15803d;">${answeredCount}</div>
+              <div style="font-size:0.8rem; font-weight:600; color:#166534; text-transform:uppercase;">Submitted</div>
+            </div>
+            <div style="background:#fef2f2; padding:12px 20px; border-radius:8px; text-align:center;">
+              <div style="font-size:1.4rem; font-weight:800; color:#b91c1c;">${pendingCount}</div>
+              <div style="font-size:0.8rem; font-weight:600; color:#991b1b; text-transform:uppercase;">Pending</div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      let listHTML = `<div class="assignment-list" style="margin-bottom: 20px;">`;
+      examQuestions.forEach((q, idx) => {
+        let statusBadge = '';
+        const lowerStatus = String(q.evalStatus).toLowerCase();
+        if (lowerStatus.includes('pass')) {
+          statusBadge = `<span style="background:#dcfce7; color:#15803d; padding:4px 10px; border-radius:999px; font-size:0.8rem; font-weight:600;"><i class="fas fa-check-circle"></i> Pass</span>`;
+        } else if (lowerStatus.includes('improvement')) {
+          statusBadge = `<span style="background:#fef08a; color:#854d0e; padding:4px 10px; border-radius:999px; font-size:0.8rem; font-weight:600;"><i class="fas fa-exclamation-triangle"></i> Needs Improvement</span>`;
+        } else if (lowerStatus.includes('pending review')) {
+          statusBadge = `<span style="background:#f1f5f9; color:var(--text-muted); padding:4px 10px; border-radius:999px; font-size:0.8rem; font-weight:600;"><i class="fas fa-clock"></i> Pending Review</span>`;
+        } else {
+          statusBadge = `<span style="background:#fee2e2; color:#b91c1c; padding:4px 10px; border-radius:999px; font-size:0.8rem; font-weight:600;"><i class="fas fa-times-circle"></i> Not Submitted</span>`;
+        }
+
+        listHTML += `
+           <div class="assignment-card" onclick="loadExamQuestion(${idx}); startExam();" style="display:flex; justify-content:space-between; align-items:center;">
+             <div class="assignment-info">
+               <h3>${q.Title}</h3>
+               <div style="display:flex; gap:10px; margin-top:8px;">
+                 <span>ID: ${q.Assignment_ID}</span>
+                 <span>Due: ${q.Due_Date || 'N/A'}</span>
+               </div>
+             </div>
+             <div>${statusBadge}</div>
+           </div>
+         `;
       });
-    } catch (e) {
-      loader.innerHTML = '<span style="color:red;">Error loading assignments.</span>';
+      listHTML += `</div>`;
+
+      listHTML += `
+        <div class="card" style="text-align:center; padding: 30px 20px;">
+          <button class="btn btn-primary" style="font-size:1.1rem; padding: 12px 24px;" onclick="startExam()"><i class="fas fa-play"></i> Open Assessment Portal</button>
+        </div>
+      `;
+
+      grid.innerHTML = progressHTML + listHTML;
     }
-  }
 
-  // ==========================================
-  // LMS: SANDBOX RENDERER
-  // ==========================================
-  function openSandbox(id, encTitle, encQuestion) {
-    const title = decodeURIComponent(encTitle);
-    const question = decodeURIComponent(encQuestion);
-
-    document.getElementById('assignments-list-container').style.display = 'none';
-    document.getElementById('sandbox-container').style.display = 'block';
-    document.getElementById('submission-alert').style.display = 'none';
-    document.getElementById('sandbox-editor').value = ''; 
-    document.getElementById('current_assignment_id').value = id;
-    document.getElementById('sandbox-title').innerText = title;
-    
-    const qContainer = document.getElementById('sandbox-question-container');
-    
-    if (question.startsWith('http://') || question.startsWith('https://')) {
-      let embedUrl = question.replace('/view', '/preview');
-      qContainer.innerHTML = `<iframe src="${embedUrl}" width="100%" height="100%" style="border:none; flex:1;"></iframe>`;
-    } else {
-      qContainer.innerHTML = `<div class="question-text">${question}</div>`;
+    // ==========================================
+    // EXAM PORTAL LOGIC
+    // ==========================================
+    function startExam() {
+      document.getElementById('assignments-list-container').style.display = 'none';
+      document.getElementById('sandbox-container').style.display = 'block';
+      if (examQuestions.length > 0) {
+        loadExamQuestion(0);
+      }
     }
-  }
 
-  function closeSandbox() {
-    document.getElementById('sandbox-container').style.display = 'none';
-    document.getElementById('assignments-list-container').style.display = 'block';
-  }
+    function closeSandbox() {
+      document.getElementById('sandbox-container').style.display = 'none';
+      document.getElementById('assignments-list-container').style.display = 'block';
+    }
 
-  function setSandboxMode(mode) {
-    currentEditorMode = mode;
-    const editor = document.getElementById('sandbox-editor');
-    document.getElementById('btn-mode-text').classList.remove('active');
-    document.getElementById('btn-mode-code').classList.remove('active');
-    document.getElementById(`btn-mode-${mode}`).classList.add('active');
-    editor.className = `sandbox-area mode-${mode}`;
-  }
+    function loadExamQuestion(index) {
+      if (index < 0 || index >= examQuestions.length) return;
 
-  // ==========================================
-  // SUBMISSION: PROFILE AND LMS
-  // ==========================================
-  document.getElementById('submission-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const btn = document.getElementById('submit-answer-btn');
-    const alertBox = document.getElementById('submission-alert');
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...'; btn.disabled = true;
+      // Save current editor content to previous question before switching
+      if (examQuestions[currentExamIndex] && document.getElementById('sandbox-container').style.display === 'block') {
+        examQuestions[currentExamIndex].answer = document.getElementById('sandbox-editor').value;
+      }
 
-    const payload = {
-      action: 'submit_assignment',
-      Candidate_registration_no: candidateData['Candidate_registration_no'],
-      Candidate_Name: candidateData['Candidate_Name'],
-      'Batch Wise': candidateData['Batch Wise'],
-      Assignment_ID: document.getElementById('current_assignment_id').value,
-      Format: currentEditorMode === 'code' ? 'Code Logic' : 'Text Answer',
-      Answer: document.getElementById('sandbox-editor').value
-    };
+      currentExamIndex = index;
+      const q = examQuestions[index];
 
-    try {
-      await fetch(APPS_SCRIPT_URL, { 
-        method: 'POST', 
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(payload) 
+      if (q.status === 'not-visited') q.status = 'not-answered';
+
+      document.getElementById('sandbox-title').innerHTML = `<i class="fas fa-question-circle"></i> Question ${index + 1}`;
+
+      const qContainer = document.getElementById('sandbox-question-container');
+      const questionText = q.Question;
+
+      if (questionText.startsWith('http://') || questionText.startsWith('https://')) {
+        let embedUrl = questionText.replace('/view', '/preview');
+        qContainer.innerHTML = `<iframe src="${embedUrl}" width="100%" height="100%" style="border:none; flex:1;"></iframe>`;
+      } else {
+        qContainer.innerHTML = `<div class="question-text">${questionText}</div>`;
+      }
+
+      document.getElementById('sandbox-editor').value = q.answer || '';
+      setSandboxMode(q.mode || 'text');
+
+      updateExamGrid();
+      document.getElementById('submission-alert').style.display = 'none';
+    }
+
+    function setSandboxMode(mode) {
+      if (examQuestions[currentExamIndex]) examQuestions[currentExamIndex].mode = mode;
+      const editor = document.getElementById('sandbox-editor');
+      document.getElementById('btn-mode-text').classList.remove('active');
+      document.getElementById('btn-mode-code').classList.remove('active');
+
+      document.getElementById(`btn-mode-${mode}`).classList.add('active');
+      editor.className = `sandbox-area mode-${mode}`;
+    }
+
+    function updateExamGrid() {
+      const grid = document.getElementById('exam-grid-buttons');
+      grid.innerHTML = '';
+
+      let counts = { answered: 0, 'not-answered': 0, 'not-visited': 0, marked: 0 };
+
+      examQuestions.forEach((q, idx) => {
+        counts[q.status]++;
+        const btn = document.createElement('div');
+        btn.className = `grid-btn ${q.status} ${idx === currentExamIndex ? 'active-q' : ''}`;
+        btn.innerText = (idx + 1).toString().padStart(2, '0');
+        btn.onclick = () => loadExamQuestion(idx);
+        grid.appendChild(btn);
       });
-      alertBox.innerHTML = '<i class="fas fa-check-circle"></i> Submitted successfully!';
-      alertBox.style.display = 'block';
-      setTimeout(closeSandbox, 2000);
-    } catch(err) {
-      alert("Failed to submit assignment.");
-    } finally {
-      btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Submit Answer'; btn.disabled = false;
-    }
-  });
 
-  document.getElementById('profile-edit-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const btn = document.getElementById('save-profile-btn');
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...'; btn.disabled = true;
-    
-    let payload = { action: 'candidate_edit' };
-    Object.assign(payload, candidateData); 
-    ['Candidate_Mobile', 'Candidate_Email', 'Candidate_Perm_Address_City_State'].forEach(f => { payload[f] = document.getElementById(f).value; });
-    
-    try {
-      await fetch(APPS_SCRIPT_URL, { 
-        method: 'POST', 
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(payload) 
-      });
-      document.getElementById('profile-alert').style.display = 'block';
-      sessionStorage.setItem('currentCandidateData', JSON.stringify(payload));
-    } catch(err) { 
-      alert("Failed to submit request."); 
-    } finally { 
-      btn.innerHTML = '<i class="fas fa-paper-plane"></i> Request Update'; btn.disabled = false; 
+      document.getElementById('count-answered').innerText = counts.answered;
+      document.getElementById('count-not-answered').innerText = counts['not-answered'];
+      document.getElementById('count-not-visited').innerText = counts['not-visited'];
+      document.getElementById('count-marked').innerText = counts.marked;
     }
-  });
 
-  function logout() { sessionStorage.clear(); window.location.replace('login.html'); }
-</script>
+    // EXAM ACTIONS
+    async function saveAnswerToBackend(q) {
+      const payload = {
+        action: 'submit_assignment',
+        Candidate_registration_no: candidateData['Candidate_registration_no'],
+        Candidate_Name: candidateData['Candidate_Name'],
+        'Batch Wise': candidateData['Batch Wise'],
+        Assignment_ID: q.Assignment_ID,
+        Format: q.mode === 'code' ? 'Code Logic' : 'Text Answer',
+        Answer: q.answer
+      };
+      try {
+        await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+        return true;
+      } catch (err) { return false; }
+    }
+
+    async function examSaveAndNext() {
+      const q = examQuestions[currentExamIndex];
+      q.answer = document.getElementById('sandbox-editor').value;
+
+      if (q.answer.trim() !== '') {
+        q.status = 'answered';
+        q.evalStatus = 'Pending Review'; // Locally update status to reflect submission
+        const btn = document.getElementById('btn-save-next');
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+        await saveAnswerToBackend(q);
+        btn.innerHTML = 'Save & Next';
+
+        document.getElementById('submission-alert').style.display = 'block';
+        setTimeout(() => document.getElementById('submission-alert').style.display = 'none', 2000);
+      } else {
+        q.status = 'not-answered';
+      }
+
+      // Dynamically update the progress report
+      updateDashboardProgressUI();
+
+      if (currentExamIndex < examQuestions.length - 1) loadExamQuestion(currentExamIndex + 1);
+      else updateExamGrid();
+    }
+
+    function examClearResponse() {
+      document.getElementById('sandbox-editor').value = '';
+      examQuestions[currentExamIndex].answer = '';
+      examQuestions[currentExamIndex].status = 'not-answered';
+      updateExamGrid();
+    }
+
+    function examMarkAndNext() {
+      examQuestions[currentExamIndex].answer = document.getElementById('sandbox-editor').value;
+      examQuestions[currentExamIndex].status = 'marked';
+      if (currentExamIndex < examQuestions.length - 1) loadExamQuestion(currentExamIndex + 1);
+      else updateExamGrid();
+    }
+
+    function examNext() {
+      if (currentExamIndex < examQuestions.length - 1) loadExamQuestion(currentExamIndex + 1);
+    }
+
+    function examBack() {
+      if (currentExamIndex > 0) loadExamQuestion(currentExamIndex - 1);
+    }
+
+    async function examSubmitAll() {
+      // Auto-save the current question before closing
+      const currentQ = examQuestions[currentExamIndex];
+      const editorVal = document.getElementById('sandbox-editor').value;
+      if (currentQ && document.getElementById('sandbox-container').style.display === 'block') {
+        if (editorVal.trim() !== '' && currentQ.answer !== editorVal) {
+          currentQ.answer = editorVal;
+          currentQ.status = 'answered';
+          currentQ.evalStatus = 'Pending Review';
+          await saveAnswerToBackend(currentQ);
+        }
+      }
+
+      updateDashboardProgressUI();
+      alert("Assessment Portal closed. Your answers are saved automatically. You can return to edit your answers later if needed.");
+      closeSandbox();
+    }
+
+    // Profile Edit Form Submit
+    document.getElementById('profile-edit-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('save-profile-btn');
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...'; btn.disabled = true;
+      let payload = { action: 'candidate_edit' };
+      Object.assign(payload, candidateData);
+      ['Candidate_Mobile', 'Candidate_Email', 'Candidate_Perm_Address_City_State'].forEach(f => { payload[f] = document.getElementById(f).value; });
+      try {
+        await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+        document.getElementById('profile-alert').style.display = 'block';
+        sessionStorage.setItem('currentCandidateData', JSON.stringify(payload));
+      } catch (err) { alert("Failed to submit request."); }
+      finally { btn.innerHTML = '<i class="fas fa-paper-plane"></i> Request Update'; btn.disabled = false; }
+    });
+
+    async function logout() {
+      const rawData = sessionStorage.getItem('currentCandidateData');
+      if (rawData) {
+        const btnText = document.querySelectorAll('.logout-btn');
+        btnText.forEach(btn => btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging out...');
+        try {
+          const data = JSON.parse(rawData);
+          await fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+              action: 'candidate_logout',
+              Candidate_registration_no: data['Candidate_registration_no'],
+              Candidate_Name: data['Candidate_Name']
+            })
+          });
+        } catch (e) { console.error("Logout ping failed", e); }
+      }
+      sessionStorage.clear();
+      if (rawData) {
+        const data = JSON.parse(rawData);
+        localStorage.setItem('candidateLogoutTrigger', data['Candidate_registration_no']);
+      }
+      window.location.replace('login.html');
+    }
+  </script>
 </body>
+
 </html>

@@ -10,17 +10,19 @@
   }
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="g-flat.css">
+<script src="lang-support.js" defer></script>
 <style>
   :root {
-    --bg-body: #f8fafc; --bg-surface: #ffffff; --text-main: #0f172a; --text-muted: #64748b;
-    --border: #e2e8f0; --primary: #2563eb; --primary-hover: #1d4ed8; --navy: #0D1B4B;
-    --success: #16a34a; --warning: #d97706; --danger: #dc2626;
+    --bg-body: #f8f9fa; --bg-surface: #ffffff; --text-main: #1e293b; --text-muted: #64748b;
+    --border: #e2e8f0; --primary: #FF9933; --primary-hover: #e68a2e; --navy: #000080;
+    --success: #138808; --warning: #F59E0B; --danger: #dc2626;
   }
   
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
+  body { font-family: 'Outfit', 'Inter', sans-serif; background-color: var(--bg-body); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
 
   /* SIDEBAR */
   .sidebar { width: 260px; background: var(--navy); color: white; display: flex; flex-direction: column; padding: 20px 0; flex-shrink: 0; }
@@ -77,17 +79,101 @@
   .text-viewer { background: #f1f5f9; color: var(--text-main); padding: 20px; border-radius: 8px; font-size: 0.95rem; white-space: pre-wrap; line-height: 1.6; margin-bottom: 20px;}
   
   .grading-box { background: white; border-top: 1px solid var(--border); padding: 20px; display: flex; gap: 15px; align-items: flex-end; }
+
+  /* Admin Photos Tab Layout */
+  .admin-photo-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .admin-photo-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary);
+  }
+  
+  /* 1-inch radius images: radius = 1in = 96px, width = height = 2in = 192px */
+  .admin-cand-avatar {
+    width: 2in;
+    height: 2in;
+    border-radius: 50%;
+    padding: 4px; /* Space for gradient border */
+    background: linear-gradient(135deg, var(--primary), var(--success), var(--warning), #2563eb);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-bottom: 4px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  
+  .admin-cand-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    background: white;
+    display: block;
+  }
+  
+  .admin-cand-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .admin-cand-name {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .admin-cand-meta {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+  .admin-cand-reg {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    background: var(--bg-body);
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    margin-top: 4px;
+    display: inline-block;
+  }
+  .batch-pill-label.active-pill {
+    background: var(--primary) !important;
+    color: white !important;
+    border-color: var(--primary) !important;
+  }
 </style>
 </head>
 <body>
 
   <div class="sidebar">
     <div class="brand"><i class="fas fa-shield-alt"></i> Admin Portal</div>
-    <a class="nav-item active" id="nav-sync" onclick="switchView('sync')">
+    <a class="nav-item" href="dashboard.html">
+      <i class="fas fa-house"></i> Main Dashboard
+    </a>
+    <a class="nav-item active" href="admin-dashboard.html" onclick="switchView('sync'); event.preventDefault();" id="nav-sync">
       <i class="fas fa-award"></i> Certificates
+    </a>
+    <a class="nav-item" href="#" onclick="switchView('photos'); event.preventDefault();" id="nav-photos">
+      <i class="fas fa-images"></i> Batch Photo Hub
     </a>
     <a class="nav-item" href="admin-assignment-hub.html">
       <i class="fas fa-laptop-code"></i> Assignment Hub
+    </a>
+    <a class="nav-item" href="admin-practical-hub.html">
+      <i class="fas fa-file-code"></i> Practical Exams
     </a>
     <a class="nav-item" href="attendance.html">
       <i class="fas fa-user-check"></i> Attendance Hub
@@ -167,6 +253,57 @@
       </div>
     </div>
 
+    <!-- VIEW PHOTOS -->
+    <div class="view-section" id="view-photos">
+      <div class="card">
+        <h2 style="color: var(--navy); margin-bottom: 10px;"><i class="fas fa-images" style="color: var(--primary); margin-right: 8px;"></i> Batch Photo Hub</h2>
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px;">
+          Select one or more training batches to display candidates with their circular photos and automatically synchronize the student marquee list shown on the public Home page.
+        </p>
+        
+        <div class="form-group" style="margin-bottom: 24px; text-align: left;">
+          <label style="margin-bottom: 10px; display: block; font-weight:700;">Show Batches in Photo Hub & Public Homepage Marquee</label>
+          <div id="batches-checkbox-container" style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px;">
+            <div style="color: var(--text-muted); font-size: 0.9rem;"><i class="fas fa-circle-notch fa-spin"></i> Loading batches...</div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 20px; display: flex; gap: 10px;">
+          <button onclick="setPhotoFilter('all', this)" class="btn btn-primary btn-sm photo-filter-btn" style="padding: 6px 12px; font-size: 0.85rem;">All Candidates</button>
+          <button onclick="setPhotoFilter('missing', this)" class="btn btn-outline btn-sm photo-filter-btn" style="padding: 6px 12px; font-size: 0.85rem;">Missing Photos</button>
+          <button onclick="setPhotoFilter('uploaded', this)" class="btn btn-outline btn-sm photo-filter-btn" style="padding: 6px 12px; font-size: 0.85rem;">Uploaded Photos</button>
+        </div>
+
+        <div id="batch-photos-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 24px; margin-top: 20px; margin-bottom: 30px;">
+          <div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 40px;">
+            <i class="fas fa-check-square" style="font-size: 2rem; margin-bottom: 12px; display: block; color: var(--primary);"></i>
+            Please check one or more batches above to display candidate profiles.
+          </div>
+        </div>
+
+        <!-- ====== BULK PHOTO UPLOAD SECTION ====== -->
+        <hr style="margin: 40px 0; border: 0; border-top: 1px solid var(--border);">
+        
+        <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; color: #3b82f6; margin-bottom: 20px;"></i>
+        <h2 style="color: var(--navy); margin-bottom: 10px;">Bulk Photo Upload</h2>
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px;">
+          Select multiple images (JPG, PNG) at once. The system will automatically read the Registration Number from the start of the file name (e.g., <strong>1748964_Photo.jpg</strong>) and attach them sequentially.
+        </p>
+
+        <div style="text-align: left; margin-bottom: 18px;">
+          <input type="file" id="bulk-photo-files" accept="image/jpeg, image/png" multiple style="width: 100%; padding: 10px; border: 1px dashed var(--primary); background: #eff6ff;">
+        </div>
+
+        <button onclick="startBulkPhotoUpload()" id="btn-bulk-photo" class="btn btn-primary" style="background: #3b82f6; width: 100%; justify-content: center;">
+          <i class="fas fa-play-circle"></i> Start Bulk Photo Upload
+        </button>
+
+        <div id="bulk-photo-progress" style="margin-top: 15px; font-weight: 600; color: var(--navy); display: none;"></div>
+        <div id="bulk-photo-log" style="margin-top: 10px; max-height: 200px; overflow-y: auto; text-align: left; font-size: 0.85rem; background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid var(--border); display: none; font-family: 'JetBrains Mono', monospace;"></div>
+
+      </div>
+    </div>
+
   </div>
 
 <script>
@@ -180,6 +317,13 @@
   // ==========================================
   window.onload = async () => {
     await fetchDynamicTargets();
+    
+    // Parse query parameter to check if we should auto-switch to photos view
+    const urlParams = new URLSearchParams(window.location.search);
+    const view = urlParams.get('view');
+    if (view === 'photos') {
+      switchView('photos');
+    }
   };
 
   function switchView(viewId) {
@@ -194,13 +338,211 @@
   // ==========================================
   async function fetchDynamicTargets() {
     try {
-      const response = await fetch(APPS_SCRIPT_URL + "?nocache=" + new Date().getTime());
+      const response = await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'fetch_all_candidates_admin',
+          adminToken: sessionStorage.getItem('adminToken')
+        })
+      });
       const data = await response.json();
+      if (data.status === 'error') throw new Error(data.message);
       spreadsheetData = data;
-      populateCandidateSuggestions(data);
+      populateCandidateSuggestions(spreadsheetData);
+      populateBatchCheckboxList(spreadsheetData);
     } catch (e) {
       console.error("Failed to load targets", e);
     }
+  }
+
+  // ==========================================
+  // BATCH PHOTO HUB LOGIC (DYNAMIC CHECKBOX LISTS)
+  // ==========================================
+  function populateBatchCheckboxList(data) {
+    const container = document.getElementById('batches-checkbox-container');
+    if (!container) return;
+    
+    const batches = new Set();
+    data.forEach(row => {
+      const batch = String(row['Batch Wise'] || row['Batch'] || '').trim();
+      if (batch && batch !== 'Unassigned') {
+        batches.add(batch);
+      }
+    });
+    
+    // Load checked list from localStorage
+    let savedBatches = [];
+    try {
+      const saved = localStorage.getItem('selectedBatchesForMainPage');
+      if (saved) {
+        savedBatches = JSON.parse(saved);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    
+    container.innerHTML = '';
+    [...batches].sort((a, b) => String(a).localeCompare(String(b), undefined, {numeric: true})).forEach(batch => {
+      const isChecked = savedBatches.includes(batch);
+      
+      const label = document.createElement('label');
+      label.className = `batch-pill-label ${isChecked ? 'active-pill' : ''}`;
+      label.style.cssText = "display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border: 1px solid var(--border); border-radius: 999px; background: white; cursor: pointer; transition: all 0.2s; font-size: 0.85rem; font-weight: 600; user-select: none;";
+      
+      const input = document.createElement('input');
+      input.type = 'checkbox';
+      input.className = 'batch-checkbox';
+      input.value = batch;
+      input.checked = isChecked;
+      input.style.cssText = "opacity: 0; width: 0; height: 0; position: absolute; pointer-events: none;";
+      
+      input.addEventListener('change', () => {
+        onBatchCheckboxChange();
+      });
+      
+      const span = document.createElement('span');
+      span.textContent = batch;
+      
+      label.appendChild(input);
+      label.appendChild(span);
+      container.appendChild(label);
+    });
+    
+    // Trigger render for initial state
+    renderSelectedBatchesPhotos(savedBatches);
+  }
+
+  function onBatchCheckboxChange() {
+    const checkedBatches = [];
+    const checkboxes = document.querySelectorAll('.batch-checkbox');
+    checkboxes.forEach(cb => {
+      const label = cb.parentElement;
+      if (cb.checked) {
+        label.classList.add('active-pill');
+        checkedBatches.push(cb.value);
+      } else {
+        label.classList.remove('active-pill');
+      }
+    });
+    
+    // Save to localStorage
+    localStorage.setItem('selectedBatchesForMainPage', JSON.stringify(checkedBatches));
+    
+    // Reload candidate photos in dashboard
+    renderSelectedBatchesPhotos(checkedBatches);
+  }
+
+  window.photoFilter = 'all';
+  function setPhotoFilter(filterType, btnElement) {
+    window.photoFilter = filterType;
+    document.querySelectorAll('.photo-filter-btn').forEach(btn => {
+      btn.classList.remove('btn-primary');
+      btn.classList.add('btn-outline');
+    });
+    btnElement.classList.remove('btn-outline');
+    btnElement.classList.add('btn-primary');
+    
+    let checkedBatches = [];
+    try {
+      checkedBatches = JSON.parse(localStorage.getItem('selectedBatchesForMainPage') || '[]');
+    } catch(e) {}
+    renderSelectedBatchesPhotos(checkedBatches);
+  }
+
+  function getCandidatePhoto(row, index) {
+    const photoLink = String(row['Photo Link'] || row['Profile_Photo'] || row['Photo'] || '').trim();
+    if (photoLink && photoLink.startsWith('http')) {
+      const driveMatch = photoLink.match(/\/d\/([a-zA-Z0-9_-]+)/);
+      if (driveMatch && driveMatch[1]) {
+        return `https://drive.google.com/thumbnail?id=${driveMatch[1]}&sz=w800`;
+      }
+      return photoLink;
+    }
+
+    const femalePhotos = [
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200",
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200",
+      "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=200",
+      "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&q=80&w=200",
+      "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&q=80&w=200"
+    ];
+    const malePhotos = [
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200",
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200",
+      "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&q=80&w=200",
+      "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=200",
+      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=200"
+    ];
+    
+    const gender = String(row['Candidate_Gender'] || row['Gender'] || '').toLowerCase();
+    if (gender === 'female' || gender === 'f') {
+      return femalePhotos[index % femalePhotos.length];
+    } else if (gender === 'male' || gender === 'm') {
+      return malePhotos[index % malePhotos.length];
+    } else {
+      return index % 2 === 0 ? femalePhotos[index % femalePhotos.length] : malePhotos[index % malePhotos.length];
+    }
+  }
+
+  function renderSelectedBatchesPhotos(selectedBatches) {
+    const container = document.getElementById('batch-photos-container');
+    if (!container) return;
+    
+    if (!selectedBatches || selectedBatches.length === 0) {
+      container.innerHTML = `
+        <div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 40px;">
+          <i class="fas fa-info-circle" style="font-size: 2rem; margin-bottom: 12px; display: block; color: var(--primary);"></i>
+          Please check one or more batches above. Selecting batches will update this list and filter candidates shown on the main page.
+        </div>
+      `;
+      return;
+    }
+    
+    const filtered = spreadsheetData.filter(row => {
+      const b = String(row['Batch Wise'] || row['Batch'] || '').trim();
+      if (!selectedBatches.includes(b)) return false;
+
+      const photoLink = String(row['Photo Link'] || row['Profile_Photo'] || row['Photo'] || '').trim();
+      const hasPhoto = photoLink && photoLink.startsWith('http');
+      
+      if (window.photoFilter === 'missing') return !hasPhoto;
+      if (window.photoFilter === 'uploaded') return hasPhoto;
+      return true;
+    });
+    
+    if (filtered.length === 0) {
+      container.innerHTML = `
+        <div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 40px;">
+          No candidates found in the selected batches.
+        </div>
+      `;
+      return;
+    }
+    
+    container.innerHTML = filtered.map((row, index) => {
+      const name = getCandidateName(row) || 'N/A';
+      const regNo = getCandidateRegNo(row) || 'N/A';
+      const course = String(row['Courses'] || row['Course'] || 'N/A');
+      const photoUrl = getCandidatePhoto(row, index);
+      const cityState = String(row['State'] || row['state'] || row['Candidate_Perm_Address_City_State'] || 'N/A');
+      
+      return `
+        <div class="admin-photo-card">
+          <div class="admin-cand-avatar">
+            <img src="${photoUrl}" alt="${name}" onerror="this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=200'">
+          </div>
+          <div class="admin-cand-info">
+            <div class="admin-cand-name">${name}</div>
+            <div class="admin-cand-meta" style="color: var(--primary); font-weight: 600; font-size: 0.85rem;">${course}</div>
+            <div class="admin-cand-meta">${cityState}</div>
+            <div>
+              <span class="admin-cand-reg">Reg: ${regNo}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
   }
 
 
@@ -275,6 +617,7 @@
     const sendPayload = async (base64Data, fileName) => {
       const payload = {
         action: 'upload_certificate',
+        adminToken: sessionStorage.getItem('adminToken'),
         candidate_registration_no: selectedRegNo,
         candidate_name: selectedName,
         drive_link: driveLink,
@@ -613,6 +956,7 @@
 
         const payload = {
           action: 'upload_certificate',
+          adminToken: sessionStorage.getItem('adminToken'),
           candidate_registration_no: extractedRegNo,
           candidate_name: getCandidateName(candidate),
           drive_link: '',
@@ -643,10 +987,106 @@
     fileInput.value = '';
   }
 
+  async function startBulkPhotoUpload() {
+    const fileInput = document.getElementById('bulk-photo-files');
+    const btn = document.getElementById('btn-bulk-photo');
+    const progressBox = document.getElementById('bulk-photo-progress');
+    const logBox = document.getElementById('bulk-photo-log');
+
+    if (fileInput.files.length === 0) {
+      alert("Please select at least one image file.");
+      return;
+    }
+
+    btn.disabled = true;
+    progressBox.style.display = 'block';
+    logBox.style.display = 'block';
+    logBox.innerHTML = ''; 
+
+    const files = Array.from(fileInput.files);
+    let successCount = 0;
+    let failCount = 0;
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      progressBox.innerText = `Processing file ${i + 1} of ${files.length} (Please do not close page)...`;
+      
+      const regNoMatch = file.name.match(/^([a-zA-Z0-9]+)/); 
+      const extractedRegNo = regNoMatch ? regNoMatch[1] : null;
+
+      if (!extractedRegNo) {
+        logPhotoMessage(`[SKIP] ${file.name}: Could not extract Reg No from name.`, '#dc2626');
+        failCount++;
+        continue;
+      }
+
+      const candidate = spreadsheetData.find(row => getCandidateRegNo(row).toLowerCase() === extractedRegNo.toLowerCase());
+      if (!candidate) {
+        logPhotoMessage(`[SKIP] ${file.name}: Reg No ${extractedRegNo} not found in database.`, '#d97706');
+        failCount++;
+        continue;
+      }
+
+      try {
+        const base64Data = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = e => resolve(e.target.result.split(',')[1]);
+          reader.onerror = () => reject(new Error("File read error"));
+          reader.readAsDataURL(file);
+        });
+
+        const payload = {
+          action: 'upload_photo',
+          adminToken: sessionStorage.getItem('adminToken'),
+          candidate_registration_no: extractedRegNo,
+          candidate_name: getCandidateName(candidate),
+          drive_link: '',
+          file_name: file.name,
+          mime_type: file.type,
+          file_data: base64Data,
+          has_file: true
+        };
+
+        const response = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
+        const result = await response.json();
+
+        if (result.status === 'success') {
+          logPhotoMessage(`[SUCCESS] Attached ${file.name} to ${getCandidateName(candidate)}`, '#166534');
+          candidate['Photo Link'] = result.url || file.name; // Use URL
+          successCount++;
+          
+          // Force refresh the photos grid if the candidate is currently visible
+          const checkedBatches = [];
+          document.querySelectorAll('.batch-checkbox').forEach(cb => {
+            if (cb.checked) checkedBatches.push(cb.value);
+          });
+          renderSelectedBatchesPhotos(checkedBatches);
+
+        } else {
+          throw new Error(result.message);
+        }
+      } catch (e) {
+        logPhotoMessage(`[ERROR] ${file.name}: ${e.message}`, '#dc2626');
+        failCount++;
+      }
+    }
+
+    progressBox.innerText = `Bulk Photo Upload Complete! ${successCount} Successful, ${failCount} Failed.`;
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-play-circle"></i> Start Bulk Photo Upload';
+    fileInput.value = '';
+  }
+
   function logMessage(msg, color) {
     const box = document.getElementById('bulk-log');
     box.innerHTML += `<div style="color: ${color}; margin-bottom: 4px; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;">${msg}</div>`;
     box.scrollTop = box.scrollHeight; // Auto-scroll to bottom
+  }
+
+  function logPhotoMessage(msg, color) {
+    const box = document.getElementById('bulk-photo-log');
+    box.innerHTML += `<div style="color: ${color}; margin-bottom: 4px; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;">${msg}</div>`;
+    box.scrollTop = box.scrollHeight;
   }
 
   function logout() { sessionStorage.clear(); window.location.replace('login.html'); }

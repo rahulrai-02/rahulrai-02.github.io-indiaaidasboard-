@@ -13,17 +13,20 @@
 </script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="g-flat.css">
+<script src="lang-support.js" defer></script>
 <style>
   :root {
-    --bg-body: #f8fafc; --bg-surface: #ffffff; --text-main: #0f172a; --text-muted: #64748b;
-    --border: #e2e8f0; --primary: #FF9933; --primary-hover: #e58a2e; --navy: #0D1B4B;
+    --bg-body: #f8f9fa; --bg-surface: #ffffff; --text-main: #1e293b; --text-muted: #64748b;
+    --border: #e2e8f0; --primary: #FF9933; --primary-hover: #e68a2e; --navy: #000080;
+    --success: #138808; --warning: #F59E0B; --danger: #dc2626;
     --radius-md: 8px; --radius-lg: 12px;
   }
   
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); color: var(--text-main); }
+  body { font-family: 'Outfit', 'Inter', sans-serif; background-color: var(--bg-body); color: var(--text-main); }
   
   header { background: var(--bg-surface); padding: 16px 32px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
   .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; color: var(--navy); font-size: 1.25rem;}
@@ -43,7 +46,7 @@
   .form-group.full { grid-column: span 2; }
   
   label { font-size: 0.875rem; font-weight: 600; color: var(--text-main); }
-  input, select { padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius-md); font-family: 'Inter', sans-serif; font-size: 0.875rem; }
+  input, select { padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius-md); font-family: 'Outfit', 'Inter', sans-serif; font-size: 0.875rem; }
   input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(255,153,51,0.15); }
   
   .section-title { font-size: 1.125rem; font-weight: 700; margin: 24px 0 16px; grid-column: span 2; border-bottom: 1px solid var(--border); padding-bottom: 8px; color: var(--navy); }
@@ -66,11 +69,16 @@
 
 <main>
   <div class="card">
-    <div class="header-banner">
-      <h2 id="display_name">Loading...</h2>
-      <p>Registration No: <strong id="display_reg">---</strong></p>
-      <div id="certificate-button-container" style="display:none; margin-top: 10px;">
-        <button type="button" class="btn btn-primary" onclick="openCertificate()"><i class="fas fa-award"></i> View Certificate</button>
+    <div class="header-banner" style="display: flex; gap: 20px; align-items: center; justify-content: flex-start;">
+      <div style="flex-shrink: 0;">
+        <img id="admin_candidate_profile_photo" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=200" alt="Profile" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+      </div>
+      <div>
+        <h2 id="display_name">Loading...</h2>
+        <p>Registration No: <strong id="display_reg">---</strong></p>
+        <div id="certificate-button-container" style="display:none; margin-top: 10px;">
+          <button type="button" class="btn btn-primary" onclick="openCertificate()"><i class="fas fa-award"></i> View Certificate</button>
+        </div>
       </div>
     </div>
 
@@ -97,6 +105,10 @@
         <div class="form-group">
           <label>Batch Wise</label>
           <input type="text" id="Batch Wise">
+        </div>
+        <div class="form-group">
+          <label>Registration Number</label>
+          <input type="text" id="Candidate_registration_no">
         </div>
         <div class="form-group">
           <label>Result Status</label>
@@ -171,7 +183,6 @@
         </div>
 
         <!-- Hidden identifiers -->
-        <input type="hidden" id="Candidate_registration_no">
         <input type="hidden" id="SNo.">
       </div>
 
@@ -211,6 +222,16 @@
     if (certLink) {
       currentCertificateUrl = certLink;
       document.getElementById('certificate-button-container').style.display = 'block';
+    }
+
+    const photoLink = String(candidate['Photo Link'] || candidate['Profile_Photo'] || candidate['Photo'] || '').trim();
+    if (photoLink && photoLink.startsWith('http')) {
+      let finalUrl = photoLink;
+      const driveMatch = photoLink.match(/\/d\/([a-zA-Z0-9_-]+)/);
+      if (driveMatch && driveMatch[1]) {
+        finalUrl = `https://drive.google.com/thumbnail?id=${driveMatch[1]}&sz=w800`;
+      }
+      document.getElementById('admin_candidate_profile_photo').src = finalUrl;
     }
 
     // Populate all fields
@@ -270,8 +291,10 @@
     btn.disabled = true;
     msgBox.style.display = 'none';
 
-    // Payload for Google Apps Script
-    let payload = { action: 'admin_update' };
+    let payload = { 
+      action: 'admin_update',
+      adminToken: sessionStorage.getItem('adminToken')
+    };
     
     // Grab everything from the original data, then overwrite with form inputs
     const currentData = JSON.parse(localStorage.getItem('currentCandidateProfile'));
