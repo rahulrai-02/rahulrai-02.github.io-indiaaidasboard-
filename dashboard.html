@@ -13,27 +13,19 @@
 </script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<link rel="stylesheet" href="g-flat.css">
+<script src="lang-support.js" defer></script>
 <style>
   :root {
-    --bg-body: #f8fafc;
-    --bg-surface: #ffffff;
-    --text-main: #0f172a;
-    --text-muted: #64748b;
-    --border: #e2e8f0;
+    --bg-body: #f8f9fa; --bg-surface: #ffffff; --text-main: #1e293b; --text-muted: #64748b;
+    --border: #e2e8f0; --primary: #FF9933; --primary-hover: #e68a2e; --navy: #000080;
+    --success: #138808; --success-light: #F6EFFF; --danger: #dc2626; --danger-light: #FFF0F2;
+    --warning: #F59E0B;
     
-    --primary: #FF9933; /* IndiaAI Saffron */
-    --primary-hover: #e58a2e;
-    --navy: #0D1B4B;
-    --success: #16a34a;
-    --success-light: #dcfce7;
-    --danger: #dc2626;
-    --danger-light: #fee2e2;
-    --warning: #d97706;
-    
-    --font-sans: 'Inter', sans-serif;
+    --font-sans: 'Outfit', 'Inter', sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
     
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
@@ -161,20 +153,13 @@
     </div>
   </a>
 
-  <!-- FULL NAVIGATION BAR -->
   <nav class="nav-links">
     <a href="index.html"><i class="fas fa-home"></i> Home</a>
-    <a href="about-us.html"><i class="fas fa-info-circle"></i> About</a>
-    <a href="training-curriculum.html"><i class="fas fa-book"></i> Curriculum</a>
-    <a href="contact-us.html"><i class="fas fa-envelope"></i> Contact</a>
-    <a href="admin-dashboard.html" id="admin-nav-link" style="display: none; color: #FF9933;"><i class="fas fa-shield-alt"></i> Admin Portal</a>
+    <a href="admin-dashboard.html"><i class="fas fa-award"></i> Certificates</a>
+    <a href="admin-dashboard.html?view=photos"><i class="fas fa-images"></i> Batch Photos</a>
+    <a href="admin-assignment-hub.html"><i class="fas fa-laptop-code"></i> Assignments</a>
+    <a href="attendance.html"><i class="fas fa-user-check"></i> Attendance</a>
   </nav>
-  <script>
-    // Show admin link only if admin is logged in
-    if (sessionStorage.getItem('isAdminLoggedIn') === 'true') {
-      document.getElementById('admin-nav-link').style.display = 'flex';
-    }
-  </script>
 
   <div class="header-actions">
     <button class="btn btn-primary" id="refresh-btn" onclick="initDashboard()"><i class="fas fa-sync-alt"></i> Sync Data</button>
@@ -298,6 +283,14 @@
           </select>
         </div>
 
+        <div class="filter-group">
+          <select id="filterPhoto" onchange="applyFilters()">
+            <option value="all">Photo Status</option>
+            <option value="uploaded">Uploaded</option>
+            <option value="missing">Not Uploaded</option>
+          </select>
+        </div>
+
         <div class="filter-group" style="margin-left: auto;">
           <i class="fas fa-list"></i> Show:
           <select id="pageSize" onchange="changePageSize()">
@@ -365,7 +358,8 @@
     { key: 'Category', label: 'Category' },
     { key: 'Candidate_Gender', label: 'Gender' },
     { key: 'Candidate_Mobile', label: 'Mobile' },
-    { key: 'Candidate_Perm_Address_City_State', label: 'Location' },
+    { key: 'State', label: 'State' },
+    { key: 'Candidate_Perm_Address_City_State', label: 'Address' },
     { key: 'Result', label: 'Result' }
   ];
 
@@ -377,24 +371,31 @@
 
   async function initDashboard() {
     const btn = document.getElementById('refresh-btn');
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Syncing...';
-    btn.disabled = true;
+    if (btn) {
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Syncing...';
+      btn.disabled = true;
+    }
 
     try {
-      const response = await fetch(APPS_SCRIPT_URL + "?nocache=" + new Date().getTime());
+      const response = await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'fetch_all_candidates_admin',
+          adminToken: sessionStorage.getItem('adminToken')
+        })
+      });
       if (!response.ok) throw new Error("Network response was not ok");
       
       rawData = await response.json();
-      if (rawData.error) throw new Error(rawData.error);
+      if (rawData.status === 'error') throw new Error(rawData.message);
       
       populateFilterDropdowns(); 
       applyFilters(); 
-      
       updateTimestamp();
       calculateStats();
       renderCharts();
       buildTableHeader();
-      
     } catch (error) {
       document.getElementById('table-body').innerHTML = `
         <tr><td colspan="${COLS.length + 1}">
@@ -404,8 +405,10 @@
           </div>
         </td></tr>`;
     } finally {
-      btn.innerHTML = '<i class="fas fa-sync-alt"></i> Sync Data';
-      btn.disabled = false;
+      if (btn) {
+        btn.innerHTML = '<i class="fas fa-sync-alt"></i> Sync Data';
+        btn.disabled = false;
+      }
     }
   }
 
@@ -497,7 +500,7 @@
       let g = r['Candidate_Gender'] || 'Unknown';
       genCounts[g] = (genCounts[g] || 0) + 1;
 
-      let loc = r['Candidate_Perm_Address_City_State'] || 'Unknown';
+      let loc = r['State'] || r['state'] || r['Candidate_Perm_Address_City_State'] || 'Unknown';
       if(loc !== 'Unknown') locCounts[loc] = (locCounts[loc] || 0) + 1;
 
       let certLink = String(r['Certificate Link'] || '').trim();
@@ -523,6 +526,7 @@
     const genderFilter = document.getElementById('filterGender').value;
     const resultFilter = document.getElementById('filterResult').value;
     const certFilter = document.getElementById('filterCertificate').value;
+    const photoFilter = document.getElementById('filterPhoto').value;
 
     filteredData = rawData.filter(row => {
       // Global Search
@@ -559,7 +563,12 @@
       if (certFilter === 'issued') matchesCertificate = rowCertificate !== '';
       else if (certFilter === 'missing') matchesCertificate = rowCertificate === '';
 
-      return matchesSearch && matchesCourse && matchesBatch && matchesCategory && matchesGender && matchesResult && matchesCertificate;
+      let rowPhoto = String(row['Photo Link'] || row['Profile_Photo'] || row['Photo'] || '').trim();
+      let matchesPhoto = true;
+      if (photoFilter === 'uploaded') matchesPhoto = rowPhoto !== '';
+      else if (photoFilter === 'missing') matchesPhoto = rowPhoto === '';
+
+      return matchesSearch && matchesCourse && matchesBatch && matchesCategory && matchesGender && matchesResult && matchesCertificate && matchesPhoto;
     });
 
     currentPage = 1;
@@ -606,10 +615,33 @@
 
     let html = '';
     pageData.forEach((row, index) => {
-      html += `<tr onclick="openProfile('${row['Candidate_registration_no']}')">`;
+      html += `<tr onclick="openProfile('${row['Candidate_registration_no'] || row['Registration No'] || row['Registration No.'] || row['Registration Number'] || row['Reg No'] || row['Reg_No'] || ''}', '${row['SNo.'] || row['SNo'] || ''}')">`;
       if (showSerial) html += `<td>${index + 1}</td>`;
       COLS.forEach(col => {
-        let val = row[col.key] || '';
+        let val = '';
+        if (col.key === 'Candidate_registration_no') {
+          val = row['Candidate_registration_no'] || row['Registration No'] || row['Registration No.'] || row['Registration Number'] || row['Reg No'] || row['Reg_No'] || '';
+        } else if (col.key === 'Candidate_Mobile') {
+          val = row['Candidate_Mobile'] || row['Mobile'] || row['Mobile No.'] || row['Contact'] || row['Phone'] || '';
+        } else if (col.key === 'Candidate_Name') {
+          val = row['Candidate_Name'] || row['Name'] || row['Candidate Name'] || '';
+        } else if (col.key === 'Batch Wise') {
+          val = row['Batch Wise'] || row['Batch'] || '';
+        } else if (col.key === 'Category') {
+          val = row['Category'] || row['Candidate Category'] || '';
+        } else if (col.key === 'Candidate_Gender') {
+          val = row['Candidate_Gender'] || row['Gender'] || '';
+        } else if (col.key === 'State') {
+          val = row['State'] || row['state'] || row['Candidate_Perm_Address_City_State'] || '';
+        } else if (col.key === 'Candidate_Perm_Address_City_State') {
+          val = row['Candidate_Perm_Address_City_State'] || row['Address'] || row['City'] || row['Location'] || '';
+        } else if (col.key === 'Result') {
+          val = row['Result'] || row['Status'] || '';
+        } else if (col.key === 'Courses') {
+          val = row['Courses'] || row['Course'] || '';
+        } else {
+          val = row[col.key] || '';
+        }
         
         // Visual indicator for missing critical data
         if (val === '') {
@@ -633,8 +665,14 @@
     renderPagination();
   }
 
-  function openProfile(regNo) {
-    const candidate = rawData.find(c => String(c['Candidate_registration_no']) === String(regNo));
+  function openProfile(regNo, sNo) {
+    let candidate;
+    if (regNo && String(regNo).trim() !== '') {
+      candidate = rawData.find(c => String(c['Candidate_registration_no'] || '').trim() === String(regNo).trim());
+    }
+    if (!candidate && sNo && String(sNo).trim() !== '') {
+      candidate = rawData.find(c => String(c['SNo.'] || c['SNo'] || '').trim() === String(sNo).trim());
+    }
     if (candidate) {
       localStorage.setItem('currentCandidateProfile', JSON.stringify(candidate));
       window.open('profile.html', '_blank');
@@ -683,10 +721,10 @@
 
   function logout() {
     sessionStorage.removeItem('isAdminLoggedIn');
+    sessionStorage.removeItem('adminToken');
     window.location.replace('login.html');
   }
 
-  // Start app
   initDashboard();
   setInterval(initDashboard, REFRESH_INTERVAL);
 </script>
