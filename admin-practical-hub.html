@@ -90,11 +90,22 @@
     </div>
 
     <div class="card">
-      <h3 style="color: var(--navy); margin-bottom: 20px;"><i class="fas fa-list-alt"></i> Practical Submissions</h3>
-      <div id="loader" style="color:var(--primary);"><i class="fas fa-spinner fa-spin"></i> Loading submissions...</div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+        <h3 style="color: var(--navy);"><i class="fas fa-list-alt"></i> Practical Submissions Roster</h3>
+        <div>
+          <select id="filter-status" onchange="renderPracticals()" style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border);">
+            <option value="all">All Students</option>
+            <option value="submitted">Submitted Only</option>
+            <option value="missing">Not Submitted</option>
+          </select>
+        </div>
+      </div>
+      
+      <div id="loader" style="color:var(--primary);"><i class="fas fa-spinner fa-spin"></i> Loading data...</div>
       <table id="practical-table" style="display: none;">
         <thead>
           <tr>
+            <th>Sr. No.</th>
             <th>Student Name & Info</th>
             <th>Submitted File (.ipynb)</th>
             <th>Status / Evaluation</th>
@@ -109,79 +120,134 @@
 
 <script>
   const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyAfhakyTh0j_StQ3a2MpnZlqQq-46kuW45Vw8V2V8gIUa9Prr-c21K-d5ZoTYAEnU2VQ/exec';
-  let practicalSubmissions = [];
+  let allCandidates = [];
+  let mergedData = [];
 
   window.onload = async () => {
     await loadPracticals();
   };
+  
+  function getCandidateRegNo(row) {
+    return String(
+      row['Candidate_registration_no'] || row['Registration No'] || row['Registration No.'] || row['Registration Number'] || row['Reg No'] || row['Reg_No'] || ''
+    ).trim();
+  }
 
   async function loadPracticals() {
     const loader = document.getElementById('loader');
     const table = document.getElementById('practical-table');
-    const tbody = document.getElementById('practical-body');
     
     try {
-      const resp = await fetch(APPS_SCRIPT_URL, { 
+      // 1. Fetch Submissions
+      const respSubs = fetch(APPS_SCRIPT_URL, { 
         method: 'POST', 
         body: JSON.stringify({ action: 'fetch_submissions', adminToken: sessionStorage.getItem('adminToken') }) 
       });
-      const data = await resp.json();
+      // 2. Fetch All Candidates
+      const respCands = fetch(APPS_SCRIPT_URL, { 
+        method: 'POST', 
+        body: JSON.stringify({ action: 'fetch_all_candidates_admin', adminToken: sessionStorage.getItem('adminToken') }) 
+      });
+
+      const [res1, res2] = await Promise.all([respSubs, respCands]);
+      const dataSubs = await res1.json();
+      const dataCands = await res2.json();
       
-      // Filter only practical exams
-      practicalSubmissions = data.filter(s => s.Assignment_ID === 'PRACTICAL_EXAM');
+      const practicalSubmissions = dataSubs.filter(s => s.Assignment_ID === 'PRACTICAL_EXAM');
+      allCandidates = dataCands.filter(c => getCandidateRegNo(c) !== '');
+      
+      // Merge Data
+      mergedData = allCandidates.map(cand => {
+        const reg = getCandidateRegNo(cand).toLowerCase();
+        const sub = practicalSubmissions.find(s => String(s.Candidate_Reg_No || s['Candidate Reg No'] || '').toLowerCase() === reg);
+        return {
+          cand: cand,
+          sub: sub || null,
+          hasSubmitted: !!sub
+        };
+      });
       
       loader.style.display = 'none';
       table.style.display = 'table';
-      
-      if (practicalSubmissions.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:#64748b;">No practical submissions found.</td></tr>';
-        return;
-      }
-      
-      tbody.innerHTML = practicalSubmissions.map((sub, idx) => {
-        const isPending = String(sub.Status).toLowerCase().includes('pending');
-        const badgeClass = isPending ? 'badge-pending' : 'badge-reviewed';
-        
-        let fileLink = sub.Answer;
-        if (fileLink && fileLink.startsWith('http')) {
-          fileLink = `<a href="${fileLink}" target="_blank" style="color:var(--primary); text-decoration:underline;"><i class="fas fa-external-link-alt"></i> View .ipynb</a>`;
-        } else {
-          fileLink = `<span style="color:var(--danger)">Invalid format or no file</span>`;
-        }
-
-        return `
-          <tr>
-            <td>
-              <strong>${sub.Candidate_Name || 'Unknown'}</strong>
-              <div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">Reg: ${sub.Candidate_registration_no} | Batch: ${sub['Batch Wise'] || sub.Batch}</div>
-              <div style="font-size:0.75rem; color:#94a3b8; margin-top:2px;">Submitted: ${new Date(sub.Timestamp).toLocaleDateString()}</div>
-            </td>
-            <td>
-              ${fileLink}
-            </td>
-            <td>
-              <div id="status-display-${idx}" style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
-                <span class="badge ${badgeClass}">${sub.Status}</span>
-                <button class="btn-evaluate" onclick="toggleEvaluate(${idx})"><i class="fas fa-edit"></i></button>
-              </div>
-              <div id="evaluate-form-${idx}" class="grading-form">
-                <select id="grade-select-${idx}">
-                  <option value="Reviewed - Pass" ${sub.Status === 'Reviewed - Pass' ? 'selected' : ''}>Reviewed - Pass</option>
-                  <option value="Reviewed - Needs Revision" ${sub.Status === 'Reviewed - Needs Revision' ? 'selected' : ''}>Reviewed - Needs Revision</option>
-                  <option value="Pending Review" ${sub.Status === 'Pending Review' ? 'selected' : ''}>Pending Review</option>
-                </select>
-                <button class="btn-save" onclick="saveGrade(${idx}, ${sub.row_index})">Save</button>
-                <button class="btn-evaluate" style="border:none;" onclick="toggleEvaluate(${idx})"><i class="fas fa-times"></i></button>
-              </div>
-            </td>
-          </tr>
-        `;
-      }).join('');
+      renderPracticals();
       
     } catch (err) {
       console.error(err);
-      loader.innerHTML = '<span style="color:var(--danger);">Error loading practical submissions.</span>';
+      loader.innerHTML = '<span style="color:var(--danger);">Error loading data.</span>';
     }
+  }
+
+  function renderPracticals() {
+    const tbody = document.getElementById('practical-body');
+    const filter = document.getElementById('filter-status').value;
+    
+    let filtered = mergedData;
+    if (filter === 'submitted') filtered = mergedData.filter(d => d.hasSubmitted);
+    if (filter === 'missing') filtered = mergedData.filter(d => !d.hasSubmitted);
+    
+    if (filtered.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#64748b;">No records found.</td></tr>';
+      return;
+    }
+    
+    tbody.innerHTML = filtered.map((item, idx) => {
+      const cand = item.cand;
+      const sub = item.sub;
+      const regNo = getCandidateRegNo(cand);
+      const name = cand['Candidate_Name'] || cand['Name'] || 'Unknown';
+      const batch = cand['Batch Wise'] || cand['Batch'] || 'N/A';
+      
+      if (!sub) {
+        return `
+          <tr>
+            <td style="font-weight:600; color:var(--text-muted);">${idx + 1}</td>
+            <td>
+              <strong>${name}</strong>
+              <div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">Reg: ${regNo} | Batch: ${batch}</div>
+            </td>
+            <td><span style="color:var(--text-muted); font-size:0.85rem;">Not Submitted</span></td>
+            <td><span class="badge" style="background:#f1f5f9; color:#475569;">Missing</span></td>
+          </tr>
+        `;
+      }
+      
+      const isPending = String(sub.Status).toLowerCase().includes('pending');
+      const badgeClass = isPending ? 'badge-pending' : 'badge-reviewed';
+      
+      let fileLink = sub.Answer;
+      if (fileLink && fileLink.startsWith('http')) {
+        fileLink = `<a href="${fileLink}" target="_blank" style="color:var(--primary); text-decoration:underline;"><i class="fas fa-external-link-alt"></i> View .ipynb</a>`;
+      } else {
+        fileLink = `<span style="color:var(--danger)">Invalid format or no file</span>`;
+      }
+
+      return `
+        <tr style="background-color: #fffbeb;">
+          <td style="font-weight:600;">${idx + 1}</td>
+          <td>
+            <strong>${name}</strong>
+            <div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">Reg: ${regNo} | Batch: ${batch}</div>
+            <div style="font-size:0.75rem; color:#94a3b8; margin-top:2px;">Submitted: ${new Date(sub.Timestamp).toLocaleDateString()}</div>
+          </td>
+          <td>${fileLink}</td>
+          <td>
+            <div id="status-display-${idx}" style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+              <span class="badge ${badgeClass}">${sub.Status}</span>
+              <button class="btn-evaluate" onclick="toggleEvaluate(${idx})"><i class="fas fa-edit"></i></button>
+            </div>
+            <div id="evaluate-form-${idx}" class="grading-form">
+              <select id="grade-select-${idx}">
+                <option value="Reviewed - Pass" ${sub.Status === 'Reviewed - Pass' ? 'selected' : ''}>Reviewed - Pass</option>
+                <option value="Reviewed - Needs Revision" ${sub.Status === 'Reviewed - Needs Revision' ? 'selected' : ''}>Reviewed - Needs Revision</option>
+                <option value="Pending Review" ${sub.Status === 'Pending Review' ? 'selected' : ''}>Pending Review</option>
+              </select>
+              <button class="btn-save" onclick="saveGrade(${idx}, ${sub.row_index})">Save</button>
+              <button class="btn-evaluate" style="border:none;" onclick="toggleEvaluate(${idx})"><i class="fas fa-times"></i></button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
   }
 
   window.toggleEvaluate = function(idx) {
