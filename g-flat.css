@@ -95,7 +95,7 @@ body.has-navbar {
 }
 
 .nav-partner-logo {
-  height: 32px;
+  height: 48px;
   width: auto;
   object-fit: contain;
 }
@@ -582,7 +582,7 @@ select:focus {
   align-items: center;
   justify-content: space-around;
   min-width: 100%;
-  animation: scroll-marquee 25s linear infinite;
+  animation: scroll-marquee 40s linear infinite;
 }
 
 .marquee-wrapper:hover .marquee-content {

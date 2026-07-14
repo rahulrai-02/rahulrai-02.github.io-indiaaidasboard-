@@ -1,104 +1,182 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
+
 <head>
   <meta charset="UTF-8">
-  <title>Contact Us | IndiaAI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us - IndiaAI NIELIT Ropar</title>
+  
+  <!-- SEO & Meta Tags -->
+  <meta name="description" content="Get in touch with the IndiaAI team at NIELIT Ropar. We are here to answer your questions about the AI Skill Development Program.">
+  <meta name="keywords" content="Contact India AI, IndiaAI Contact, NIELIT Ropar Contact, Artificial Intelligence Training Inquiry, AI Course Details">
+  <meta name="author" content="NIELIT Ropar">
+  <meta name="robots" content="index, follow">
+  
+  <!-- Open Graph / Social Media -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Contact Us - IndiaAI NIELIT Ropar">
+  <meta property="og:description" content="Get in touch with the IndiaAI team at NIELIT Ropar. We are here to answer your questions about the AI Skill Development Program.">
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Contact Us - IndiaAI NIELIT Ropar">
+  <meta property="twitter:description" content="Get in touch with the IndiaAI team at NIELIT Ropar. We are here to answer your questions about the AI Skill Development Program.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="g-flat.css">
+  <script src="lang-support.js" defer></script>
   <style>
-    .contact-form input, .contact-form textarea {
+    .contact-form input,
+    .contact-form textarea {
       width: 100%;
       padding: 12px 16px;
       margin-bottom: 20px;
-      border: 1.5px solid var(--neutral-300);
-      border-radius: 8px;
-      font-family: var(--font-sans);
-      font-size: 1rem;
     }
+
     .contact-form label {
       display: block;
       font-weight: 600;
-      color: var(--neutral-800);
-      margin-bottom: 6px;
+      color: var(--navy);
+      margin-bottom: 8px;
     }
-    .submit-btn {
-      background: var(--indigo-800);
-      color: white;
-      border: none;
-      padding: 14px 24px;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 1rem;
-      cursor: pointer;
-      width: 100%;
-    }
+
     .contact-info-block {
       padding: 24px;
-      background: var(--neutral-50);
+      background: var(--bg-body);
+      border: 1px solid var(--border);
       border-radius: 12px;
       margin-bottom: 20px;
     }
+
+    .contact-info-block h3 {
+      font-size: 1.15rem;
+      margin-bottom: 8px;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .contact-info-block p {
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
   </style>
 </head>
-<body>
 
-  <header style="background:#fff;border-bottom:1px solid #e2e8f0;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;">
-    <a href="index.html" style="font-weight:700;font-size:1.1rem;color:#0f172a;text-decoration:none;">DataSync</a>
-    <nav style="display:flex;gap:16px;align-items:center;">
-      <a href="index.html" style="color:#64748b;text-decoration:none;">Home</a>
-      <a href="about-us.html" style="color:#64748b;text-decoration:none;">About</a>
-      <a href="training-curriculum.html" style="color:#64748b;text-decoration:none;">Training</a>
-      <a href="contact-us.html" style="color:#64748b;text-decoration:none;">Contact</a>
-      <a href="login.html" style="padding:8px 12px;background:#2563eb;color:#fff;border-radius:8px;text-decoration:none;">Login</a>
-    </nav>
-  </header>
+<body class="has-navbar">
 
-<main>
-  <div class="info-band">
-    <div class="info-band-inner" style="padding: 40px 24px; display: block; text-align: center;">
-      <h1 style="font-size: 2.5rem; font-weight: 800;">Contact Support</h1>
-    </div>
-  </div>
-
-  <section class="section-wrap">
-    <div class="charts-grid wide">
-      
-      <div class="chart-card" style="padding: 30px;">
-        <h2 style="margin-bottom: 24px; color: var(--indigo-900);">Send us a Message</h2>
-        <form class="contact-form">
-          <label>Full Name</label>
-          <input type="text" placeholder="Enter your name">
-          
-          <label>Email Address</label>
-          <input type="email" placeholder="Enter your email">
-          
-          <label>Message</label>
-          <textarea rows="5" placeholder="How can we help you?"></textarea>
-          
-          <button type="submit" class="submit-btn">Submit Inquiry</button>
-        </form>
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <div class="nav-logo" onclick="window.location.href='index.html'" style="cursor: pointer;">
+        <img src="photos/India logo .png" alt="IndiaAI Logo" style="height: 48px; width: auto; object-fit: contain;">
+        <div class="logo-divider"></div>
+        <img src="photos/emblem.jpeg" alt="Emblem of India" class="nav-partner-logo">
+        <img src="photos/ndu-logo.jpeg" alt="NDU Logo" class="nav-partner-logo">
       </div>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle Navigation">
+        <span class="hamburger"></span>
+      </button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about-us.html">About</a>
+        <a href="training-curriculum.html">Training</a>
+        <a href="index.html#coordinators">Team</a>
+        <a href="index.html#dashboard">Insights</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="contact-us.html">Contact</a>
+        <a href="login.html" class="nav-cta">Login</a>
+      </div>
+    </div>
+  </nav>
 
-      <div class="chart-card" style="padding: 30px;">
-        <h2 style="margin-bottom: 24px; color: var(--indigo-900);">Headquarters</h2>
-        
-        <div class="contact-info-block">
-          <h3 style="font-size: 1.1rem; margin-bottom: 8px;">📍 Address</h3>
-          <p style="color: var(--neutral-700);">NIELIT Bhawan, Plot No. 3,<br>PSP Pocket, Sector-8, Dwarka,<br>New Delhi-110077</p>
+  <main>
+    <div class="info-band">
+      <h1>Contact Support</h1>
+      <p>Get in touch with the IndiaAI Skill Development team</p>
+    </div>
+
+    <section class="section-wrap">
+      <div class="charts-grid wide">
+
+        <div class="chart-card" style="padding: 30px;">
+          <h2 style="margin-bottom: 24px; color: var(--navy); font-weight: 800;">Send us a Message</h2>
+          <form class="contact-form">
+            <label>Full Name</label>
+            <input type="text" placeholder="Enter your name" required>
+
+            <label>Email Address</label>
+            <input type="email" placeholder="Enter your email" required>
+
+            <label>Message</label>
+            <textarea rows="5" placeholder="How can we help you?" required></textarea>
+
+            <button type="submit" class="submit-btn">Submit Inquiry</button>
+          </form>
         </div>
 
-        <div class="contact-info-block">
-          <h3 style="font-size: 1.1rem; margin-bottom: 8px;">📞 Phone</h3>
-          <p style="color: var(--neutral-700);">+91-11-44446777</p>
+        <div class="chart-card" style="padding: 30px;">
+          <h2 style="margin-bottom: 24px; color: var(--navy); font-weight: 800;">Headquarters</h2>
+
+          <div class="contact-info-block">
+            <h3>📍 Address</h3>
+            <p>NIELIT Bhawan, Plot No. 3,<br>PSP Pocket, Sector-8, Dwarka,<br>New Delhi-110077</p>
+          </div>
+
+          <div class="contact-info-block">
+            <h3>📞 Phone</h3>
+            <p>+91-11-44446777</p>
+          </div>
+
+          <div class="contact-info-block">
+            <h3>✉️ Email</h3>
+            <p>contact@nielit.gov.in</p>
+          </div>
         </div>
 
-        <div class="contact-info-block">
-          <h3 style="font-size: 1.1rem; margin-bottom: 8px;">✉️ Email</h3>
-          <p style="color: var(--neutral-700);">contact@nielit.gov.in</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <img src="photos/India logo .png" alt="IndiaAI Logo" style="height: 60px; width: auto; object-fit: contain; margin-bottom: 10px; display: block;">
+          <p>IndiaAI Skill Development Initiative by NIELIT Ropar, funded by MeitY, Government of India. Building
+            Bharat's technology workforce.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <a href="index.html#dashboard">Insights Dashboard</a>
+          <a href="index.html#courses">Courses</a>
+          <a href="gallery.html">Photo Gallery</a>
+          <a href="login.html">Candidate Login</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="#">Training Manual</a>
+          <a href="#">Assessment Guidelines</a>
+          <a href="#">Centre Directory</a>
+          <a href="#">Help & Support</a>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <a href="contact-us.html">NIELIT Ropar</a>
+          <a href="contact-us.html">Punjab, India</a>
+          <a href="mailto:info@nielit.gov.in">info@nielit.gov.in</a>
+          <a href="tel:+911144446777">+91-11-44446777</a>
         </div>
       </div>
-
+      <div class="footer-bottom">
+        <p>© 2026 NIELIT Ropar — Developed under the IndiaAI Mission. All rights reserved.</p>
+        <p>Ministry of Electronics & Information Technology, Govt. of India</p>
+      </div>
     </div>
-  </section>
-</main>
+  </footer>
 
 </body>
+
 </html>

@@ -2,23 +2,44 @@
 <html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8">
-  <title>Training Curriculum | IndiaAI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Training Curriculum - IndiaAI</title>
+  
+  <!-- SEO & Meta Tags -->
+  <meta name="description" content="Explore the comprehensive Training Curriculum for the IndiaAI Skill Development Program. Covers Python, Machine Learning, Deep Learning, and AI integration.">
+  <meta name="keywords" content="India AI Syllabus, AI Training Curriculum, NIELIT Ropar Syllabus, Machine Learning Course, Data Science Syllabus, Artificial Intelligence Training">
+  <meta name="author" content="NIELIT Ropar">
+  <meta name="robots" content="index, follow">
+  
+  <!-- Open Graph / Social Media -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Training Curriculum - IndiaAI">
+  <meta property="og:description" content="Explore the comprehensive Training Curriculum for the IndiaAI Skill Development Program. Covers Python, Machine Learning, Deep Learning, and AI integration.">
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Training Curriculum - IndiaAI">
+  <meta property="twitter:description" content="Explore the comprehensive Training Curriculum for the IndiaAI Skill Development Program. Covers Python, Machine Learning, Deep Learning, and AI integration.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="g-flat.css">
+  <script src="lang-support.js" defer></script>
   <style>
-    /* Specific styles for course cards */
     .course-card {
-      padding: 24px;
+      padding: 28px;
     }
     .course-title {
-      font-size: 1.2rem;
+      font-size: 1.35rem;
       font-weight: 700;
-      color: var(--indigo-800);
+      color: var(--primary);
       margin-bottom: 12px;
-      border-bottom: 1px solid var(--neutral-200);
+      border-bottom: 1px dashed var(--border);
       padding-bottom: 12px;
     }
     .course-meta {
       font-size: 0.9rem;
-      color: var(--neutral-600);
+      color: var(--text-muted);
       display: flex;
       justify-content: space-between;
       margin-bottom: 16px;
@@ -26,48 +47,48 @@
     }
     .course-desc {
       font-size: 0.95rem;
-      color: var(--neutral-700);
-      margin-bottom: 20px;
-    }
-    .course-btn {
-      display: block;
-      text-align: center;
-      background: linear-gradient(135deg, var(--tiranga-saffron), var(--saffron));
-      color: white;
-      padding: 10px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 24px;
+      line-height: 1.7;
     }
   </style>
 </head>
-<body>
+<body class="has-navbar">
 
-  <header style="background:#fff;border-bottom:1px solid #e2e8f0;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;">
-    <a href="index.html" style="font-weight:700;font-size:1.1rem;color:#0f172a;text-decoration:none;">DataSync</a>
-    <nav style="display:flex;gap:16px;align-items:center;">
-      <a href="index.html" style="color:#64748b;text-decoration:none;">Home</a>
-      <a href="about-us.html" style="color:#64748b;text-decoration:none;">About</a>
-      <a href="training-curriculum.html" style="color:#64748b;text-decoration:none;">Training</a>
-      <a href="contact-us.html" style="color:#64748b;text-decoration:none;">Contact</a>
-      <a href="login.html" style="padding:8px 12px;background:#2563eb;color:#fff;border-radius:8px;text-decoration:none;">Login</a>
-    </nav>
-  </header>
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <div class="nav-logo" onclick="window.location.href='index.html'" style="cursor: pointer;">
+      <img src="photos/India logo .png" alt="IndiaAI Logo" style="height: 48px; width: auto; object-fit: contain;">
+    </div>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle Navigation">
+      <span class="hamburger"></span>
+    </button>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="about-us.html">About</a>
+      <a href="training-curriculum.html">Training</a>
+      <a href="index.html#coordinators">Team</a>
+      <a href="index.html#dashboard">Insights</a>
+      <a href="gallery.html">Gallery</a>
+      <a href="contact-us.html">Contact</a>
+      <a href="login.html" class="nav-cta">Login</a>
+    </div>
+  </div>
+</nav>
 
 <main>
   <div class="info-band">
-    <div class="info-band-inner" style="padding: 40px 24px; display: block; text-align: center;">
-      <h1 style="font-size: 2.5rem; font-weight: 800;">Training Curriculum</h1>
-      <p style="font-size: 1.1rem; color: rgba(255,255,255,0.8);">Explore our 6+ specialized AI courses offered nationwide</p>
-    </div>
+    <h1>Training Curriculum</h1>
+    <p>Explore our specialized AI courses offered nationwide</p>
   </div>
 
   <section class="section-wrap">
     <div class="section-header">
       <span class="section-pill">🎓 Courses</span>
       <h2 class="section-title">Available Programs</h2>
+      <div class="section-divider"></div>
     </div>
-    <div class="section-divider"></div>
 
     <div class="charts-grid three">
       
@@ -104,6 +125,43 @@
     </div>
   </section>
 </main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <img src="photos/India logo .png" alt="IndiaAI Logo" style="height: 60px; width: auto; object-fit: contain; margin-bottom: 10px; display: block;">
+        <p>IndiaAI Skill Development Initiative by NIELIT Ropar, funded by MeitY, Government of India. Building Bharat's technology workforce.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <a href="index.html#dashboard">Insights Dashboard</a>
+        <a href="index.html#courses">Courses</a>
+        <a href="gallery.html">Photo Gallery</a>
+        <a href="login.html">Candidate Login</a>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a href="#">Training Manual</a>
+        <a href="#">Assessment Guidelines</a>
+        <a href="#">Centre Directory</a>
+        <a href="#">Help & Support</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="contact-us.html">NIELIT Ropar</a>
+        <a href="contact-us.html">Punjab, India</a>
+        <a href="mailto:info@nielit.gov.in">info@nielit.gov.in</a>
+        <a href="tel:+911144446777">+91-11-44446777</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 NIELIT Ropar — Developed under the IndiaAI Mission. All rights reserved.</p>
+      <p>Ministry of Electronics & Information Technology, Govt. of India</p>
+    </div>
+  </div>
+</footer>
 
 </body>
 </html>
