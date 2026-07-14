@@ -681,11 +681,11 @@
       const groupedStudents = {};
       hubSubmissions.forEach((sub, idx) => {
         sub.original_index = idx; // Preserve index for backend update
-        const regNo = sub.Candidate_registration_no || sub.Candidate_Name || 'Unknown';
+        const regNo = String(sub.Candidate_registration_no || sub.Candidate_Reg_No || sub['Candidate Reg No'] || sub['Registration No'] || sub['Registration No.'] || sub['Registration Number'] || sub['Reg No'] || sub['Reg_No'] || sub.Candidate_Name || 'Unknown').trim();
         if (!groupedStudents[regNo]) {
           groupedStudents[regNo] = {
             Candidate_Name: sub.Candidate_Name,
-            Candidate_registration_no: sub.Candidate_registration_no,
+            Candidate_registration_no: regNo,
             Batch: sub['Batch Wise'] || sub.Batch,
             submissions: []
           };

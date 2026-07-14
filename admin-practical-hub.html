@@ -92,7 +92,11 @@
     <div class="card">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
         <h3 style="color: var(--navy);"><i class="fas fa-list-alt"></i> Practical Submissions Roster</h3>
-        <div>
+        <div style="display: flex; gap: 10px;">
+          <select id="filter-batch" onchange="renderPracticals()" style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border);">
+            <option value="all">All Batches</option>
+            <!-- Batches will be injected here -->
+          </select>
           <select id="filter-status" onchange="renderPracticals()" style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border);">
             <option value="all">All Students</option>
             <option value="submitted">Submitted Only</option>
@@ -156,10 +160,27 @@
       const practicalSubmissions = dataSubs.filter(s => s.Assignment_ID === 'PRACTICAL_EXAM');
       allCandidates = dataCands.filter(c => getCandidateRegNo(c) !== '');
       
+      // Populate Batch Filter
+      const batches = new Set();
+      allCandidates.forEach(c => {
+        const b = String(c['Batch Wise'] || c['Batch'] || '').trim();
+        if (b) batches.add(b);
+      });
+      const batchSelect = document.getElementById('filter-batch');
+      [...batches].sort().forEach(b => {
+        const opt = document.createElement('option');
+        opt.value = b;
+        opt.textContent = b;
+        batchSelect.appendChild(opt);
+      });
+      
       // Merge Data
       mergedData = allCandidates.map(cand => {
         const reg = getCandidateRegNo(cand).toLowerCase();
-        const sub = practicalSubmissions.find(s => String(s.Candidate_Reg_No || s['Candidate Reg No'] || '').toLowerCase() === reg);
+        const sub = practicalSubmissions.find(s => {
+          const sReg = String(s.Candidate_Reg_No || s['Candidate Reg No'] || s['Registration No'] || s['Registration No.'] || s['Registration Number'] || s['Reg No'] || s['Reg_No'] || s.Candidate_registration_no || '').toLowerCase().trim();
+          return sReg === reg;
+        });
         return {
           cand: cand,
           sub: sub || null,
@@ -179,11 +200,17 @@
 
   function renderPracticals() {
     const tbody = document.getElementById('practical-body');
-    const filter = document.getElementById('filter-status').value;
+    const statusFilter = document.getElementById('filter-status').value;
+    const batchFilter = document.getElementById('filter-batch').value;
     
     let filtered = mergedData;
-    if (filter === 'submitted') filtered = mergedData.filter(d => d.hasSubmitted);
-    if (filter === 'missing') filtered = mergedData.filter(d => !d.hasSubmitted);
+    
+    if (statusFilter === 'submitted') filtered = filtered.filter(d => d.hasSubmitted);
+    if (statusFilter === 'missing') filtered = filtered.filter(d => !d.hasSubmitted);
+    
+    if (batchFilter !== 'all') {
+      filtered = filtered.filter(d => String(d.cand['Batch Wise'] || d.cand['Batch'] || '').trim() === batchFilter);
+    }
     
     if (filtered.length === 0) {
       tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#64748b;">No records found.</td></tr>';
